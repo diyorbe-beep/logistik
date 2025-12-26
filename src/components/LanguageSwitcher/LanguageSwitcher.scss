@@ -2,18 +2,30 @@
 @import '../../styles/mixins';
 
 .language-switcher {
+  position: relative;
+  display: flex;
+  align-items: center;
+
   .language-select {
     padding: $spacing-xs $spacing-md;
+    padding-right: 2.5rem;
     border: 1px solid $border-color;
-    border-radius: $radius-md;
+    border-radius: $radius-lg;
     background: $bg-primary;
     color: $text-primary;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    @include smooth-transition(all, 0.3s);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-sm center;
+    background-size: 12px;
 
     &:hover {
       border-color: $primary;
+      background-color: rgba(37, 99, 235, 0.05);
     }
 
     &:focus {
@@ -22,6 +34,8 @@
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
   }
+
 }
+
 
 

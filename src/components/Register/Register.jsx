@@ -10,6 +10,8 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    userType: 'customer',
+    phone: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,23 +43,48 @@ const Register = () => {
     setLoading(true);
 
     try {
+      const requestBody = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: formData.userType === 'customer' ? 'customer' : formData.userType === 'carrier' ? 'carrier' : 'operator',
+        userType: formData.userType,
+        phone: formData.phone || '',
+      };
+
+      console.log('Register request:', requestBody);
+
       const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          role: 'user',
-        }),
+        body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = { error: 'Server error occurred' };
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || t('error'));
+        console.error('Register error:', data);
+        let errorMessage = data.error || t('error');
+        
+        // Translate common error messages to user-friendly text
+        if (errorMessage.toLowerCase().includes('username already exists')) {
+          errorMessage = t('usernameAlreadyExists');
+        } else if (errorMessage.toLowerCase().includes('email already exists')) {
+          errorMessage = t('emailAlreadyExists');
+        } else if (errorMessage.toLowerCase().includes('required')) {
+          errorMessage = t('fillAllFields');
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
+        return;
       }
 
       // Auto login after registration
@@ -119,6 +146,31 @@ const Register = () => {
               required
               placeholder={t('enterEmail')}
             />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">{t('phone')}</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="+998 90 123 45 67"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="userType">{t('userType')} *</label>
+            <select
+              id="userType"
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+              required
+            >
+              <option value="customer">{t('customer')}</option>
+              <option value="carrier">{t('carrier')}</option>
+              <option value="operator">{t('operator')}</option>
+            </select>
           </div>
           <div className="form-group">
             <label htmlFor="password">{t('password')}</label>

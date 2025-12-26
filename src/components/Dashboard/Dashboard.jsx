@@ -11,6 +11,7 @@ const Dashboard = () => {
     inTransit: 0,
     delivered: 0,
     received: 0,
+    monthly: [],
   });
   const [shipments, setShipments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,14 +67,15 @@ const Dashboard = () => {
     { name: t('delivered'), value: stats.delivered, color: '#10b981' },
   ];
 
-  const monthlyData = [
-    { month: t('jan'), shipments: 12 },
-    { month: t('feb'), shipments: 19 },
-    { month: t('mar'), shipments: 15 },
-    { month: t('apr'), shipments: 22 },
-    { month: t('may'), shipments: 18 },
-    { month: t('jun'), shipments: 25 },
-  ];
+  // Convert monthly data from backend to chart format
+  const monthlyData = stats.monthly?.map((item) => {
+    const [year, month] = item.month.split('-');
+    const monthNames = [t('jan'), t('feb'), t('mar'), t('apr'), t('may'), t('jun'), t('jul'), t('aug'), t('sep'), t('oct'), t('nov'), t('dec')];
+    return {
+      month: monthNames[parseInt(month) - 1] || month,
+      shipments: item.count,
+    };
+  }) || [];
 
   if (loading) {
     return <div className="dashboard-loading">{t('loadingDashboard')}</div>;

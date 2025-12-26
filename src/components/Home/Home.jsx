@@ -15,7 +15,7 @@ const Home = () => {
             {t('heroDescription')}
           </p>
           <div className="hero-buttons">
-            <Link to="/register" className="btn-primary btn-large">
+            <Link to="/register" className="btn-primary btn-large button">
               {t('getStarted')}
             </Link>
             <Link to="/login" className="btn-secondary btn-large">
@@ -24,7 +24,7 @@ const Home = () => {
           </div>
         </div>
         <div className="hero-image">
-          <div className="hero-icon">🚚</div>
+          {/* Truck image is now in background, this section can be removed or used for decorative elements */}
         </div>
       </div>
 

@@ -1,0 +1,121 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.contact-page {
+  padding: $spacing-2xl 0;
+
+  .contact-hero {
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+    @include fade-in-up(0.5s);
+
+    h1 {
+      font-size: 2.5rem;
+      color: $text-primary;
+      margin-bottom: $spacing-md;
+
+      @include responsive(md) {
+        font-size: 2rem;
+      }
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: $text-secondary;
+
+      @include responsive(md) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: $spacing-2xl;
+
+  @include responsive(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.info-card {
+  @include card;
+  text-align: center;
+  @include hover-lift;
+  @include fade-in-up(0.5s);
+  animation-delay: calc(var(--index, 0) * 0.1s);
+
+  .info-icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-md;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: $text-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    color: $text-secondary;
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.contact-form-container {
+  @include card;
+  @include scale-in(0.5s);
+}
+
+.contact-form {
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+
+    @include responsive(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-sm;
+      color: $text-primary;
+      font-weight: 500;
+    }
+
+    input,
+    textarea {
+      @include input;
+    }
+
+    textarea {
+      resize: vertical;
+      font-family: inherit;
+    }
+  }
+}
+
+.success-message {
+  background: rgba(16, 185, 129, 0.1);
+  color: $success;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-lg;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  @include fade-in-up(0.4s);
+}
+

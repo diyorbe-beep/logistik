@@ -57,6 +57,24 @@ const Layout = ({ children, onLogout }) => {
               <span className="text">{t('vehicles')}</span>
             </Link>
           </li>
+          <li>
+            <Link to="/pricing" className={isActive('/pricing') ? 'active' : ''} onClick={closeSidebar}>
+              <span className="icon">💰</span>
+              <span className="text">{t('pricing')}</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/carriers" className={isActive('/carriers') ? 'active' : ''} onClick={closeSidebar}>
+              <span className="icon">🚛</span>
+              <span className="text">{t('carriers')}</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className={isActive('/profile') ? 'active' : ''} onClick={closeSidebar}>
+              <span className="icon">👤</span>
+              <span className="text">{t('profile')}</span>
+            </Link>
+          </li>
         </ul>
         <div className="sidebar-footer">
           <div className="language-switcher-sidebar">

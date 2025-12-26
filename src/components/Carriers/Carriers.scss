@@ -1,0 +1,222 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.carriers-page {
+  .carriers-header {
+    margin-bottom: $spacing-2xl;
+
+    h1 {
+      font-size: 2rem;
+      color: $text-primary;
+    }
+  }
+}
+
+.carriers-content {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: $spacing-xl;
+
+  @include responsive(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.carriers-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.carrier-card {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  @include smooth-transition(all, 0.3s);
+  @include fade-in-up(0.5s);
+  animation-delay: calc(var(--index, 0) * 0.05s);
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &.active {
+    border: 2px solid $primary;
+    background: rgba(37, 99, 235, 0.05);
+  }
+
+  .carrier-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    @include flex-center;
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .carrier-info {
+    flex: 1;
+
+    h3 {
+      font-size: 1.1rem;
+      color: $text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .carrier-phone {
+      color: $text-secondary;
+      font-size: 0.875rem;
+      margin-bottom: $spacing-sm;
+    }
+
+    .carrier-stats {
+      display: flex;
+      gap: $spacing-md;
+      font-size: 0.875rem;
+      color: $text-secondary;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+      }
+    }
+  }
+}
+
+.carrier-details {
+  @include card;
+  @include scale-in(0.5s);
+
+  .details-header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+
+    h2 {
+      font-size: 1.5rem;
+      color: $text-primary;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: $text-secondary;
+      cursor: pointer;
+      @include smooth-transition(all, 0.3s);
+
+      &:hover {
+        color: $text-primary;
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .details-info {
+    margin-bottom: $spacing-xl;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: $spacing-md;
+    margin-bottom: $spacing-sm;
+    background: $bg-secondary;
+    border-radius: $radius-md;
+
+    .label {
+      color: $text-secondary;
+      font-weight: 500;
+    }
+
+    .value {
+      color: $text-primary;
+      font-weight: 600;
+
+      &.status-active {
+        color: $success;
+      }
+    }
+  }
+
+  .work-history {
+    h3 {
+      font-size: 1.25rem;
+      color: $text-primary;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .history-item {
+    padding: $spacing-md;
+    background: $bg-secondary;
+    border-radius: $radius-md;
+    @include smooth-transition(all, 0.3s);
+
+    &:hover {
+      background: darken($bg-secondary, 2%);
+    }
+
+    .history-header {
+      @include flex-between;
+      margin-bottom: $spacing-sm;
+
+      .shipment-id {
+        font-weight: 600;
+        color: $primary;
+      }
+
+      .history-date {
+        font-size: 0.875rem;
+        color: $text-secondary;
+      }
+    }
+
+    .history-route {
+      color: $text-primary;
+      margin-bottom: $spacing-sm;
+    }
+
+    .history-status {
+      display: inline-block;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      &.status-delivered {
+        background: rgba(16, 185, 129, 0.1);
+        color: $success;
+      }
+
+      &.status-in-transit {
+        background: rgba(59, 130, 246, 0.1);
+        color: $primary;
+      }
+
+      &.status-received {
+        background: rgba(107, 114, 128, 0.1);
+        color: $text-secondary;
+      }
+    }
+  }
+
+  .no-history {
+    text-align: center;
+    color: $text-secondary;
+    padding: $spacing-xl;
+  }
+}
+

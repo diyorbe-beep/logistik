@@ -35,6 +35,7 @@ export const translations = {
     dontHaveAccount: 'Hisobingiz yo\'qmi?',
     registerHere: 'Bu yerda ro\'yxatdan o\'ting',
     defaultCredentials: 'Default: admin / admin123',
+    invalidCredentials: 'Noto\'g\'ri foydalanuvchi nomi yoki parol. Iltimos, qayta urinib ko\'ring.',
     
     // Register
     createAccountTitle: 'Hisob yaratish',
@@ -48,6 +49,9 @@ export const translations = {
     creatingAccount: 'Hisob yaratilmoqda...',
     alreadyHaveAccount: 'Allaqachon hisobingiz bormi?',
     loginHere: 'Bu yerda kiring',
+    usernameAlreadyExists: 'Bu foydalanuvchi nomi allaqachon mavjud. Iltimos, boshqa nom tanlang.',
+    emailAlreadyExists: 'Bu email allaqachon ro\'yxatdan o\'tgan. Iltimos, boshqa email ishlating yoki kirish qiling.',
+    fillAllFields: 'Iltimos, barcha majburiy maydonlarni to\'ldiring.',
     
     // Dashboard
     dashboard: 'Dashboard',
@@ -121,6 +125,111 @@ export const translations = {
     // Common
     nA: 'N/A',
     error: 'Xatolik',
+    currency: 'UZS',
+    
+    // Pricing
+    pricing: 'Narxlar',
+    newPricing: '+ Yangi narx',
+    newPricingTitle: 'Yangi narx',
+    editPricing: 'Narxni tahrirlash',
+    createPricing: 'Narx yaratish',
+    createPricingBtn: 'Narx yaratish',
+    updatePricing: 'Narxni yangilash',
+    loadingPricing: 'Narxlar yuklanmoqda...',
+    noPricing: 'Narxlar topilmadi. Birinchi narxni yarating!',
+    route: 'Marshrut',
+    distance: 'Masofa',
+    pricePerKm: '1 km narxi',
+    totalPrice: 'Jami narx',
+    vehicleType: 'Transport vositasi turi',
+    selectVehicleType: 'Transport vositasi turini tanlang',
+    truck: 'Yuk mashinasi',
+    van: 'Furgon',
+    car: 'Avtomobil',
+    
+    // Services
+    services: 'Xizmatlar',
+    ourServices: 'Bizning xizmatlarimiz',
+    servicesSubtitle: 'Logistika va transport sohasida professional yechimlar',
+    serviceShipment: 'Yuk tashish',
+    serviceShipmentDesc: 'Xavfsiz va tezkor yuk tashish xizmatlari',
+    serviceTransport: 'Transport xizmatlari',
+    serviceTransportDesc: 'Har qanday turdagi transport vositalari',
+    serviceTracking: 'Kuzatuv',
+    serviceTrackingDesc: 'Real vaqtda yuk holatini kuzatish',
+    servicePricing: 'Narxlash',
+    servicePricingDesc: 'Shaffof va raqobatbardosh narxlar',
+    serviceExpress: 'Ekspress yetkazib berish',
+    serviceExpressDesc: 'Tezkor va ishonchli yetkazib berish',
+    serviceInsurance: 'Sug\'urta',
+    serviceInsuranceDesc: 'Yuklarni sug\'urta qilish xizmatlari',
+    
+    // About
+    about: 'Biz haqimizda',
+    aboutUs: 'Biz haqimizda',
+    aboutSubtitle: 'Logistika sohasida yetakchi kompaniya',
+    ourMission: 'Bizning missiyamiz',
+    missionText: 'Mijozlarimizga eng yaxshi logistika xizmatlarini taqdim etish va ularning bizneslarini rivojlantirishga yordam berish.',
+    ourVision: 'Bizning ko\'zlagan maqsadimiz',
+    visionText: 'Mintaqada eng ishonchli va innovatsion logistika kompaniyasi bo\'lish.',
+    whyChooseUs: 'Nima uchun bizni tanlashadi?',
+    feature1: 'Tajribali va professional jamoa',
+    feature2: '24/7 mijozlar uchun qo\'llab-quvvatlash',
+    feature3: 'Zamonaviy texnologiyalar va kuzatuv tizimi',
+    feature4: 'Raqobatbardosh narxlar va sifatli xizmat',
+    
+    // Contact
+    contact: 'Aloqa',
+    contactUs: 'Biz bilan bog\'laning',
+    contactSubtitle: 'Savollaringiz bormi? Bizga yozing!',
+    phone: 'Telefon',
+    address: 'Manzil',
+    addressText: 'Toshkent shahri, Yunusobod tumani',
+    message: 'Xabar',
+    subject: 'Mavzu',
+    enterName: 'Ismingizni kiriting',
+    enterEmail: 'Emailingizni kiriting',
+    enterPhone: 'Telefon raqamingizni kiriting',
+    enterSubject: 'Mavzuni kiriting',
+    enterMessage: 'Xabaringizni kiriting',
+    sendMessage: 'Xabar yuborish',
+    sending: 'Yuborilmoqda...',
+    messageSent: 'Xabaringiz muvaffaqiyatli yuborildi!',
+    
+    // Profile
+    profile: 'Shaxsiy kabinet',
+    myProfile: 'Mening profilim',
+    editProfile: 'Profilni tahrirlash',
+    loadingProfile: 'Profil yuklanmoqda...',
+    profileUpdated: 'Profil muvaffaqiyatli yangilandi',
+    saveChanges: 'O\'zgarishlarni saqlash',
+    
+    // News
+    news: 'Yangiliklar',
+    loadingNews: 'Yangiliklar yuklanmoqda...',
+    noNews: 'Yangiliklar topilmadi',
+    readMore: 'Batafsil',
+    
+    // Carriers
+    carriers: 'Yetkazib beruvchilar',
+    loadingCarriers: 'Yetkazib beruvchilar yuklanmoqda...',
+    noCarriers: 'Yetkazib beruvchilar topilmadi',
+    carrierName: 'Yetkazib beruvchi nomi',
+    carrierPhone: 'Telefon raqami',
+    carrierEmail: 'Email',
+    carrierVehicle: 'Transport vositasi',
+    carrierStatus: 'Holati',
+    workHistory: 'Ish tarixi',
+    totalShipments: 'Jami yuklar',
+    completedShipments: 'Bajarilgan yuklar',
+    activeShipments: 'Faol yuklar',
+    
+    // User Types
+    userType: 'Foydalanuvchi turi',
+    customer: 'Buyurtmachi',
+    carrier: 'Yetkazib beruvchi',
+    operator: 'Operator',
+    selectUserType: 'Foydalanuvchi turini tanlang',
     
     // Search & Filters
     searchPlaceholder: 'Qidirish (kuzatuv raqami, manba, manzil...)',
@@ -180,6 +289,7 @@ export const translations = {
     dontHaveAccount: 'Нет аккаунта?',
     registerHere: 'Зарегистрируйтесь здесь',
     defaultCredentials: 'По умолчанию: admin / admin123',
+    invalidCredentials: 'Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.',
     
     // Register
     createAccountTitle: 'Создать аккаунт',
@@ -193,6 +303,9 @@ export const translations = {
     creatingAccount: 'Создание аккаунта...',
     alreadyHaveAccount: 'Уже есть аккаунт?',
     loginHere: 'Войдите здесь',
+    usernameAlreadyExists: 'Это имя пользователя уже существует. Пожалуйста, выберите другое имя.',
+    emailAlreadyExists: 'Этот email уже зарегистрирован. Пожалуйста, используйте другой email или войдите.',
+    fillAllFields: 'Пожалуйста, заполните все обязательные поля.',
     
     // Dashboard
     dashboard: 'Панель управления',
@@ -250,6 +363,26 @@ export const translations = {
     users: 'Пользователи',
     loadingUsers: 'Загрузка пользователей...',
     role: 'Роль',
+    
+    // Pricing
+    pricing: 'Цены',
+    newPricing: '+ Новая цена',
+    newPricingTitle: 'Новая цена',
+    editPricing: 'Редактировать цену',
+    createPricing: 'Создать цену',
+    createPricingBtn: 'Создать цену',
+    updatePricing: 'Обновить цену',
+    loadingPricing: 'Загрузка цен...',
+    noPricing: 'Цены не найдены. Создайте первую цену!',
+    route: 'Маршрут',
+    distance: 'Расстояние',
+    pricePerKm: 'Цена за 1 км',
+    totalPrice: 'Общая цена',
+    vehicleType: 'Тип транспорта',
+    selectVehicleType: 'Выберите тип транспорта',
+    truck: 'Грузовик',
+    van: 'Фургон',
+    car: 'Автомобиль',
     
     // Vehicles
     vehicles: 'Транспортные средства',
@@ -325,6 +458,7 @@ export const translations = {
     dontHaveAccount: 'Don\'t have an account?',
     registerHere: 'Register here',
     defaultCredentials: 'Default: admin / admin123',
+    invalidCredentials: 'Invalid username or password. Please try again.',
     
     // Register
     createAccountTitle: 'Create Account',
@@ -338,6 +472,9 @@ export const translations = {
     creatingAccount: 'Creating Account...',
     alreadyHaveAccount: 'Already have an account?',
     loginHere: 'Login here',
+    usernameAlreadyExists: 'This username already exists. Please choose another username.',
+    emailAlreadyExists: 'This email is already registered. Please use another email or login.',
+    fillAllFields: 'Please fill in all required fields.',
     
     // Dashboard
     dashboard: 'Dashboard',
@@ -411,6 +548,27 @@ export const translations = {
     // Common
     nA: 'N/A',
     error: 'Error',
+    currency: 'UZS',
+    
+    // Pricing
+    pricing: 'Pricing',
+    newPricing: '+ New Pricing',
+    newPricingTitle: 'New Pricing',
+    editPricing: 'Edit Pricing',
+    createPricing: 'Create Pricing',
+    createPricingBtn: 'Create Pricing',
+    updatePricing: 'Update Pricing',
+    loadingPricing: 'Loading pricing...',
+    noPricing: 'No pricing found. Create your first pricing!',
+    route: 'Route',
+    distance: 'Distance',
+    pricePerKm: 'Price per km',
+    totalPrice: 'Total Price',
+    vehicleType: 'Vehicle Type',
+    selectVehicleType: 'Select Vehicle Type',
+    truck: 'Truck',
+    van: 'Van',
+    car: 'Car',
     
     // Search & Filters
     searchPlaceholder: 'Search (tracking number, origin, destination...)',

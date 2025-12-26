@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
 import './Vehicles.scss';
@@ -53,6 +54,9 @@ const Vehicles = () => {
     <div className="vehicles">
       <div className="vehicles-header">
         <h1>{t('vehicles')}</h1>
+        <Link to="/vehicles/new" className="btn-primary">
+          {t('newVehicle')}
+        </Link>
       </div>
 
       <div className="vehicles-grid">

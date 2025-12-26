@@ -1,0 +1,89 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.profile-page {
+  .profile-header {
+    margin-bottom: $spacing-2xl;
+
+    h1 {
+      font-size: 2rem;
+      color: $text-primary;
+    }
+  }
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: $spacing-xl;
+
+  @include responsive(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-card {
+  @include card;
+  text-align: center;
+  @include fade-in-up(0.5s);
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    @include flex-center;
+    margin: 0 auto $spacing-lg;
+
+    .avatar-icon {
+      font-size: 4rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: $text-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  .user-role {
+    color: $text-secondary;
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+}
+
+.profile-form-card {
+  @include card;
+  @include scale-in(0.5s);
+  animation-delay: 0.2s;
+
+  h3 {
+    font-size: 1.5rem;
+    color: $text-primary;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.profile-form {
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-sm;
+      color: $text-primary;
+      font-weight: 500;
+    }
+
+    input {
+      @include input;
+
+      &.disabled-input {
+        background: $bg-secondary;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+

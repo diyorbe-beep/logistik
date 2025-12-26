@@ -1,0 +1,90 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.about-page {
+  padding: $spacing-2xl 0;
+
+  .about-hero {
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+    @include fade-in-up(0.5s);
+
+    h1 {
+      font-size: 2.5rem;
+      color: $text-primary;
+      margin-bottom: $spacing-md;
+
+      @include responsive(md) {
+        font-size: 2rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: $text-secondary;
+
+      @include responsive(md) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-section {
+  @include card;
+  margin-bottom: $spacing-xl;
+  @include fade-in-up(0.5s);
+  animation-delay: calc(var(--index, 0) * 0.1s);
+
+  h2 {
+    font-size: 1.8rem;
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+  }
+
+  p {
+    color: $text-secondary;
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
+}
+
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-md;
+
+  @include responsive(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $bg-secondary;
+  border-radius: $radius-md;
+  @include smooth-transition(all, 0.3s);
+
+  &:hover {
+    background: darken($bg-secondary, 2%);
+    transform: translateX(4px);
+  }
+
+  .check-icon {
+    font-size: 1.5rem;
+  }
+
+  span:last-child {
+    color: $text-primary;
+    font-weight: 500;
+  }
+}
+

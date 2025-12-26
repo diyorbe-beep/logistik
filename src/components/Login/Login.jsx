@@ -26,16 +26,33 @@ const Login = ({ onLogin }) => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = { error: 'Server error occurred' };
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || t('error'));
+        let errorMessage = data.error || t('error');
+        
+        // Translate common error messages
+        if (errorMessage.toLowerCase().includes('invalid credentials') || 
+            errorMessage.toLowerCase().includes('invalid') ||
+            response.status === 401) {
+          errorMessage = t('invalidCredentials');
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
+        return;
       }
 
       onLogin(data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      console.error('Login error:', err);
+      setError(err.message || t('error'));
     } finally {
       setLoading(false);
     }
