@@ -1,0 +1,249 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: $spacing-md;
+  left: $spacing-md;
+  z-index: 1001;
+  background: $primary;
+  color: $text-white;
+  border: none;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: $shadow-md;
+
+  @include responsive(md) {
+    display: block;
+  }
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+
+  @include responsive(md) {
+    display: block;
+  }
+}
+
+.sidebar {
+  width: 260px;
+  background: $bg-sidebar;
+  color: $text-white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  @include slide-in-left(0.4s);
+
+  @include responsive(md) {
+    transform: translateX(-100%);
+    
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  @include responsive(sm) {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+.sidebar-header {
+  padding: $spacing-xl;
+  border-bottom: 1px solid $border-dark;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-white;
+  }
+
+  .sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    color: $text-white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+
+    @include responsive(md) {
+      display: block;
+    }
+  }
+}
+
+.sidebar-menu {
+  list-style: none;
+  flex: 1;
+  padding: $spacing-md 0;
+  overflow-y: auto;
+
+  li {
+    margin: $spacing-xs 0;
+
+    a {
+      display: flex;
+      align-items: center;
+      padding: $spacing-md $spacing-xl;
+      color: $text-light;
+      text-decoration: none;
+      position: relative;
+      @include smooth-transition(all, 0.3s, cubic-bezier(0.4, 0, 0.2, 1));
+      @include fade-in-up(0.3s);
+      animation-delay: calc(var(--index, 0) * 0.05s);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        background: rgba(255, 255, 255, 0.1);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .icon {
+        margin-right: $spacing-md;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        @include smooth-transition(transform, 0.3s);
+      }
+
+      .text {
+        @include responsive(md) {
+          display: block;
+        }
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: $text-white;
+        transform: translateX(4px);
+        padding-left: calc(#{$spacing-xl} + 4px);
+
+        &::before {
+          width: 3px;
+        }
+
+        .icon {
+          transform: scale(1.1);
+        }
+      }
+
+      &.active {
+        background: $primary;
+        color: $text-white;
+        border-left: 3px solid $primary-light;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+
+        &::before {
+          width: 3px;
+        }
+      }
+    }
+  }
+}
+
+.sidebar-footer {
+  padding: $spacing-md;
+  border-top: 1px solid $border-dark;
+
+  .language-switcher-sidebar {
+    margin-bottom: $spacing-md;
+
+    .language-select {
+      width: 100%;
+      padding: $spacing-sm;
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: $radius-md;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      option {
+        background: $bg-sidebar;
+        color: $text-white;
+      }
+    }
+  }
+
+  .logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-md;
+    background: rgba(239, 68, 68, 0.1);
+    color: $text-white;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .icon {
+      margin-right: $spacing-sm;
+    }
+
+    .text {
+      @include responsive(md) {
+        display: block;
+      }
+    }
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: $spacing-xl;
+  min-height: 100vh;
+  width: calc(100% - 260px);
+
+  @include responsive(md) {
+    margin-left: 0;
+    width: 100%;
+    padding: $spacing-md;
+    padding-top: 60px;
+  }
+
+  @include responsive(sm) {
+    padding: $spacing-sm;
+    padding-top: 60px;
+  }
+}

@@ -1,0 +1,27 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.language-switcher {
+  .language-select {
+    padding: $spacing-xs $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    background: $bg-primary;
+    color: $text-primary;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: $primary;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+}
+
+

@@ -1,0 +1,289 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.dashboard {
+  .dashboard-header {
+    @include flex-between;
+    margin-bottom: $spacing-2xl;
+
+    @include responsive(md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-md;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: $text-primary;
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+
+  @include responsive(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  @include card;
+  @include flex-between;
+  padding: $spacing-xl;
+  @include hover-lift;
+  animation-delay: calc(var(--index, 0) * 0.1s);
+
+  @include responsive(sm) {
+    padding: $spacing-md;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: $radius-lg;
+    @include flex-center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+
+    @include responsive(sm) {
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      margin-bottom: $spacing-sm;
+    }
+
+    &.total {
+      background: rgba(37, 99, 235, 0.1);
+    }
+
+    &.received {
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    &.in-transit {
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    &.delivered {
+      background: rgba(16, 185, 129, 0.1);
+    }
+  }
+
+  .stat-content {
+    flex: 1;
+    margin-left: $spacing-lg;
+
+    @include responsive(sm) {
+      margin-left: 0;
+    }
+
+    h3 {
+      font-size: 0.875rem;
+      color: $text-secondary;
+      font-weight: 500;
+      margin-bottom: $spacing-xs;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-primary;
+
+      @include responsive(sm) {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-lg;
+
+  @include responsive(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  .action-card {
+    @include card;
+    text-decoration: none;
+    color: $text-primary;
+    @include hover-lift;
+    animation-delay: calc(var(--index, 0) * 0.1s);
+
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: $spacing-sm;
+      color: $text-primary;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.dashboard-loading {
+  @include flex-center;
+  height: 50vh;
+  font-size: 1.2rem;
+  color: $text-secondary;
+}
+
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+
+  @include responsive(md) {
+    grid-template-columns: 1fr;
+  }
+
+  @include responsive(sm) {
+    gap: $spacing-md;
+  }
+
+  .chart-card {
+    @include card;
+    padding: $spacing-xl;
+    overflow-x: auto;
+    @include scale-in(0.5s);
+    animation-delay: calc(var(--index, 0) * 0.1s);
+
+    @include responsive(sm) {
+      padding: $spacing-md;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: $spacing-lg;
+      color: $text-primary;
+      text-align: center;
+      @include smooth-transition(all, 0.3s);
+
+      @include responsive(sm) {
+        font-size: 1.1rem;
+        margin-bottom: $spacing-md;
+      }
+    }
+
+    &:hover {
+      h3 {
+        color: $primary;
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.recent-shipments {
+  @include card;
+  margin-bottom: $spacing-2xl;
+
+  .section-header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: $text-primary;
+
+      @include responsive(sm) {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .shipments-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .shipment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md;
+    background: $bg-secondary;
+    border-radius: $radius-md;
+    transition: background 0.2s;
+
+    @include responsive(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+    }
+
+    &:hover {
+      background: darken($bg-secondary, 2%);
+    }
+
+    .shipment-info {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+      flex: 1;
+
+      .tracking-number {
+        font-weight: 600;
+        color: $primary;
+        font-size: 0.9rem;
+      }
+
+      .route {
+        color: $text-secondary;
+        font-size: 0.875rem;
+      }
+    }
+
+    .status-badge {
+      padding: $spacing-xs $spacing-md;
+      border-radius: $radius-md;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      &.status-received {
+        background: rgba(6, 182, 212, 0.1);
+        color: $info;
+      }
+
+      &.status-in-transit {
+        background: rgba(245, 158, 11, 0.1);
+        color: $warning;
+      }
+
+      &.status-delivered {
+        background: rgba(16, 185, 129, 0.1);
+        color: $success;
+      }
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    color: $text-secondary;
+    padding: $spacing-xl;
+  }
+}
+
+

@@ -1,0 +1,266 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.shipments {
+  .shipments-header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+
+    @include responsive(md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-md;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: $text-primary;
+    }
+  }
+
+  .empty-state {
+    @include card;
+    text-align: center;
+    padding: $spacing-2xl;
+
+    p {
+      color: $text-secondary;
+      margin-bottom: $spacing-lg;
+      font-size: 1.1rem;
+    }
+  }
+
+  .shipments-filters {
+    @include card;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-lg;
+    flex-wrap: wrap;
+
+    @include responsive(md) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        left: $spacing-md;
+        color: $text-secondary;
+        font-size: 1.2rem;
+      }
+
+      .search-input {
+        @include input;
+        padding-left: 2.5rem;
+      }
+    }
+
+    .filter-box {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      label {
+        font-weight: 500;
+        color: $text-primary;
+        white-space: nowrap;
+      }
+
+      .filter-select {
+        @include input;
+        min-width: 150px;
+      }
+    }
+
+    .results-count {
+      color: $text-secondary;
+      font-size: 0.9rem;
+      white-space: nowrap;
+
+      @include responsive(md) {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.shipments-table-container {
+  @include card;
+  overflow-x: auto;
+}
+
+.shipments-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: $bg-secondary;
+
+    th {
+      padding: $spacing-md;
+      text-align: left;
+      font-weight: 600;
+      color: $text-primary;
+      border-bottom: 2px solid $border-color;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      @include smooth-transition(all, 0.3s);
+      @include fade-in-up(0.3s);
+      animation-delay: calc(var(--index, 0) * 0.03s);
+
+      &:hover {
+        background: $bg-secondary;
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      td {
+        padding: $spacing-md;
+        color: $text-primary;
+
+        .tracking-number {
+          font-weight: 600;
+          color: $primary;
+        }
+      }
+    }
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-md;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &.status-received {
+      background: rgba(6, 182, 212, 0.1);
+      color: $info;
+    }
+
+    &.status-in-transit {
+      background: rgba(245, 158, 11, 0.1);
+      color: $warning;
+    }
+
+    &.status-delivered {
+      background: rgba(16, 185, 129, 0.1);
+      color: $success;
+    }
+  }
+
+  .actions {
+    white-space: nowrap;
+  }
+}
+
+// Desktop view
+.desktop-view {
+  @include responsive(md) {
+    display: none;
+  }
+}
+
+// Mobile view
+.mobile-view {
+  display: none;
+
+  @include responsive(md) {
+    display: block;
+  }
+}
+
+.shipments-cards {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.shipment-card {
+  @include card;
+  padding: $spacing-lg;
+  @include fade-in-up(0.4s);
+  animation-delay: calc(var(--index, 0) * 0.05s);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid $border-color;
+    @include smooth-transition(all, 0.3s);
+
+    .tracking-number {
+      font-weight: 600;
+      color: $primary;
+      font-size: 1.1rem;
+    }
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .label {
+      font-weight: 500;
+      color: $text-secondary;
+      font-size: 0.9rem;
+    }
+
+    .value {
+      color: $text-primary;
+      font-size: 0.9rem;
+      text-align: right;
+      flex: 1;
+      margin-left: $spacing-md;
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: $spacing-sm;
+    padding-top: $spacing-md;
+    border-top: 1px solid $border-color;
+
+    .btn-edit,
+    .btn-delete {
+      flex: 1;
+      text-align: center;
+    }
+  }
+}
+
+@include responsive(md) {
+  .shipments-table-container {
+    overflow-x: scroll;
+  }
+
+  .shipments-table {
+    min-width: 800px;
+  }
+}
+
+

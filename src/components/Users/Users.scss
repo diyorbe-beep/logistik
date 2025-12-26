@@ -1,0 +1,75 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.users {
+  .users-header {
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      font-size: 2rem;
+      color: $text-primary;
+    }
+  }
+}
+
+.users-table-container {
+  @include card;
+  overflow-x: auto;
+
+  @include responsive(sm) {
+    padding: $spacing-md;
+  }
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: $bg-secondary;
+
+    th {
+      padding: $spacing-md;
+      text-align: left;
+      font-weight: 600;
+      color: $text-primary;
+      border-bottom: 2px solid $border-color;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      transition: background 0.2s;
+
+      &:hover {
+        background: $bg-secondary;
+      }
+
+      td {
+        padding: $spacing-md;
+        color: $text-primary;
+      }
+    }
+  }
+
+  .role-badge {
+    display: inline-block;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-md;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &.admin {
+      background: rgba(37, 99, 235, 0.1);
+      color: $primary;
+    }
+
+    &.user {
+      background: rgba(100, 116, 139, 0.1);
+      color: $secondary;
+    }
+  }
+}
+
+

@@ -1,0 +1,441 @@
+export const translations = {
+  uz: {
+    // Navbar
+    home: 'Bosh sahifa',
+    login: 'Kirish',
+    register: 'Ro\'yxatdan o\'tish',
+    logout: 'Chiqish',
+    
+    // Home Page
+    heroTitle: 'Logistics Pro',
+    heroSubtitle: 'Professional Transport & Logistics Management System',
+    heroDescription: 'Logistika operatsiyalarini bizning keng qamrovli yuk tashish kuzatuv va boshqaruv platformamiz bilan soddalashtiring. Yuk tashishlarni boshqaring, transport vositalarini kuzating va yetkazib berishlarni bitta joyda kuzating.',
+    getStarted: 'Boshlash',
+    keyFeatures: 'Asosiy xususiyatlar',
+    shipmentManagement: 'Yuk tashish boshqaruvi',
+    shipmentManagementDesc: 'Yaratishdan yetkazib berishgacha barcha yuk tashishlaringizni real vaqt rejimida status yangilanishlari bilan kuzating va boshqaring.',
+    vehicleTracking: 'Transport vositalarini kuzatish',
+    vehicleTrackingDesc: 'Avtopark transport vositalaringizni kuzating va ularni samarali logistika operatsiyalari uchun yuk tashishlarga tayinlang.',
+    dashboardAnalytics: 'Dashboard tahlillari',
+    dashboardAnalyticsDesc: 'Logistika operatsiyalaringiz bo\'yicha statistikalar va tahlillar bilan keng qamrovli tushunchalar oling.',
+    statusTracking: 'Status kuzatuv',
+    statusTrackingDesc: 'Yuk tashish holatini har bir bosqichda kuzating: Qabul qilindi, Yo\'lda, Yetkazib berildi.',
+    readyToStart: 'Boshlashga tayyormisiz?',
+    joinToday: 'Bugun bizga qo\'shiling va logistika operatsiyalaringizni soddalashtiring',
+    createAccount: 'Hisob yaratish',
+    
+    // Login
+    loginTitle: 'Logistics Pro',
+    loginSubtitle: 'Transport & Logistics Management',
+    username: 'Foydalanuvchi nomi',
+    password: 'Parol',
+    enterUsername: 'Foydalanuvchi nomini kiriting',
+    enterPassword: 'Parolni kiriting',
+    loggingIn: 'Kirilmoqda...',
+    dontHaveAccount: 'Hisobingiz yo\'qmi?',
+    registerHere: 'Bu yerda ro\'yxatdan o\'ting',
+    defaultCredentials: 'Default: admin / admin123',
+    
+    // Register
+    createAccountTitle: 'Hisob yaratish',
+    joinLogisticsPro: 'Bugun Logistics Pro\'ga qo\'shiling',
+    email: 'Email',
+    enterEmail: 'Emailni kiriting',
+    confirmPassword: 'Parolni tasdiqlash',
+    enterConfirmPassword: 'Parolni tasdiqlang',
+    passwordMinLength: 'Parol kamida 6 ta belgidan iborat bo\'lishi kerak',
+    passwordsNotMatch: 'Parollar mos kelmaydi',
+    creatingAccount: 'Hisob yaratilmoqda...',
+    alreadyHaveAccount: 'Allaqachon hisobingiz bormi?',
+    loginHere: 'Bu yerda kiring',
+    
+    // Dashboard
+    dashboard: 'Dashboard',
+    newShipment: '+ Yangi yuk tashish',
+    totalShipments: 'Jami yuk tashishlar',
+    received: 'Qabul qilindi',
+    inTransit: 'Yo\'lda',
+    delivered: 'Yetkazib berildi',
+    manageShipments: 'Yuk tashishlarni boshqarish',
+    manageShipmentsDesc: 'Barcha yuk tashishlarni ko\'ring va boshqaring',
+    manageUsers: 'Foydalanuvchilarni boshqarish',
+    manageUsersDesc: 'Tizim foydalanuvchilarini qo\'shing va boshqaring',
+    manageVehicles: 'Transport vositalarini boshqarish',
+    manageVehiclesDesc: 'Avtopark transport vositalarini kuzating va boshqaring',
+    loadingDashboard: 'Dashboard yuklanmoqda...',
+    
+    // Shipments
+    shipments: 'Yuk tashishlar',
+    noShipments: 'Yuk tashish topilmadi. Birinchi yuk tashishni yarating!',
+    createShipment: 'Yuk tashish yaratish',
+    id: 'ID',
+    trackingNumber: 'Kuzatuv raqami',
+    origin: 'Manba',
+    destination: 'Manzil',
+    status: 'Holat',
+    vehicle: 'Transport vositasi',
+    created: 'Yaratilgan',
+    actions: 'Harakatlar',
+    edit: 'Tahrirlash',
+    delete: 'O\'chirish',
+    deleteConfirm: 'Bu yuk tashishni o\'chirishni xohlaysizmi?',
+    loadingShipments: 'Yuk tashishlar yuklanmoqda...',
+    
+    // Shipment Form
+    editShipment: 'Yuk tashishni tahrirlash',
+    newShipmentTitle: 'Yangi yuk tashish',
+    cancel: 'Bekor qilish',
+    trackingNumberRequired: 'Kuzatuv raqami *',
+    statusRequired: 'Holat *',
+    originRequired: 'Manba *',
+    destinationRequired: 'Manzil *',
+    customerNameRequired: 'Mijoz ismi *',
+    selectVehicle: 'Transport vositasi tanlang',
+    weight: 'Og\'irlik (kg)',
+    customerName: 'Mijoz ismi',
+    customerEmail: 'Mijoz email',
+    customerPhone: 'Mijoz telefon',
+    description: 'Tavsif',
+    additionalNotes: 'Qo\'shimcha eslatmalar yoki tavsif...',
+    saving: 'Saqlanmoqda...',
+    updateShipment: 'Yuk tashishni yangilash',
+    createShipmentBtn: 'Yuk tashish yaratish',
+    
+    // Users
+    users: 'Foydalanuvchilar',
+    loadingUsers: 'Foydalanuvchilar yuklanmoqda...',
+    role: 'Rol',
+    
+    // Vehicles
+    vehicles: 'Transport vositalari',
+    loadingVehicles: 'Transport vositalari yuklanmoqda...',
+    available: 'Mavjud',
+    inUse: 'Ishlatilmoqda',
+    maintenance: 'Ta\'mirlash',
+    
+    // Status
+    received: 'Qabul qilindi',
+    inTransit: 'Yo\'lda',
+    delivered: 'Yetkazib berildi',
+    
+    // Common
+    nA: 'N/A',
+    error: 'Xatolik',
+    
+    // Search & Filters
+    searchPlaceholder: 'Qidirish (kuzatuv raqami, manba, manzil...)',
+    filterByStatus: 'Holat bo\'yicha filtrlash',
+    allStatuses: 'Barcha holatlar',
+    showing: 'Ko\'rsatilmoqda',
+    of: 'dan',
+    noResultsFound: 'Natijalar topilmadi',
+    
+    // Charts
+    statusDistribution: 'Holat bo\'yicha taqsimot',
+    monthlyShipments: 'Oylik yuk tashishlar',
+    recentShipments: 'So\'nggi yuk tashishlar',
+    viewAll: 'Barchasini ko\'rish',
+    noRecentShipments: 'So\'nggi yuk tashishlar yo\'q',
+    jan: 'Yan',
+    feb: 'Fev',
+    mar: 'Mar',
+    apr: 'Apr',
+    may: 'May',
+    jun: 'Iyun',
+  },
+  
+  ru: {
+    // Navbar
+    home: 'Главная',
+    login: 'Войти',
+    register: 'Регистрация',
+    logout: 'Выход',
+    
+    // Home Page
+    heroTitle: 'Logistics Pro',
+    heroSubtitle: 'Профессиональная система управления транспортом и логистикой',
+    heroDescription: 'Упростите свои логистические операции с помощью нашей комплексной платформы отслеживания и управления грузоперевозками. Управляйте грузами, отслеживайте транспортные средства и контролируйте доставки в одном месте.',
+    getStarted: 'Начать',
+    keyFeatures: 'Ключевые функции',
+    shipmentManagement: 'Управление грузоперевозками',
+    shipmentManagementDesc: 'Отслеживайте и управляйте всеми вашими грузоперевозками от создания до доставки с обновлениями статуса в реальном времени.',
+    vehicleTracking: 'Отслеживание транспорта',
+    vehicleTrackingDesc: 'Отслеживайте транспортные средства вашего парка и назначайте их на грузоперевозки для эффективных логистических операций.',
+    dashboardAnalytics: 'Аналитика панели управления',
+    dashboardAnalyticsDesc: 'Получайте комплексную информацию со статистикой и аналитикой по вашим логистическим операциям.',
+    statusTracking: 'Отслеживание статуса',
+    statusTrackingDesc: 'Отслеживайте статус грузоперевозки на каждом этапе: Получено, В пути, Доставлено.',
+    readyToStart: 'Готовы начать?',
+    joinToday: 'Присоединяйтесь к нам сегодня и упростите свои логистические операции',
+    createAccount: 'Создать аккаунт',
+    
+    // Login
+    loginTitle: 'Logistics Pro',
+    loginSubtitle: 'Управление транспортом и логистикой',
+    username: 'Имя пользователя',
+    password: 'Пароль',
+    enterUsername: 'Введите имя пользователя',
+    enterPassword: 'Введите пароль',
+    loggingIn: 'Вход...',
+    dontHaveAccount: 'Нет аккаунта?',
+    registerHere: 'Зарегистрируйтесь здесь',
+    defaultCredentials: 'По умолчанию: admin / admin123',
+    
+    // Register
+    createAccountTitle: 'Создать аккаунт',
+    joinLogisticsPro: 'Присоединяйтесь к Logistics Pro сегодня',
+    email: 'Email',
+    enterEmail: 'Введите email',
+    confirmPassword: 'Подтвердите пароль',
+    enterConfirmPassword: 'Подтвердите пароль',
+    passwordMinLength: 'Пароль должен содержать не менее 6 символов',
+    passwordsNotMatch: 'Пароли не совпадают',
+    creatingAccount: 'Создание аккаунта...',
+    alreadyHaveAccount: 'Уже есть аккаунт?',
+    loginHere: 'Войдите здесь',
+    
+    // Dashboard
+    dashboard: 'Панель управления',
+    newShipment: '+ Новый груз',
+    totalShipments: 'Всего грузоперевозок',
+    received: 'Получено',
+    inTransit: 'В пути',
+    delivered: 'Доставлено',
+    manageShipments: 'Управление грузоперевозками',
+    manageShipmentsDesc: 'Просматривайте и управляйте всеми грузоперевозками',
+    manageUsers: 'Управление пользователями',
+    manageUsersDesc: 'Добавляйте и управляйте пользователями системы',
+    manageVehicles: 'Управление транспортом',
+    manageVehiclesDesc: 'Отслеживайте и управляйте транспортными средствами парка',
+    loadingDashboard: 'Загрузка панели управления...',
+    
+    // Shipments
+    shipments: 'Грузоперевозки',
+    noShipments: 'Грузоперевозки не найдены. Создайте первую грузоперевозку!',
+    createShipment: 'Создать грузоперевозку',
+    id: 'ID',
+    trackingNumber: 'Номер отслеживания',
+    origin: 'Откуда',
+    destination: 'Куда',
+    status: 'Статус',
+    vehicle: 'Транспортное средство',
+    created: 'Создано',
+    actions: 'Действия',
+    edit: 'Редактировать',
+    delete: 'Удалить',
+    deleteConfirm: 'Вы уверены, что хотите удалить эту грузоперевозку?',
+    loadingShipments: 'Загрузка грузоперевозок...',
+    
+    // Shipment Form
+    editShipment: 'Редактировать грузоперевозку',
+    newShipmentTitle: 'Новый груз',
+    cancel: 'Отмена',
+    trackingNumberRequired: 'Номер отслеживания *',
+    statusRequired: 'Статус *',
+    originRequired: 'Откуда *',
+    destinationRequired: 'Куда *',
+    customerNameRequired: 'Имя клиента *',
+    selectVehicle: 'Выберите транспортное средство',
+    weight: 'Вес (кг)',
+    customerName: 'Имя клиента',
+    customerEmail: 'Email клиента',
+    customerPhone: 'Телефон клиента',
+    description: 'Описание',
+    additionalNotes: 'Дополнительные заметки или описание...',
+    saving: 'Сохранение...',
+    updateShipment: 'Обновить грузоперевозку',
+    createShipmentBtn: 'Создать грузоперевозку',
+    
+    // Users
+    users: 'Пользователи',
+    loadingUsers: 'Загрузка пользователей...',
+    role: 'Роль',
+    
+    // Vehicles
+    vehicles: 'Транспортные средства',
+    loadingVehicles: 'Загрузка транспортных средств...',
+    available: 'Доступно',
+    inUse: 'Используется',
+    maintenance: 'Техобслуживание',
+    
+    // Status
+    received: 'Получено',
+    inTransit: 'В пути',
+    delivered: 'Доставлено',
+    
+    // Common
+    nA: 'Н/Д',
+    error: 'Ошибка',
+    
+    // Search & Filters
+    searchPlaceholder: 'Поиск (номер отслеживания, откуда, куда...)',
+    filterByStatus: 'Фильтр по статусу',
+    allStatuses: 'Все статусы',
+    showing: 'Показано',
+    of: 'из',
+    noResultsFound: 'Результаты не найдены',
+    
+    // Charts
+    statusDistribution: 'Распределение по статусам',
+    monthlyShipments: 'Ежемесячные грузоперевозки',
+    recentShipments: 'Последние грузоперевозки',
+    viewAll: 'Посмотреть все',
+    noRecentShipments: 'Нет последних грузоперевозок',
+    jan: 'Янв',
+    feb: 'Фев',
+    mar: 'Мар',
+    apr: 'Апр',
+    may: 'Май',
+    jun: 'Июн',
+  },
+  
+  en: {
+    // Navbar
+    home: 'Home',
+    login: 'Login',
+    register: 'Register',
+    logout: 'Logout',
+    
+    // Home Page
+    heroTitle: 'Logistics Pro',
+    heroSubtitle: 'Professional Transport & Logistics Management System',
+    heroDescription: 'Streamline your logistics operations with our comprehensive shipment tracking and management platform. Manage shipments, track vehicles, and monitor deliveries all in one place.',
+    getStarted: 'Get Started',
+    keyFeatures: 'Key Features',
+    shipmentManagement: 'Shipment Management',
+    shipmentManagementDesc: 'Track and manage all your shipments from creation to delivery with real-time status updates.',
+    vehicleTracking: 'Vehicle Tracking',
+    vehicleTrackingDesc: 'Monitor your fleet vehicles and assign them to shipments for efficient logistics operations.',
+    dashboardAnalytics: 'Dashboard Analytics',
+    dashboardAnalyticsDesc: 'Get comprehensive insights with statistics and analytics on your logistics operations.',
+    statusTracking: 'Status Tracking',
+    statusTrackingDesc: 'Track shipment status through every stage: Received, In Transit, and Delivered.',
+    readyToStart: 'Ready to Get Started?',
+    joinToday: 'Join us today and streamline your logistics operations',
+    createAccount: 'Create Account',
+    
+    // Login
+    loginTitle: 'Logistics Pro',
+    loginSubtitle: 'Transport & Logistics Management',
+    username: 'Username',
+    password: 'Password',
+    enterUsername: 'Enter username',
+    enterPassword: 'Enter password',
+    loggingIn: 'Logging in...',
+    dontHaveAccount: 'Don\'t have an account?',
+    registerHere: 'Register here',
+    defaultCredentials: 'Default: admin / admin123',
+    
+    // Register
+    createAccountTitle: 'Create Account',
+    joinLogisticsPro: 'Join Logistics Pro today',
+    email: 'Email',
+    enterEmail: 'Enter email',
+    confirmPassword: 'Confirm Password',
+    enterConfirmPassword: 'Confirm password',
+    passwordMinLength: 'Password must be at least 6 characters long',
+    passwordsNotMatch: 'Passwords do not match',
+    creatingAccount: 'Creating Account...',
+    alreadyHaveAccount: 'Already have an account?',
+    loginHere: 'Login here',
+    
+    // Dashboard
+    dashboard: 'Dashboard',
+    newShipment: '+ New Shipment',
+    totalShipments: 'Total Shipments',
+    received: 'Received',
+    inTransit: 'In Transit',
+    delivered: 'Delivered',
+    manageShipments: 'Manage Shipments',
+    manageShipmentsDesc: 'View and manage all shipments',
+    manageUsers: 'Manage Users',
+    manageUsersDesc: 'Add and manage system users',
+    manageVehicles: 'Manage Vehicles',
+    manageVehiclesDesc: 'Track and manage fleet vehicles',
+    loadingDashboard: 'Loading dashboard...',
+    
+    // Shipments
+    shipments: 'Shipments',
+    noShipments: 'No shipments found. Create your first shipment!',
+    createShipment: 'Create Shipment',
+    id: 'ID',
+    trackingNumber: 'Tracking Number',
+    origin: 'Origin',
+    destination: 'Destination',
+    status: 'Status',
+    vehicle: 'Vehicle',
+    created: 'Created',
+    actions: 'Actions',
+    edit: 'Edit',
+    delete: 'Delete',
+    deleteConfirm: 'Are you sure you want to delete this shipment?',
+    loadingShipments: 'Loading shipments...',
+    
+    // Shipment Form
+    editShipment: 'Edit Shipment',
+    newShipmentTitle: 'New Shipment',
+    cancel: 'Cancel',
+    trackingNumberRequired: 'Tracking Number *',
+    statusRequired: 'Status *',
+    originRequired: 'Origin *',
+    destinationRequired: 'Destination *',
+    customerNameRequired: 'Customer Name *',
+    selectVehicle: 'Select Vehicle',
+    weight: 'Weight (kg)',
+    customerName: 'Customer Name',
+    customerEmail: 'Customer Email',
+    customerPhone: 'Customer Phone',
+    description: 'Description',
+    additionalNotes: 'Additional notes or description...',
+    saving: 'Saving...',
+    updateShipment: 'Update Shipment',
+    createShipmentBtn: 'Create Shipment',
+    
+    // Users
+    users: 'Users',
+    loadingUsers: 'Loading users...',
+    role: 'Role',
+    
+    // Vehicles
+    vehicles: 'Vehicles',
+    loadingVehicles: 'Loading vehicles...',
+    available: 'Available',
+    inUse: 'In Use',
+    maintenance: 'Maintenance',
+    
+    // Status
+    received: 'Received',
+    inTransit: 'In Transit',
+    delivered: 'Delivered',
+    
+    // Common
+    nA: 'N/A',
+    error: 'Error',
+    
+    // Search & Filters
+    searchPlaceholder: 'Search (tracking number, origin, destination...)',
+    filterByStatus: 'Filter by Status',
+    allStatuses: 'All Statuses',
+    showing: 'Showing',
+    of: 'of',
+    noResultsFound: 'No results found',
+    
+    // Charts
+    statusDistribution: 'Status Distribution',
+    monthlyShipments: 'Monthly Shipments',
+    recentShipments: 'Recent Shipments',
+    viewAll: 'View All',
+    noRecentShipments: 'No recent shipments',
+    jan: 'Jan',
+    feb: 'Feb',
+    mar: 'Mar',
+    apr: 'Apr',
+    may: 'May',
+    jun: 'Jun',
+  },
+};
+
+export const getTranslation = (lang, key) => {
+  return translations[lang]?.[key] || translations.en[key] || key;
+};
+
