@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useUser } from '../../contexts/UserContext';
 import { API_URL } from '../../config/api';
 import './Pricing.scss';
 
@@ -8,6 +9,8 @@ const Pricing = () => {
   const [pricing, setPricing] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const { user } = useUser();
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     fetchPricing();
@@ -16,10 +19,13 @@ const Pricing = () => {
   const fetchPricing = async () => {
     try {
       const token = localStorage.getItem('token');
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const response = await fetch(`${API_URL}/api/pricing`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers,
       });
 
       if (response.ok) {
@@ -58,49 +64,62 @@ const Pricing = () => {
   };
 
   if (loading) {
-    return <div className="loading">{t('loadingPricing')}</div>;
+    return <div className="pricing-page"><div className="loading">{t('loadingPricing')}</div></div>;
   }
 
   return (
-    <div className="pricing">
-      <div className="pricing-header">
-        <h1>{t('pricing')}</h1>
-        <Link to="/pricing/new" className="btn-primary">
-          {t('newPricing')}
-        </Link>
-      </div>
-
-      {pricing.length === 0 ? (
-        <div className="empty-state">
-          <p>{t('noPricing')}</p>
-          <Link to="/pricing/new" className="btn-primary">
-            {t('createPricing')}
-          </Link>
+    <div className="pricing-page">
+      <div className="pricing-container">
+        <div className="pricing-header">
+          <h1>{t('pricing')}</h1>
+          <p className="pricing-subtitle">{t('pricingSubtitle') || 'Professional logistics services at competitive prices'}</p>
+          {isAdmin && (
+            <Link to="/pricing/new" className="btn-primary">
+              {t('newPricing')}
+            </Link>
+          )}
         </div>
-      ) : (
-        <div className="pricing-table-container">
-          <table className="pricing-table">
-            <thead>
-              <tr>
-                <th>{t('id')}</th>
-                <th>{t('route')}</th>
-                <th>{t('distance')}</th>
-                <th>{t('pricePerKm')}</th>
-                <th>{t('totalPrice')}</th>
-                <th>{t('vehicleType')}</th>
-                <th>{t('actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pricing.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.route}</td>
-                  <td>{item.distance} km</td>
-                  <td>{item.pricePerKm} {t('currency')}</td>
-                  <td className="total-price">{item.totalPrice} {t('currency')}</td>
-                  <td>{item.vehicleType}</td>
-                  <td className="actions">
+
+        {pricing.length === 0 ? (
+          <div className="empty-state">
+            <p>{t('noPricing')}</p>
+            {isAdmin && (
+              <Link to="/pricing/new" className="btn-primary">
+                {t('createPricing')}
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="pricing-grid">
+            {pricing.map((item) => (
+              <div key={item.id} className="pricing-card">
+                <div className="pricing-card-header">
+                  <h3>{item.route}</h3>
+                  <div className="vehicle-type-badge">{item.vehicleType}</div>
+                </div>
+                <div className="pricing-card-body">
+                  <div className="pricing-info">
+                    <div className="info-item">
+                      <span className="info-label">{t('distance')}:</span>
+                      <span className="info-value">{item.distance} km</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">{t('pricePerKm')}:</span>
+                      <span className="info-value">{item.pricePerKm} {t('currency')}</span>
+                    </div>
+                    {item.description && (
+                      <div className="info-item description">
+                        <p>{item.description}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="pricing-total">
+                    <span className="total-label">{t('totalPrice')}:</span>
+                    <span className="total-value">{item.totalPrice.toLocaleString()} {t('currency')}</span>
+                  </div>
+                </div>
+                {isAdmin && (
+                  <div className="pricing-card-actions">
                     <Link to={`/pricing/edit/${item.id}`} className="btn-edit">
                       {t('edit')}
                     </Link>
@@ -110,16 +129,15 @@ const Pricing = () => {
                     >
                       {t('delete')}
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 export default Pricing;
-

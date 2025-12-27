@@ -48,8 +48,12 @@ const Login = ({ onLogin }) => {
         return;
       }
 
-      onLogin(data.token);
-      navigate('/dashboard');
+      onLogin(data.token, data.user);
+      // Navigate will be handled by App.jsx based on role
+      const defaultRoute = data.user?.role === 'admin' || data.user?.role === 'operator' 
+        ? '/dashboard' 
+        : '/profile';
+      navigate(defaultRoute);
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message || t('error'));

@@ -63,50 +63,6 @@ const Navbar = () => {
               <span className="logo-line2">Pro</span>
             </div>
           </Link>
-          <div className="navbar-links">
-            <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">🏠</span>
-              <span className="nav-text">{t('home')}</span>
-            </Link>
-            <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📦</span>
-              <span className="nav-text">{t('services')}</span>
-            </Link>
-            <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">💰</span>
-              <span className="nav-text">{t('pricing')}</span>
-            </Link>
-            <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">ℹ️</span>
-              <span className="nav-text">{t('about')}</span>
-            </Link>
-            <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📞</span>
-              <span className="nav-text">{t('contact')}</span>
-            </Link>
-            <Link to="/news" className={location.pathname === '/news' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📰</span>
-              <span className="nav-text">{t('news')}</span>
-            </Link>
-          </div>
-          <div className="navbar-actions">
-            <LanguageSwitcher />
-            {!isAuthenticated && (
-              <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>
-                {t('login')}
-              </Link>
-            )}
-            {isAuthenticated && (
-              <>
-                <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
-                  {t('dashboard')}
-                </Link>
-                <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={closeMenu}>
-                  {t('profile')}
-                </Link>
-              </>
-            )}
-          </div>
           <button className="navbar-toggle" onClick={toggleMenu} aria-label="Toggle menu">
             <span className={`hamburger ${menuOpen ? 'open' : ''}`}>
               <span></span>
@@ -115,7 +71,7 @@ const Navbar = () => {
             </span>
           </button>
           <div className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
-            <div className="navbar-links-mobile">
+            <div className="navbar-links">
               <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
                 <span className="nav-icon">🏠</span>
                 <span className="nav-text">{t('home')}</span>
@@ -141,7 +97,7 @@ const Navbar = () => {
                 <span className="nav-text">{t('news')}</span>
               </Link>
             </div>
-            <div className="navbar-actions-mobile">
+            <div className="navbar-actions">
               <LanguageSwitcher />
               {!isAuthenticated && (
                 <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>

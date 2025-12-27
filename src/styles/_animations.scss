@@ -23,6 +23,17 @@
   }
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -116,6 +127,10 @@
 
 @mixin fade-in-up($duration: 0.4s, $delay: 0s) {
   animation: fadeInUp $duration cubic-bezier(0.16, 1, 0.3, 1) $delay;
+}
+
+@mixin fade-in-down($duration: 0.4s, $delay: 0s) {
+  animation: fadeInDown $duration cubic-bezier(0.16, 1, 0.3, 1) $delay;
 }
 
 @mixin slide-in-right($duration: 0.4s, $delay: 0s) {
@@ -214,6 +229,7 @@
     height: 300px;
   }
 }
+
 
 
 

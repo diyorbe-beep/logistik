@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useUser } from '../../contexts/UserContext';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import './Layout.scss';
 
 const Layout = ({ children, onLogout }) => {
   const location = useLocation();
   const { t } = useTranslation();
+  const { user } = useUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isActive = (path) => {
@@ -21,6 +23,68 @@ const Layout = ({ children, onLogout }) => {
     setSidebarOpen(false);
   };
 
+  // Get menu items based on user role
+  const getMenuItems = () => {
+    const role = user?.role || '';
+    const items = [];
+
+    // Dashboard - Only for operator and admin
+    if (role === 'admin' || role === 'operator') {
+      items.push({
+        path: '/dashboard',
+        icon: '📊',
+        text: t('dashboard'),
+      });
+    }
+
+    // Shipments - Only for operator and admin
+    if (role === 'admin' || role === 'operator') {
+      items.push({
+        path: '/shipments',
+        icon: '📦',
+        text: t('shipments'),
+      });
+    }
+
+    // Users - Only for admin
+    if (role === 'admin') {
+      items.push({
+        path: '/users',
+        icon: '👥',
+        text: t('users'),
+      });
+    }
+
+    // Vehicles - Only for admin
+    if (role === 'admin') {
+      items.push({
+        path: '/vehicles',
+        icon: '🚚',
+        text: t('vehicles'),
+      });
+    }
+
+    // Carriers - Only for operator and admin
+    if (role === 'admin' || role === 'operator') {
+      items.push({
+        path: '/carriers',
+        icon: '🚛',
+        text: t('carriers'),
+      });
+    }
+
+    // Profile - All authenticated users
+    items.push({
+      path: '/profile',
+      icon: '👤',
+      text: t('profile'),
+    });
+
+    return items;
+  };
+
+  const menuItems = getMenuItems();
+
   return (
     <div className="layout">
       <button className="mobile-menu-toggle" onClick={toggleSidebar}>
@@ -33,48 +97,18 @@ const Layout = ({ children, onLogout }) => {
           <button className="sidebar-close" onClick={closeSidebar}>×</button>
         </div>
         <ul className="sidebar-menu">
-          <li>
-            <Link to="/dashboard" className={isActive('/dashboard') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">📊</span>
-              <span className="text">{t('dashboard')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/shipments" className={isActive('/shipments') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">📦</span>
-              <span className="text">{t('shipments')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/users" className={isActive('/users') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">👥</span>
-              <span className="text">{t('users')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/vehicles" className={isActive('/vehicles') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">🚚</span>
-              <span className="text">{t('vehicles')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/pricing" className={isActive('/pricing') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">💰</span>
-              <span className="text">{t('pricing')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/carriers" className={isActive('/carriers') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">🚛</span>
-              <span className="text">{t('carriers')}</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/profile" className={isActive('/profile') ? 'active' : ''} onClick={closeSidebar}>
-              <span className="icon">👤</span>
-              <span className="text">{t('profile')}</span>
-            </Link>
-          </li>
+          {menuItems.map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={isActive(item.path) ? 'active' : ''}
+                onClick={closeSidebar}
+              >
+                <span className="icon">{item.icon}</span>
+                <span className="text">{item.text}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
         <div className="sidebar-footer">
           <div className="language-switcher-sidebar">
@@ -87,7 +121,9 @@ const Layout = ({ children, onLogout }) => {
         </div>
       </nav>
       <main className="main-content">
-        {children}
+        <div className="content-container">
+          {children}
+        </div>
       </main>
     </div>
   );

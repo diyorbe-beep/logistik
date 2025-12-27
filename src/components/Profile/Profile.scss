@@ -4,86 +4,220 @@
 .profile-page {
   .profile-header {
     margin-bottom: $spacing-2xl;
+    text-align: center;
 
     h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: $text-primary;
+      margin-bottom: $spacing-md;
+      @include fade-in-down(0.5s);
+
+      @include responsive(sm) {
+        font-size: 2rem;
+      }
     }
-  }
-}
 
-.profile-content {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: $spacing-xl;
-
-  @include responsive(md) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.profile-card {
-  @include card;
-  text-align: center;
-  @include fade-in-up(0.5s);
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
-    @include flex-center;
-    margin: 0 auto $spacing-lg;
-
-    .avatar-icon {
-      font-size: 4rem;
+    .profile-subtitle {
+      font-size: 1.1rem;
+      color: $text-secondary;
+      @include fade-in-up(0.5s);
     }
   }
 
-  h2 {
-    font-size: 1.5rem;
-    color: $text-primary;
-    margin-bottom: $spacing-sm;
+  .profile-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: $spacing-xl;
+
+    @include responsive(md) {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .user-role {
-    color: $text-secondary;
-    text-transform: capitalize;
-    font-weight: 500;
-  }
-}
+  .profile-card {
+    @include card;
+    text-align: center;
+    @include fade-in-up(0.5s);
+    height: fit-content;
 
-.profile-form-card {
-  @include card;
-  @include scale-in(0.5s);
-  animation-delay: 0.2s;
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      @include flex-center;
+      margin: 0 auto $spacing-lg;
+      box-shadow: $shadow-lg;
 
-  h3 {
-    font-size: 1.5rem;
-    color: $text-primary;
-    margin-bottom: $spacing-xl;
-  }
-}
+      .avatar-icon {
+        font-size: 4rem;
+      }
+    }
 
-.profile-form {
-  .form-group {
-    margin-bottom: $spacing-lg;
-
-    label {
-      display: block;
+    h2 {
+      font-size: 1.5rem;
+      color: $text-primary;
       margin-bottom: $spacing-sm;
-      color: $text-primary;
-      font-weight: 500;
     }
 
-    input {
-      @include input;
+    .user-role {
+      color: $text-secondary;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: $spacing-xs;
+    }
 
-      &.disabled-input {
-        background: $bg-secondary;
-        cursor: not-allowed;
+    .user-email,
+    .user-phone {
+      color: $text-secondary;
+      font-size: 0.95rem;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  .profile-form-card {
+    @include card;
+    @include scale-in(0.5s);
+    animation-delay: 0.2s;
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+      margin-bottom: $spacing-xl;
+    }
+  }
+
+  .profile-form {
+    .form-group {
+      margin-bottom: $spacing-lg;
+
+      label {
+        display: block;
+        margin-bottom: $spacing-sm;
+        color: $text-primary;
+        font-weight: 500;
+      }
+
+      input {
+        @include input;
+
+        &.disabled-input {
+          background: $bg-secondary;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  .profile-section {
+    @include card;
+    margin-top: $spacing-xl;
+    @include fade-in-up(0.5s);
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+      margin-bottom: $spacing-lg;
+      padding-bottom: $spacing-md;
+      border-bottom: 2px solid $border-color;
+    }
+
+    .no-data {
+      text-align: center;
+      color: $text-secondary;
+      padding: $spacing-xl;
+      font-size: 1.1rem;
+    }
+
+    .shipments-list {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+    }
+
+    .shipment-item {
+      @include card;
+      padding: $spacing-lg;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      @include smooth-transition(all, 0.3s);
+      @include fade-in-up(0.3s);
+      animation-delay: calc(var(--index, 0) * 0.05s);
+      border: 1px solid $border-color;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+        border-color: $primary;
+      }
+
+      @include responsive(sm) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $spacing-md;
+      }
+
+      .shipment-info {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-xs;
+        flex: 1;
+
+        .tracking-number {
+          font-weight: 600;
+          color: $primary;
+          font-size: 1.1rem;
+        }
+
+        .route {
+          color: $text-primary;
+          font-size: 1rem;
+        }
+
+        .weight {
+          color: $text-secondary;
+          font-size: 0.9rem;
+        }
+
+        .carrier-info {
+          color: $text-secondary;
+          font-size: 0.9rem;
+          font-style: italic;
+        }
+
+        .status-badge {
+          display: inline-block;
+          padding: $spacing-xs $spacing-md;
+          border-radius: $radius-full;
+          font-size: 0.875rem;
+          font-weight: 500;
+          width: fit-content;
+          margin-top: $spacing-xs;
+
+          &.status-received {
+            background: rgba(6, 182, 212, 0.1);
+            color: #06b6d4;
+          }
+
+          &.status-in-transit {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+          }
+
+          &.status-delivered {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+          }
+        }
+      }
+
+      .btn-primary {
+        @include responsive(sm) {
+          width: 100%;
+        }
       }
     }
   }
 }
-

@@ -17,11 +17,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: $spacing-sm $spacing-lg;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include flex-between;
   position: relative;
-  gap: $spacing-md;
 
   @include responsive(md) {
     padding: $spacing-sm $spacing-md;
@@ -36,7 +33,6 @@
   z-index: 1001;
   @include smooth-transition(all, 0.2s);
   gap: $spacing-xs;
-  flex-shrink: 0;
 
   .logo-icon-wrapper {
     width: 36px;
@@ -90,102 +86,6 @@
   }
 }
 
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  flex: 1;
-  justify-content: center;
-
-  @include responsive(md) {
-    display: none;
-  }
-
-  a {
-    text-decoration: none;
-    color: $text-secondary;
-    font-weight: 500;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $radius-md;
-    position: relative;
-    @include smooth-transition(all, 0.2s);
-    white-space: nowrap;
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-
-    .nav-icon {
-      font-size: 1rem;
-    }
-
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-  }
-}
-
-.navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  flex-shrink: 0;
-
-  @include responsive(md) {
-    display: none;
-  }
-
-  .language-switcher {
-    // Language switcher styles
-  }
-
-  a {
-    text-decoration: none;
-    color: $text-primary;
-    font-weight: 500;
-    padding: $spacing-xs $spacing-md;
-    border-radius: $radius-md;
-    @include smooth-transition(all, 0.2s);
-    white-space: nowrap;
-    font-size: 0.875rem;
-
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-
-    &.btn-primary {
-      @include button-primary;
-      padding: $spacing-xs $spacing-lg;
-      font-weight: 600;
-      background: $primary;
-      border: none;
-      color: $text-white;
-
-      &:hover {
-        background: $primary-dark;
-      }
-
-      &.active {
-        background: $primary-dark;
-      }
-    }
-  }
-}
-
 .navbar-toggle {
   display: none;
   background: none;
@@ -196,7 +96,6 @@
   width: 28px;
   height: 28px;
   position: relative;
-  flex-shrink: 0;
 
   @include responsive(md) {
     display: block;
@@ -243,10 +142,13 @@
 }
 
 .navbar-menu {
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  justify-content: space-between;
+  flex: 1;
 
   @include responsive(md) {
-    display: block;
     position: fixed;
     top: 0;
     right: 0;
@@ -262,6 +164,8 @@
     transition: transform 0.3s ease;
     overflow-y: auto;
     z-index: 1000;
+    gap: 0;
+    justify-content: flex-start;
 
     &.open {
       transform: translateX(0);
@@ -274,29 +178,42 @@
   }
 }
 
-.navbar-links-mobile {
+.navbar-links {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 0;
-  margin-bottom: $spacing-md;
+  align-items: center;
+  gap: $spacing-sm;
+
+  @include responsive(md) {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    margin-bottom: $spacing-md;
+  }
 
   a {
     text-decoration: none;
     color: $text-secondary;
     font-weight: 500;
-    padding: $spacing-sm $spacing-md;
+    padding: $spacing-xs $spacing-sm;
     border-radius: $radius-md;
+    position: relative;
     @include smooth-transition(all, 0.2s);
+    white-space: nowrap;
     font-size: 0.875rem;
     display: flex;
     align-items: center;
     gap: $spacing-xs;
-    margin-bottom: $spacing-xs;
-    justify-content: flex-start;
 
     .nav-icon {
       font-size: 1rem;
+    }
+
+    @include responsive(md) {
+      width: 100%;
+      text-align: left;
+      padding: $spacing-sm $spacing-md;
+      margin-bottom: $spacing-xs;
+      justify-content: flex-start;
     }
 
     &:hover {
@@ -312,20 +229,27 @@
   }
 }
 
-.navbar-actions-mobile {
+.navbar-actions {
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  align-items: center;
   gap: $spacing-sm;
-  margin-top: $spacing-md;
-  padding-top: $spacing-md;
-  border-top: 1px solid $border-color;
+
+  @include responsive(md) {
+    flex-direction: column;
+    width: 100%;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+    padding-top: $spacing-md;
+    border-top: 1px solid $border-color;
+  }
 
   .language-switcher {
-    width: 100%;
-
-    .language-select {
+    @include responsive(md) {
       width: 100%;
+
+      .language-select {
+        width: 100%;
+      }
     }
   }
 
@@ -333,12 +257,18 @@
     text-decoration: none;
     color: $text-primary;
     font-weight: 500;
-    padding: $spacing-sm $spacing-md;
+    padding: $spacing-xs $spacing-md;
     border-radius: $radius-md;
     @include smooth-transition(all, 0.2s);
+    white-space: nowrap;
     font-size: 0.875rem;
-    text-align: center;
-    margin-bottom: $spacing-xs;
+
+    @include responsive(md) {
+      width: 100%;
+      text-align: center;
+      padding: $spacing-sm $spacing-md;
+      margin-bottom: $spacing-xs;
+    }
 
     &:hover {
       color: $primary;
@@ -353,11 +283,19 @@
 
     &.btn-primary {
       @include button-primary;
+      padding: $spacing-xs $spacing-lg;
       font-weight: 600;
+      margin-left: 0;
       background: $primary;
       border: none;
       color: $text-white;
-      width: 100%;
+
+      @include responsive(md) {
+        width: 100%;
+        padding: $spacing-sm $spacing-md;
+        margin-top: 0;
+        margin-left: 0;
+      }
 
       &:hover {
         background: $primary-dark;

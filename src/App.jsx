@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useUser } from './contexts/UserContext';
 import Navbar from './components/Navbar/Navbar';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
@@ -21,25 +22,67 @@ import Carriers from './components/Carriers/Carriers';
 import Layout from './components/Layout/Layout';
 import './App.scss';
 
+// Role-based route wrapper
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+  const { user, loading } = useUser();
+  const token = localStorage.getItem('token');
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    // Redirect based on role
+    if (user.role === 'customer') {
+      return <Navigate to="/profile" replace />;
+    } else if (user.role === 'carrier') {
+      return <Navigate to="/profile" replace />;
+    } else {
+      return <Navigate to="/dashboard" replace />;
+    }
+  }
+
+  return children;
+};
+
+// Redirect after login based on role
+const getDefaultRoute = (role) => {
+  switch (role) {
+    case 'admin':
+    case 'operator':
+      return '/dashboard';
+    case 'carrier':
+    case 'customer':
+      return '/profile';
+    default:
+      return '/';
+  }
+};
+
 function App() {
+  const { user, loading, logout, refetchUser } = useUser();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
+    setIsAuthenticated(!!token);
+    if (token && !user) {
+      refetchUser();
     }
-    setLoading(false);
-  }, []);
+  }, [user, refetchUser]);
 
-  const handleLogin = (token) => {
+  const handleLogin = async (token, userData) => {
     localStorage.setItem('token', token);
     setIsAuthenticated(true);
+    await refetchUser();
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout();
     setIsAuthenticated(false);
   };
 
@@ -52,31 +95,17 @@ function App() {
       <Navbar />
       <Routes>
         {/* Public Routes */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
-        <Route
-          path="/services"
-          element={<Services />}
-        />
-        <Route
-          path="/about"
-          element={<About />}
-        />
-        <Route
-          path="/contact"
-          element={<Contact />}
-        />
-        <Route
-          path="/news"
-          element={<News />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/news" element={<News />} />
         <Route
           path="/login"
           element={
             isAuthenticated ? (
-              <Navigate to="/dashboard" replace />
+              <Navigate to={getDefaultRoute(user?.role)} replace />
             ) : (
               <Login onLogin={handleLogin} />
             )
@@ -86,168 +115,144 @@ function App() {
           path="/register"
           element={
             isAuthenticated ? (
-              <Navigate to="/dashboard" replace />
+              <Navigate to={getDefaultRoute(user?.role)} replace />
             ) : (
               <Register />
             )
           }
         />
         
-        {/* Protected Routes */}
+        {/* Protected Routes - Dashboard (Operator & Admin only) */}
         <Route
           path="/dashboard"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin', 'operator']}>
               <Layout onLogout={handleLogout}>
                 <Dashboard />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
+
+        {/* Protected Routes - Shipments (Operator & Admin only) */}
         <Route
           path="/shipments"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin', 'operator']}>
               <Layout onLogout={handleLogout}>
                 <Shipments />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
         <Route
           path="/shipments/new"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin', 'operator']}>
               <Layout onLogout={handleLogout}>
                 <ShipmentForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
         <Route
           path="/shipments/edit/:id"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin', 'operator']}>
               <Layout onLogout={handleLogout}>
                 <ShipmentForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
+
+        {/* Protected Routes - Users (Admin only) */}
         <Route
           path="/users"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <Users />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
+
+        {/* Protected Routes - Vehicles (Admin only) */}
         <Route
           path="/vehicles"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <Vehicles />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
         <Route
           path="/vehicles/new"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <VehicleForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
         <Route
           path="/vehicles/edit/:id"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <VehicleForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
+
+        {/* Protected Routes - Carriers (Admin & Operator only) */}
         <Route
           path="/carriers"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin', 'operator']}>
               <Layout onLogout={handleLogout}>
                 <Carriers />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
-        <Route
-          path="/pricing"
-          element={
-            isAuthenticated ? (
-              <Layout onLogout={handleLogout}>
-                <Pricing />
-              </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+
+        {/* Protected Routes - Pricing Management (Admin only) */}
         <Route
           path="/pricing/new"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <PricingForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
         <Route
           path="/pricing/edit/:id"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <PricingForm />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
+
+        {/* Protected Routes - Profile (All authenticated users) */}
         <Route
           path="/profile"
           element={
-            isAuthenticated ? (
+            <ProtectedRoute>
               <Layout onLogout={handleLogout}>
                 <Profile />
               </Layout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            </ProtectedRoute>
           }
         />
       </Routes>
