@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './DeliveryCompletionModal.scss';
 
 const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete }) => {
@@ -133,7 +134,7 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
             <div className="modal-header">
               <h2>{t('completeDelivery')}</h2>
               <button className="close-btn" onClick={handleClose} disabled={loading}>
-                ×
+                <Icons.Close size={20} />
               </button>
             </div>
 
@@ -223,7 +224,8 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
                   />
                   {formData.deliveryPhoto && (
                     <div className="file-preview">
-                      <span>📷 {formData.deliveryPhoto.name}</span>
+                      <Icons.FileText size={16} />
+                      <span>{formData.deliveryPhoto.name}</span>
                     </div>
                   )}
                 </div>
@@ -249,7 +251,7 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
                       </>
                     ) : (
                       <>
-                        <span>✅</span>
+                        <Icons.CheckCircle size={18} />
                         {t('completeDelivery')}
                       </>
                     )}

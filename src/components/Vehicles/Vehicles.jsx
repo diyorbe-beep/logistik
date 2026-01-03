@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './Vehicles.scss';
 
 const Vehicles = () => {
@@ -62,7 +63,9 @@ const Vehicles = () => {
       <div className="vehicles-grid">
         {vehicles.map((vehicle) => (
           <div key={vehicle.id} className="vehicle-card">
-            <div className="vehicle-icon">🚚</div>
+            <div className="vehicle-icon">
+              <Icons.Truck size={48} color="#2563eb" />
+            </div>
             <h3>{vehicle.name}</h3>
             <p className="vehicle-type">{vehicle.type}</p>
             <span className={`status-badge ${vehicle.status.toLowerCase().replace(' ', '-')}`}>

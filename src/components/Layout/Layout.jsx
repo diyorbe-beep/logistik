@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
+import { Icons } from '../Icons/Icons';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import './Layout.scss';
 
@@ -32,7 +33,7 @@ const Layout = ({ children, onLogout }) => {
     if (role === 'admin' || role === 'operator') {
       items.push({
         path: '/dashboard',
-        icon: '📊',
+        icon: <Icons.BarChart size={20} />,
         text: t('dashboard'),
       });
     }
@@ -41,7 +42,7 @@ const Layout = ({ children, onLogout }) => {
     if (role === 'admin' || role === 'operator') {
       items.push({
         path: '/shipments',
-        icon: '📦',
+        icon: <Icons.Package size={20} />,
         text: t('shipments'),
       });
     }
@@ -50,7 +51,7 @@ const Layout = ({ children, onLogout }) => {
     if (role === 'admin') {
       items.push({
         path: '/users',
-        icon: '👥',
+        icon: <Icons.Users size={20} />,
         text: t('users'),
       });
     }
@@ -59,7 +60,7 @@ const Layout = ({ children, onLogout }) => {
     if (role === 'admin') {
       items.push({
         path: '/vehicles',
-        icon: '🚚',
+        icon: <Icons.Truck size={20} />,
         text: t('vehicles'),
       });
     }
@@ -68,7 +69,7 @@ const Layout = ({ children, onLogout }) => {
     if (role === 'admin' || role === 'operator') {
       items.push({
         path: '/carriers',
-        icon: '🚛',
+        icon: <Icons.Users size={20} />,
         text: t('carriers'),
       });
     }
@@ -76,7 +77,7 @@ const Layout = ({ children, onLogout }) => {
     // Profile - All authenticated users
     items.push({
       path: '/profile',
-      icon: '👤',
+      icon: <Icons.User size={20} />,
       text: t('profile'),
     });
 
@@ -88,7 +89,7 @@ const Layout = ({ children, onLogout }) => {
   return (
     <div className="layout">
       <button className="mobile-menu-toggle" onClick={toggleSidebar}>
-        <span className="hamburger-icon">☰</span>
+        <Icons.Menu size={24} />
       </button>
       
       {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
@@ -96,11 +97,11 @@ const Layout = ({ children, onLogout }) => {
       <nav className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <span className="logo-icon">🚛</span>
+            <Icons.Truck size={28} color="#2563eb" />
             <h2>Logistics Pro</h2>
           </div>
           <button className="sidebar-close" onClick={closeSidebar}>
-            <span>✖️</span>
+            <Icons.Close size={20} />
           </button>
         </div>
         
@@ -135,7 +136,7 @@ const Layout = ({ children, onLogout }) => {
             <LanguageSwitcher />
           </div>
           <button onClick={onLogout} className="logout-btn">
-            <span className="logout-icon">🚪</span>
+            <Icons.LogOut size={18} />
             <span className="logout-text">{t('logout')}</span>
           </button>
         </div>

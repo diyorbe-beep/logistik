@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './News.scss';
 
 const News = () => {
@@ -62,7 +63,9 @@ const News = () => {
 
         {news.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">📰</div>
+            <div className="empty-icon">
+              <Icons.FileText size={64} color="#6b7280" />
+            </div>
             <h3>{t('noNews')}</h3>
             <p>{t('noNewsDesc') || 'Hozircha yangiliklar mavjud emas'}</p>
           </div>
@@ -76,7 +79,7 @@ const News = () => {
                       <img src={item.image} alt={item.title} />
                     ) : (
                       <div className="news-placeholder">
-                        <span className="placeholder-icon">📰</span>
+                        <Icons.FileText size={32} color="#6b7280" />
                       </div>
                     )}
                   </div>
@@ -87,12 +90,12 @@ const News = () => {
                 <div className="news-content">
                   <div className="news-meta">
                     <span className="news-date">
-                      <span className="date-icon">📅</span>
+                      <Icons.Calendar size={16} color="#6b7280" />
                       {formatDate(item.createdAt || item.date)}
                     </span>
                     {item.author && (
                       <span className="news-author">
-                        <span className="author-icon">✍️</span>
+                        <Icons.User size={16} color="#6b7280" />
                         {item.author}
                       </span>
                     )}
@@ -101,7 +104,7 @@ const News = () => {
                   <p className="news-summary">{item.summary || item.content?.substring(0, 150) + '...'}</p>
                   <Link to={`/news/${item.id}`} className="read-more">
                     <span>{t('readMore')}</span>
-                    <span className="arrow">→</span>
+                    <Icons.ArrowRight size={16} />
                   </Link>
                 </div>
               </article>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import DeliveryCompletionModal from '../DeliveryCompletion/DeliveryCompletionModal';
 import './Profile.scss';
 
@@ -346,13 +347,15 @@ const Profile = () => {
                         onClick={() => handleCompleteDelivery(shipment)}
                         className="btn-success"
                       >
-                        ✅ {t('completeDelivery')}
+                        <Icons.CheckCircle size={16} />
+                        {t('completeDelivery')}
                       </button>
                     )}
                     {shipment.status === 'Delivered' && shipment.deliveryCode && (
                       <div className="delivery-info">
                         <span className="delivery-code">
-                          🔑 {t('deliveryCode')}: {shipment.deliveryCode}
+                          <Icons.Lock size={16} />
+                          {t('deliveryCode')}: {shipment.deliveryCode}
                         </span>
                       </div>
                     )}
@@ -513,7 +516,10 @@ const Profile = () => {
         <div className="profile-card">
           <div className="profile-avatar">
             <span className="avatar-icon">
-              {role === 'admin' ? '👑' : role === 'operator' ? '⚙️' : role === 'carrier' ? '🚛' : '👤'}
+              {role === 'admin' ? <Icons.Settings size={32} color="#f59e0b" /> : 
+               role === 'operator' ? <Icons.Settings size={32} color="#6b7280" /> : 
+               role === 'carrier' ? <Icons.Truck size={32} color="#2563eb" /> : 
+               <Icons.User size={32} color="#6b7280" />}
             </span>
           </div>
           <h2>{user?.username || t('user')}</h2>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { Icons } from '../Icons/Icons';
 import './Contact.scss';
 
 const Contact = () => {
@@ -52,19 +53,25 @@ const Contact = () => {
       <div className="contact-content">
         <div className="contact-info">
           <div className="info-card">
-            <div className="info-icon">📞</div>
+            <div className="info-icon">
+              <Icons.Phone size={32} color="#2563eb" />
+            </div>
             <h3>{t('phone')}</h3>
             <p>+998 90 123 45 67</p>
             <p>+998 71 234 56 78</p>
           </div>
           <div className="info-card">
-            <div className="info-icon">✉️</div>
+            <div className="info-icon">
+              <Icons.Mail size={32} color="#2563eb" />
+            </div>
             <h3>{t('email')}</h3>
             <p>info@logisticspro.uz</p>
             <p>support@logisticspro.uz</p>
           </div>
           <div className="info-card">
-            <div className="info-icon">📍</div>
+            <div className="info-icon">
+              <Icons.MapPin size={32} color="#2563eb" />
+            </div>
             <h3>{t('address')}</h3>
             <p>{t('addressText')}</p>
           </div>

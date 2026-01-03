@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { Icons } from '../Icons/Icons';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import './Navbar.scss';
 
@@ -65,27 +66,27 @@ const Navbar = () => {
           </Link>
           <div className="navbar-links">
             <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">🏠</span>
+              <span className="nav-icon"><Icons.Home size={18} /></span>
               <span className="nav-text">{t('home')}</span>
             </Link>
             <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📦</span>
+              <span className="nav-icon"><Icons.Package size={18} /></span>
               <span className="nav-text">{t('services')}</span>
             </Link>
             <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">💰</span>
+              <span className="nav-icon"><Icons.DollarSign size={18} /></span>
               <span className="nav-text">{t('pricing')}</span>
             </Link>
             <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">ℹ️</span>
+              <span className="nav-icon"><Icons.Info size={18} /></span>
               <span className="nav-text">{t('about')}</span>
             </Link>
             <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📞</span>
+              <span className="nav-icon"><Icons.Phone size={18} /></span>
               <span className="nav-text">{t('contact')}</span>
             </Link>
             <Link to="/news" className={location.pathname === '/news' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon">📰</span>
+              <span className="nav-icon"><Icons.FileText size={18} /></span>
               <span className="nav-text">{t('news')}</span>
             </Link>
           </div>
@@ -117,27 +118,27 @@ const Navbar = () => {
           <div className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
             <div className="navbar-links-mobile">
               <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">🏠</span>
+                <span className="nav-icon"><Icons.Home size={18} /></span>
                 <span className="nav-text">{t('home')}</span>
               </Link>
               <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">📦</span>
+                <span className="nav-icon"><Icons.Package size={18} /></span>
                 <span className="nav-text">{t('services')}</span>
               </Link>
               <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">💰</span>
+                <span className="nav-icon"><Icons.DollarSign size={18} /></span>
                 <span className="nav-text">{t('pricing')}</span>
               </Link>
               <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">ℹ️</span>
+                <span className="nav-icon"><Icons.Info size={18} /></span>
                 <span className="nav-text">{t('about')}</span>
               </Link>
               <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">📞</span>
+                <span className="nav-icon"><Icons.Phone size={18} /></span>
                 <span className="nav-text">{t('contact')}</span>
               </Link>
               <Link to="/news" className={location.pathname === '/news' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon">📰</span>
+                <span className="nav-icon"><Icons.FileText size={18} /></span>
                 <span className="nav-text">{t('news')}</span>
               </Link>
             </div>

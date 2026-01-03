@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import './Dashboard.scss';
 
@@ -92,7 +93,7 @@ const Dashboard = () => {
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon total">📦</div>
+          <div className="stat-icon total"><Icons.Package size={32} color="#2563eb" /></div>
           <div className="stat-content">
             <h3>{t('totalShipments')}</h3>
             <p className="stat-value">{stats.total}</p>
@@ -100,7 +101,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon received">📥</div>
+          <div className="stat-icon received"><Icons.CheckCircle size={32} color="#06b6d4" /></div>
           <div className="stat-content">
             <h3>{t('received')}</h3>
             <p className="stat-value">{stats.received}</p>
@@ -108,7 +109,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon in-transit">🚚</div>
+          <div className="stat-icon in-transit"><Icons.Truck size={32} color="#f59e0b" /></div>
           <div className="stat-content">
             <h3>{t('inTransit')}</h3>
             <p className="stat-value">{stats.inTransit}</p>
@@ -116,7 +117,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon delivered">✅</div>
+          <div className="stat-icon delivered"><Icons.CheckCircle size={32} color="#10b981" /></div>
           <div className="stat-content">
             <h3>{t('delivered')}</h3>
             <p className="stat-value">{stats.delivered}</p>

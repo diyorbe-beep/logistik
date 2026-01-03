@@ -2,14 +2,18 @@
 @import '../../styles/mixins';
 
 .home {
-  // Hero Section
+  // Hero Section - Professional Full Background
   .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 6rem 0 4rem;
+    padding: 8rem 0 6rem;
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
     
+    // Multiple background layers for depth and professional look
     &::before {
       content: '';
       position: absolute;
@@ -17,13 +21,30 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-      opacity: 0.3;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%);
+      z-index: 1;
+    }
+    
+    // Animated geometric pattern overlay
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      animation: backgroundFloat 20s ease-in-out infinite;
+      z-index: 1;
     }
     
     .container {
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
     
     .hero-content {
@@ -41,91 +62,145 @@
     
     .hero-text {
       .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
+        font-size: 4rem;
+        font-weight: 900;
         line-height: 1.1;
         margin-bottom: 1.5rem;
+        position: relative;
         
         @include responsive(lg) {
-          font-size: 3rem;
+          font-size: 3.5rem;
         }
         
         @include responsive(md) {
+          font-size: 3rem;
+        }
+        
+        @include responsive(sm) {
           font-size: 2.5rem;
         }
         
         .gradient-text {
-          background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+          background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #e0f2fe 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          position: relative;
+          
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
+            border-radius: 2px;
+            animation: underlineGlow 2s ease-in-out infinite alternate;
+            
+            @include responsive(lg) {
+              left: 50%;
+              transform: translateX(-50%);
+            }
+          }
         }
       }
       
       .hero-subtitle {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         font-weight: 600;
-        margin-bottom: 1rem;
-        opacity: 0.9;
+        margin-bottom: 1.5rem;
+        opacity: 0.95;
+        color: #e0f2fe;
         
         @include responsive(md) {
+          font-size: 1.5rem;
+        }
+        
+        @include responsive(sm) {
           font-size: 1.25rem;
         }
       }
       
       .hero-description {
-        font-size: 1.125rem;
-        line-height: 1.7;
-        margin-bottom: 2.5rem;
-        opacity: 0.8;
+        font-size: 1.25rem;
+        line-height: 1.8;
+        margin-bottom: 3rem;
+        opacity: 0.9;
         max-width: 500px;
+        color: #f0f9ff;
         
         @include responsive(lg) {
           max-width: none;
+          margin: 0 auto 3rem;
         }
         
         @include responsive(md) {
+          font-size: 1.125rem;
+        }
+        
+        @include responsive(sm) {
           font-size: 1rem;
         }
       }
       
       .hero-buttons {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
         
         @include responsive(sm) {
           flex-direction: column;
+          align-items: center;
         }
         
         .btn-large {
-          padding: 1rem 2rem;
+          padding: 1.25rem 2.5rem;
           font-size: 1.125rem;
-          font-weight: 600;
-          border-radius: 12px;
+          font-weight: 700;
+          border-radius: 16px;
           display: inline-flex;
           align-items: center;
-          gap: 0.5rem;
-          @include smooth-transition(all, 0.3s);
+          gap: 0.75rem;
+          @include smooth-transition(all, 0.4s);
+          position: relative;
+          overflow: hidden;
+          
+          // Shimmer effect
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+          }
+          
+          &:hover::before {
+            left: 100%;
+          }
           
           &.btn-primary {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.4);
             
             &:hover {
-              transform: translateY(-3px);
-              box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.5);
+              transform: translateY(-4px) scale(1.02);
+              box-shadow: 0 30px 60px -15px rgba(59, 130, 246, 0.6);
             }
           }
           
           &.btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             
             &:hover {
-              background: rgba(255, 255, 255, 0.2);
+              background: rgba(255, 255, 255, 0.25);
               border-color: rgba(255, 255, 255, 0.5);
-              transform: translateY(-2px);
+              transform: translateY(-3px);
+              box-shadow: 0 20px 40px -10px rgba(255, 255, 255, 0.2);
             }
           }
         }
@@ -134,10 +209,14 @@
     
     .hero-visual {
       position: relative;
-      height: 400px;
+      height: 500px;
       
       @include responsive(lg) {
-        height: 300px;
+        height: 400px;
+      }
+      
+      @include responsive(md) {
+        height: 350px;
       }
       
       .hero-image {
@@ -145,60 +224,158 @@
         width: 100%;
         height: 100%;
         
+        // Enhanced floating cards with professional design
         .floating-card {
           position: absolute;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          padding: 1rem 1.5rem;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          border-radius: 16px;
+          padding: 1.25rem 1.75rem;
+          box-shadow: 
+            0 20px 40px -10px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 1rem;
           color: #1f2937;
           font-weight: 600;
-          animation: float 6s ease-in-out infinite;
+          animation: float 8s ease-in-out infinite;
+          border: 1px solid rgba(59, 130, 246, 0.1);
           
           .card-icon {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+          }
+          
+          .card-text {
+            font-size: 0.95rem;
+            color: #374151;
           }
           
           &.card-1 {
-            top: 20%;
-            left: 10%;
+            top: 15%;
+            left: 5%;
             animation-delay: 0s;
+            transform: rotate(-2deg);
           }
           
           &.card-2 {
-            top: 60%;
-            right: 20%;
-            animation-delay: 2s;
+            top: 55%;
+            right: 10%;
+            animation-delay: 2.5s;
+            transform: rotate(2deg);
           }
           
           &.card-3 {
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 5s;
+            transform: rotate(-1deg);
           }
         }
         
+        // Professional truck with enhanced effects
         .hero-truck {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          font-size: 6rem;
-          animation: bounce 3s ease-in-out infinite;
+          width: 280px;
+          height: 168px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: contain;
+          animation: truckFloat 4s ease-in-out infinite;
+          filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+          z-index: 2;
+          
+          // Glowing effect around truck
+          &::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
+            z-index: -1;
+          }
+          
+          // Fallback truck emoji if image doesn't load
+          &::after {
+            content: '🚛';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          
+          // Show emoji if background image fails to load
+          &:empty:not([style*="background-image"]) {
+            &::after {
+              opacity: 1;
+            }
+          }
+          
+          @include responsive(lg) {
+            width: 220px;
+            height: 132px;
+            
+            &::after {
+              font-size: 5rem;
+            }
+          }
           
           @include responsive(md) {
-            font-size: 4rem;
+            width: 180px;
+            height: 108px;
+            
+            &::after {
+              font-size: 4rem;
+            }
           }
+          
+          @include responsive(sm) {
+            width: 150px;
+            height: 90px;
+            
+            &::after {
+              font-size: 3rem;
+            }
+          }
+        }
+        
+        // Animated road effect
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(255, 255, 255, 0.3) 20%, 
+            rgba(255, 255, 255, 0.6) 50%, 
+            rgba(255, 255, 255, 0.3) 80%, 
+            transparent 100%
+          );
+          border-radius: 2px;
+          animation: roadMove 3s linear infinite;
         }
       }
     }
   }
   
-  // Stats Section
+  // Stats Section with enhanced design
   .stats-section {
     background: white;
     padding: 4rem 0;
@@ -212,10 +389,20 @@
       .stat-card {
         text-align: center;
         padding: 2rem 1rem;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        @include smooth-transition(all, 0.3s);
+        
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
         
         .stat-icon {
           font-size: 3rem;
           margin-bottom: 1rem;
+          animation: bounce 2s ease-in-out infinite;
         }
         
         .stat-number {
@@ -223,6 +410,10 @@
           font-weight: 800;
           color: $primary;
           margin-bottom: 0.5rem;
+          background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
         
         .stat-label {
@@ -234,7 +425,7 @@
     }
   }
   
-  // Features Section
+  // Features Section with enhanced cards
   .features-section {
     background: $bg-secondary;
     
@@ -245,8 +436,8 @@
         position: relative;
         padding: 2.5rem;
         text-align: center;
-        border-radius: 16px;
-        @include smooth-transition(all, 0.3s);
+        border-radius: 20px;
+        @include smooth-transition(all, 0.4s);
         overflow: hidden;
         
         &::before {
@@ -257,7 +448,7 @@
           right: 0;
           bottom: 0;
           opacity: 0;
-          @include smooth-transition(opacity, 0.3s);
+          @include smooth-transition(opacity, 0.4s);
         }
         
         &.blue {
@@ -270,6 +461,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -287,6 +479,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -304,6 +497,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -321,6 +515,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -338,6 +533,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -355,6 +551,7 @@
           
           &:hover {
             color: white;
+            transform: translateY(-8px) scale(1.02);
             
             &::before {
               opacity: 1;
@@ -370,7 +567,7 @@
           
           span {
             display: inline-block;
-            animation: pulse 2s infinite;
+            animation: iconPulse 2s infinite;
           }
         }
         
@@ -400,8 +597,6 @@
         }
         
         &:hover {
-          transform: translateY(-8px);
-          
           .feature-arrow {
             opacity: 1;
             transform: translateX(0);
@@ -442,6 +637,7 @@
           @include flex-center;
           margin: 0 auto 1.5rem;
           box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.3);
+          animation: stepPulse 2s ease-in-out infinite;
         }
         
         .step-content {
@@ -468,6 +664,7 @@
         font-size: 2rem;
         color: $primary;
         font-weight: bold;
+        animation: connectorPulse 2s ease-in-out infinite;
         
         @include responsive(lg) {
           transform: rotate(90deg);
@@ -476,7 +673,7 @@
     }
   }
   
-  // CTA Section
+  // CTA Section with enhanced background
   .cta-section {
     background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     color: white;
@@ -492,6 +689,7 @@
       right: 0;
       bottom: 0;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+      animation: backgroundFloat 15s ease-in-out infinite reverse;
     }
     
     .cta-content {
@@ -563,30 +761,103 @@
   }
 }
 
-// Animations
+// Professional Animations
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(var(--rotation, 0deg));
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-20px) rotate(var(--rotation, 0deg));
   }
 }
 
-@keyframes bounce {
+@keyframes truckFloat {
   0%, 100% {
     transform: translate(-50%, -50%) translateY(0px);
   }
   50% {
-    transform: translate(-50%, -50%) translateY(-10px);
+    transform: translate(-50%, -50%) translateY(-15px);
   }
 }
 
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes stepPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.3);
   }
   50% {
     transform: scale(1.05);
+    box-shadow: 0 12px 24px -6px rgba(37, 99, 235, 0.4);
+  }
+}
+
+@keyframes connectorPulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(10px) translateY(-10px);
+  }
+  50% {
+    transform: translateX(0px) translateY(-20px);
+  }
+  75% {
+    transform: translateX(-10px) translateY(-10px);
+  }
+}
+
+@keyframes underlineGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  }
+}
+
+@keyframes roadMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
   }
 }

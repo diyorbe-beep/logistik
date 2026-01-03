@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './Shipments.scss';
 
 const Shipments = () => {
@@ -136,7 +137,7 @@ const Shipments = () => {
       {/* Search and Filter Bar */}
       <div className="shipments-filters">
         <div className="search-box">
-          <span className="search-icon">🔍</span>
+          <Icons.Search size={18} color="#6b7280" />
           <input
             type="text"
             placeholder={t('searchPlaceholder')}
@@ -207,12 +208,14 @@ const Shipments = () => {
                     <td>{new Date(shipment.createdAt).toLocaleDateString()}</td>
                     <td className="actions">
                       <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                        <Icons.Edit size={16} />
                         {t('edit')}
                       </Link>
                       <button
                         onClick={() => handleDelete(shipment.id)}
                         className="btn-delete"
                       >
+                        <Icons.Trash size={16} />
                         {t('delete')}
                       </button>
                     </td>
@@ -252,12 +255,14 @@ const Shipments = () => {
                 </div>
                 <div className="card-actions">
                   <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                    <Icons.Edit size={16} />
                     {t('edit')}
                   </Link>
                   <button
                     onClick={() => handleDelete(shipment.id)}
                     className="btn-delete"
                   >
+                    <Icons.Trash size={16} />
                     {t('delete')}
                   </button>
                 </div>

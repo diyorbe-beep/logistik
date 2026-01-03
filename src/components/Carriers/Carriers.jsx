@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './Carriers.scss';
 
 const Carriers = () => {
@@ -75,7 +76,7 @@ const Carriers = () => {
                 onClick={() => fetchCarrierHistory(carrier.id)}
               >
                 <div className="carrier-avatar">
-                  <span>🚛</span>
+                  <Icons.Truck size={32} color="#2563eb" />
                 </div>
                 <div className="carrier-info">
                   <h3>{carrier.name || carrier.username}</h3>
@@ -93,7 +94,9 @@ const Carriers = () => {
             <div className="carrier-details">
               <div className="details-header">
                 <h2>{selectedCarrier.name || selectedCarrier.username}</h2>
-                <button onClick={() => setSelectedCarrier(null)} className="close-btn">×</button>
+                <button onClick={() => setSelectedCarrier(null)} className="close-btn">
+                  <Icons.Close size={20} />
+                </button>
               </div>
               <div className="details-info">
                 <div className="info-item">

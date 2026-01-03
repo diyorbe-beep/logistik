@@ -1,4 +1,5 @@
 import { useTranslation } from '../../hooks/useTranslation';
+import { Icons } from '../Icons/Icons';
 import './Services.scss';
 
 const Services = () => {
@@ -6,32 +7,32 @@ const Services = () => {
 
   const services = [
     {
-      icon: '📦',
+      icon: <Icons.Package size={48} color="#2563eb" />,
       title: t('serviceShipment'),
       description: t('serviceShipmentDesc'),
     },
     {
-      icon: '🚚',
+      icon: <Icons.Truck size={48} color="#2563eb" />,
       title: t('serviceTransport'),
       description: t('serviceTransportDesc'),
     },
     {
-      icon: '📊',
+      icon: <Icons.BarChart size={48} color="#2563eb" />,
       title: t('serviceTracking'),
       description: t('serviceTrackingDesc'),
     },
     {
-      icon: '💰',
+      icon: <Icons.DollarSign size={48} color="#2563eb" />,
       title: t('servicePricing'),
       description: t('servicePricingDesc'),
     },
     {
-      icon: '⏱️',
+      icon: <Icons.Clock size={48} color="#2563eb" />,
       title: t('serviceExpress'),
       description: t('serviceExpressDesc'),
     },
     {
-      icon: '🛡️',
+      icon: <Icons.Shield size={48} color="#2563eb" />,
       title: t('serviceInsurance'),
       description: t('serviceInsuranceDesc'),
     },
