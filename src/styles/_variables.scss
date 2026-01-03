@@ -46,11 +46,107 @@ $shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 
+// Professional Icons (using Unicode emojis for better compatibility)
+$icons: (
+  'dashboard': '📊',
+  'shipments': '📦',
+  'users': '👥',
+  'vehicles': '🚚',
+  'carriers': '🚛',
+  'profile': '👤',
+  'orders': '📋',
+  'home': '🏠',
+  'login': '🔐',
+  'logout': '🚪',
+  'edit': '✏️',
+  'delete': '🗑️',
+  'add': '➕',
+  'search': '🔍',
+  'filter': '🔽',
+  'success': '✅',
+  'warning': '⚠️',
+  'error': '❌',
+  'info': 'ℹ️',
+  'loading': '⏳',
+  'delivery': '🚚',
+  'completed': '✅',
+  'pending': '⏳',
+  'in-transit': '🚛',
+  'received': '📥',
+  'phone': '📞',
+  'email': '📧',
+  'location': '📍',
+  'calendar': '📅',
+  'clock': '🕐',
+  'weight': '⚖️',
+  'dimensions': '📏',
+  'insurance': '🛡️',
+  'money': '💰',
+  'route': '🗺️',
+  'tracking': '🔍',
+  'notification': '🔔',
+  'settings': '⚙️',
+  'help': '❓',
+  'close': '✖️',
+  'menu': '☰',
+  'arrow-right': '→',
+  'arrow-left': '←',
+  'arrow-up': '↑',
+  'arrow-down': '↓',
+  'check': '✓',
+  'star': '⭐',
+  'heart': '❤️',
+  'thumbs-up': '👍',
+  'fire': '🔥',
+  'rocket': '🚀',
+  'trophy': '🏆',
+  'medal': '🏅',
+  'target': '🎯',
+  'chart': '📈',
+  'report': '📊',
+  'document': '📄',
+  'folder': '📁',
+  'download': '⬇️',
+  'upload': '⬆️',
+  'share': '📤',
+  'print': '🖨️',
+  'copy': '📋',
+  'paste': '📋',
+  'cut': '✂️',
+  'save': '💾',
+  'refresh': '🔄',
+  'sync': '🔄',
+  'backup': '💾',
+  'restore': '🔄',
+  'security': '🔒',
+  'key': '🔑',
+  'shield': '🛡️',
+  'lock': '🔒',
+  'unlock': '🔓'
+);
+
+// Icon function
+@function icon($name) {
+  @return map-get($icons, $name);
+}
+
 // Breakpoints
 $breakpoint-sm: 640px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
+
+// Container widths
+$container-sm: 640px;
+$container-md: 768px;
+$container-lg: 1024px;
+$container-xl: 1280px;
+$container-2xl: 1536px;
+$container-max: 1400px;
+
+// Container padding
+$container-padding: 1rem;
+$container-padding-lg: 2rem;
 
 
 

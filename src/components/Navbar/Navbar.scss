@@ -1,387 +1,378 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.navbar {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  position: sticky;
+.navbar-overlay {
+  position: fixed;
   top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid $border-color;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.navbar-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: $spacing-sm $spacing-lg;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  gap: $spacing-md;
-
-  @include responsive(md) {
-    padding: $spacing-sm $spacing-md;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(4px);
+  
+  @include responsive(lg) {
+    display: block;
   }
 }
 
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: $text-primary;
-  z-index: 1001;
-  @include smooth-transition(all, 0.2s);
-  gap: $spacing-xs;
-  flex-shrink: 0;
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  @include smooth-transition(all, 0.3s);
 
-  .logo-icon-wrapper {
-    width: 36px;
-    height: 36px;
+  .navbar-container {
+    @include container;
+    @include flex-between;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  // Logo
+  .navbar-logo {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: $primary;
-    border-radius: 8px;
-    padding: 6px;
-    @include smooth-transition(all, 0.2s);
+    gap: 0.75rem;
+    text-decoration: none;
+    color: $text-primary;
+    font-weight: 700;
+    @include smooth-transition(all, 0.3s);
 
-    .logo-icon {
-      width: 24px;
-      height: 24px;
-      color: white;
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      border-radius: 10px;
+      @include flex-center;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+        color: white;
+      }
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+
+      .logo-line1 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: $text-primary;
+      }
+
+      .logo-line2 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $primary;
+        margin-top: -2px;
+      }
     }
   }
 
-  .logo-text {
+  // Desktop Navigation Links
+  .navbar-links {
     display: flex;
-    flex-direction: column;
-    line-height: 1.2;
+    align-items: center;
+    gap: 2rem;
 
-    @include responsive(sm) {
+    @include responsive(lg) {
       display: none;
     }
 
-    .logo-line1 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: $text-primary;
-      display: block;
-      letter-spacing: -0.3px;
-    }
-
-    .logo-line2 {
-      font-size: 0.75rem;
-      font-weight: 500;
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
       color: $text-secondary;
-      display: block;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-  }
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      @include smooth-transition(all, 0.3s);
+      position: relative;
 
-  &:hover {
-    .logo-icon-wrapper {
-      background: $primary-dark;
-    }
-  }
-}
+      .nav-icon {
+        font-size: 1.125rem;
+      }
 
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  flex: 1;
-  justify-content: center;
-
-  @include responsive(md) {
-    display: none;
-  }
-
-  a {
-    text-decoration: none;
-    color: $text-secondary;
-    font-weight: 500;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $radius-md;
-    position: relative;
-    @include smooth-transition(all, 0.2s);
-    white-space: nowrap;
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-
-    .nav-icon {
-      font-size: 1rem;
-    }
-
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-  }
-}
-
-.navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  flex-shrink: 0;
-
-  @include responsive(md) {
-    display: none;
-  }
-
-  .language-switcher {
-    // Language switcher styles
-  }
-
-  a {
-    text-decoration: none;
-    color: $text-primary;
-    font-weight: 500;
-    padding: $spacing-xs $spacing-md;
-    border-radius: $radius-md;
-    @include smooth-transition(all, 0.2s);
-    white-space: nowrap;
-    font-size: 0.875rem;
-
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-
-    &.btn-primary {
-      @include button-primary;
-      padding: $spacing-xs $spacing-lg;
-      font-weight: 600;
-      background: $primary;
-      border: none;
-      color: $text-white;
+      .nav-text {
+        font-size: 0.95rem;
+      }
 
       &:hover {
-        background: $primary-dark;
+        color: $primary;
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateY(-2px);
       }
 
       &.active {
-        background: $primary-dark;
+        color: $primary;
+        background: rgba(59, 130, 246, 0.1);
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1rem;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 6px;
+          height: 6px;
+          background: $primary;
+          border-radius: 50%;
+        }
       }
     }
   }
-}
 
-.navbar-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: $spacing-xs;
-  z-index: 1001;
-  width: 28px;
-  height: 28px;
-  position: relative;
-  flex-shrink: 0;
+  // Desktop Actions
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
-  @include responsive(md) {
-    display: block;
+    @include responsive(lg) {
+      display: none;
+    }
+
+    .btn-primary {
+      @include button-primary;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.95rem;
+      border-radius: 8px;
+    }
+
+    a:not(.btn-primary) {
+      color: $text-secondary;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      @include smooth-transition(all, 0.3s);
+
+      &:hover {
+        color: $primary;
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      &.active {
+        color: $primary;
+        background: rgba(59, 130, 246, 0.1);
+      }
+    }
   }
 
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 20px;
-    height: 16px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  // Mobile Menu Toggle
+  .navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    @include smooth-transition(all, 0.3s);
 
-    span {
-      width: 100%;
-      height: 2px;
-      background: $text-primary;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-      transform-origin: center;
+    @include responsive(lg) {
       display: block;
     }
 
-    &.open {
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .hamburger {
+      width: 24px;
+      height: 18px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
       span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background: $text-primary;
+        border-radius: 1px;
+        @include smooth-transition(all, 0.3s);
+        transform-origin: center;
+
         &:nth-child(1) {
-          transform: rotate(45deg) translate(5px, 5px);
+          width: 100%;
         }
 
         &:nth-child(2) {
-          opacity: 0;
-          transform: scaleX(0);
+          width: 80%;
         }
 
         &:nth-child(3) {
-          transform: rotate(-45deg) translate(5px, -5px);
+          width: 60%;
+        }
+      }
+
+      &.open {
+        span {
+          &:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+            width: 100%;
+          }
+
+          &:nth-child(2) {
+            opacity: 0;
+            width: 100%;
+          }
+
+          &:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+            width: 100%;
+          }
         }
       }
     }
   }
-}
 
-.navbar-menu {
-  display: none;
-
-  @include responsive(md) {
-    display: block;
+  // Mobile Menu
+  .navbar-menu {
     position: fixed;
     top: 0;
     right: 0;
-    width: 260px;
+    width: 320px;
     height: 100vh;
-    background: $bg-primary;
-    flex-direction: column;
-    align-items: stretch;
-    padding: $spacing-xl $spacing-md;
-    padding-top: 60px;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
     transform: translateX(100%);
-    transition: transform 0.3s ease;
-    overflow-y: auto;
-    z-index: 1000;
+    @include smooth-transition(transform, 0.3s);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+
+    @include responsive(sm) {
+      width: 280px;
+    }
 
     &.open {
       transform: translateX(0);
     }
-  }
 
-  @include responsive(sm) {
-    width: 100%;
-    right: 0;
-  }
-}
+    .navbar-links-mobile {
+      flex: 1;
+      padding: 2rem 0;
 
-.navbar-links-mobile {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 0;
-  margin-bottom: $spacing-md;
+      a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: $text-secondary;
+        font-weight: 500;
+        padding: 1rem 2rem;
+        @include smooth-transition(all, 0.3s);
+        border-left: 4px solid transparent;
 
-  a {
-    text-decoration: none;
-    color: $text-secondary;
-    font-weight: 500;
-    padding: $spacing-sm $spacing-md;
-    border-radius: $radius-md;
-    @include smooth-transition(all, 0.2s);
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-    margin-bottom: $spacing-xs;
-    justify-content: flex-start;
+        .nav-icon {
+          font-size: 1.25rem;
+          width: 24px;
+          text-align: center;
+        }
 
-    .nav-icon {
-      font-size: 1rem;
+        .nav-text {
+          font-size: 1rem;
+        }
+
+        &:hover {
+          color: $primary;
+          background: rgba(59, 130, 246, 0.05);
+          border-left-color: rgba(59, 130, 246, 0.3);
+        }
+
+        &.active {
+          color: $primary;
+          background: rgba(59, 130, 246, 0.1);
+          border-left-color: $primary;
+          font-weight: 600;
+        }
+      }
     }
 
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
+    .navbar-actions-mobile {
+      padding: 2rem;
+      border-top: 1px solid $border-color;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
 
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-  }
-}
-
-.navbar-actions-mobile {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: $spacing-sm;
-  margin-top: $spacing-md;
-  padding-top: $spacing-md;
-  border-top: 1px solid $border-color;
-
-  .language-switcher {
-    width: 100%;
-
-    .language-select {
-      width: 100%;
-    }
-  }
-
-  a {
-    text-decoration: none;
-    color: $text-primary;
-    font-weight: 500;
-    padding: $spacing-sm $spacing-md;
-    border-radius: $radius-md;
-    @include smooth-transition(all, 0.2s);
-    font-size: 0.875rem;
-    text-align: center;
-    margin-bottom: $spacing-xs;
-
-    &:hover {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    &.active {
-      color: $primary;
-      background: rgba(37, 99, 235, 0.1);
-      font-weight: 600;
-    }
-
-    &.btn-primary {
-      @include button-primary;
-      font-weight: 600;
-      background: $primary;
-      border: none;
-      color: $text-white;
-      width: 100%;
-
-      &:hover {
-        background: $primary-dark;
+      .btn-primary {
+        @include button-primary;
+        justify-content: center;
+        width: 100%;
       }
 
-      &.active {
-        background: $primary-dark;
+      a:not(.btn-primary) {
+        color: $text-secondary;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        text-align: center;
+        @include smooth-transition(all, 0.3s);
+
+        &:hover {
+          color: $primary;
+          background: rgba(59, 130, 246, 0.1);
+        }
+
+        &.active {
+          color: $primary;
+          background: rgba(59, 130, 246, 0.1);
+        }
       }
     }
   }
 }
 
-// Overlay for mobile menu
-.navbar-overlay {
-  display: none;
+// Scroll effect
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
 
-  @include responsive(md) {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 999;
+// Add top padding to body when navbar is present
+body {
+  padding-top: 80px;
+}
+
+// Animation for mobile menu items
+.navbar-menu.open {
+  .navbar-links-mobile a {
+    animation: slideInRight 0.3s ease-out forwards;
+    opacity: 0;
+    transform: translateX(20px);
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
+    }
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

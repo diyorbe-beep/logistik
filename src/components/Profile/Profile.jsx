@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { API_URL } from '../../config/api';
+import DeliveryCompletionModal from '../DeliveryCompletion/DeliveryCompletionModal';
 import './Profile.scss';
 
 const Profile = () => {
@@ -17,6 +18,8 @@ const Profile = () => {
   const [shipments, setShipments] = useState([]);
   const [availableShipments, setAvailableShipments] = useState([]);
   const [pendingConfirmations, setPendingConfirmations] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [deliveryModal, setDeliveryModal] = useState({ isOpen: false, shipment: null });
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -29,6 +32,7 @@ const Profile = () => {
       fetchAllShipments();
     } else if (contextUser?.role === 'customer') {
       fetchMyShipments();
+      fetchMyOrders();
     }
   }, [contextUser]);
 
@@ -54,6 +58,24 @@ const Profile = () => {
       console.error('Error fetching profile:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMyOrders = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/orders`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data);
+      }
+    } catch (err) {
+      console.error('Error fetching orders:', err);
     }
   };
 
@@ -98,6 +120,262 @@ const Profile = () => {
       console.error('Error fetching available shipments:', err);
     }
   };
+
+  const handleAcceptShipment = async (shipmentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/shipments/${shipmentId}/accept`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        alert(t('shipmentAccepted'));
+        fetchAvailableShipments();
+        fetchMyShipments();
+      } else {
+        alert(t('error'));
+      }
+    } catch (err) {
+      alert(t('error'));
+    }
+  };
+
+  const handleCompleteDelivery = (shipment) => {
+    setDeliveryModal({ isOpen: true, shipment });
+  };
+
+  const handleDeliveryComplete = (updatedShipment) => {
+    // Update shipments list
+    setShipments(prev => prev.map(s => 
+      s.id === updatedShipment.shipment.id ? updatedShipment.shipment : s
+    ));
+    
+    // Show success message
+    alert(t('deliveryCompletedSuccessfully'));
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Pending':
+        return 'status-pending';
+      case 'Received':
+        return 'status-received';
+      case 'In Transit':
+        return 'status-in-transit';
+      case 'Delivered':
+        return 'status-delivered';
+      case 'Converted':
+        return 'status-converted';
+      default:
+        return '';
+    }
+  };
+
+  const getStatusTranslation = (status) => {
+    switch (status) {
+      case 'Pending':
+        return t('pending');
+      case 'Received':
+        return t('received');
+      case 'In Transit':
+        return t('inTransit');
+      case 'Delivered':
+        return t('delivered');
+      case 'Converted':
+        return t('converted');
+      default:
+        return status;
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">{t('loadingProfile')}</div>;
+  }
+
+  return (
+    <div className="profile">
+      <div className="profile-header">
+        <h1>{t('profile')}</h1>
+        <div className="user-info">
+          <div className="user-avatar">
+            <span>{user?.username?.charAt(0).toUpperCase()}</span>
+          </div>
+          <div className="user-details">
+            <h2>{user?.username}</h2>
+            <p className="user-role">{user?.role}</p>
+            <p className="user-email">{user?.email}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Customer Section */}
+      {user?.role === 'customer' && (
+        <div className="customer-section">
+          <div className="section-header">
+            <h3>{t('myOrders')}</h3>
+            <Link to="/orders/new" className="btn-primary">
+              {t('createOrder')}
+            </Link>
+          </div>
+          
+          {orders.length > 0 ? (
+            <div className="orders-list">
+              {orders.map((order) => (
+                <div key={order.id} className="order-card">
+                  <div className="card-header">
+                    <span className="order-number">#{order.trackingNumber}</span>
+                    <span className={`status-badge ${getStatusClass(order.status)}`}>
+                      {getStatusTranslation(order.status)}
+                    </span>
+                  </div>
+                  <div className="card-body">
+                    <p><strong>{t('route')}:</strong> {order.origin} → {order.destination}</p>
+                    <p><strong>{t('weight')}:</strong> {order.weight} kg</p>
+                    <p><strong>{t('estimatedPrice')}:</strong> {order.estimatedPrice?.toLocaleString()} {t('currency')}</p>
+                    <p><strong>{t('created')}:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>{t('noOrders')}</p>
+              <Link to="/orders/new" className="btn-primary">
+                {t('createFirstOrder')}
+              </Link>
+            </div>
+          )}
+
+          <div className="section-header">
+            <h3>{t('myShipments')}</h3>
+          </div>
+          
+          {shipments.length > 0 ? (
+            <div className="shipments-list">
+              {shipments.map((shipment) => (
+                <div key={shipment.id} className="shipment-card">
+                  <div className="card-header">
+                    <span className="tracking-number">#{shipment.trackingNumber}</span>
+                    <span className={`status-badge ${getStatusClass(shipment.status)}`}>
+                      {getStatusTranslation(shipment.status)}
+                    </span>
+                  </div>
+                  <div className="card-body">
+                    <p><strong>{t('route')}:</strong> {shipment.origin} → {shipment.destination}</p>
+                    <p><strong>{t('weight')}:</strong> {shipment.weight} kg</p>
+                    {shipment.deliveredAt && (
+                      <p><strong>{t('deliveredAt')}:</strong> {new Date(shipment.deliveredAt).toLocaleDateString()}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>{t('noShipments')}</p>
+          )}
+        </div>
+      )}
+
+      {/* Carrier Section */}
+      {user?.role === 'carrier' && (
+        <div className="carrier-section">
+          <div className="section-header">
+            <h3>{t('availableShipments')}</h3>
+          </div>
+          
+          {availableShipments.length > 0 ? (
+            <div className="available-shipments">
+              {availableShipments.map((shipment) => (
+                <div key={shipment.id} className="shipment-card available">
+                  <div className="card-header">
+                    <span className="tracking-number">#{shipment.trackingNumber}</span>
+                    <span className="status-badge status-received">{t('available')}</span>
+                  </div>
+                  <div className="card-body">
+                    <p><strong>{t('route')}:</strong> {shipment.origin} → {shipment.destination}</p>
+                    <p><strong>{t('weight')}:</strong> {shipment.weight} kg</p>
+                    <p><strong>{t('customer')}:</strong> {shipment.customerName}</p>
+                  </div>
+                  <div className="card-actions">
+                    <button
+                      onClick={() => handleAcceptShipment(shipment.id)}
+                      className="btn-primary"
+                    >
+                      {t('acceptShipment')}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>{t('noAvailableShipments')}</p>
+          )}
+
+          <div className="section-header">
+            <h3>{t('myDeliveries')}</h3>
+          </div>
+          
+          {shipments.length > 0 ? (
+            <div className="my-deliveries">
+              {shipments.map((shipment) => (
+                <div key={shipment.id} className="shipment-card">
+                  <div className="card-header">
+                    <span className="tracking-number">#{shipment.trackingNumber}</span>
+                    <span className={`status-badge ${getStatusClass(shipment.status)}`}>
+                      {getStatusTranslation(shipment.status)}
+                    </span>
+                  </div>
+                  <div className="card-body">
+                    <p><strong>{t('route')}:</strong> {shipment.origin} → {shipment.destination}</p>
+                    <p><strong>{t('weight')}:</strong> {shipment.weight} kg</p>
+                    <p><strong>{t('customer')}:</strong> {shipment.customerName}</p>
+                    <p><strong>{t('recipient')}:</strong> {shipment.recipientName}</p>
+                    {shipment.specialInstructions && (
+                      <p><strong>{t('specialInstructions')}:</strong> {shipment.specialInstructions}</p>
+                    )}
+                    {shipment.deliveredAt && (
+                      <p><strong>{t('deliveredAt')}:</strong> {new Date(shipment.deliveredAt).toLocaleDateString()}</p>
+                    )}
+                  </div>
+                  <div className="card-actions">
+                    {shipment.status === 'In Transit' && (
+                      <button
+                        onClick={() => handleCompleteDelivery(shipment)}
+                        className="btn-success"
+                      >
+                        ✅ {t('completeDelivery')}
+                      </button>
+                    )}
+                    {shipment.status === 'Delivered' && shipment.deliveryCode && (
+                      <div className="delivery-info">
+                        <span className="delivery-code">
+                          🔑 {t('deliveryCode')}: {shipment.deliveryCode}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>{t('noActiveDeliveries')}</p>
+          )}
+        </div>
+      )}
+
+      {/* Delivery Completion Modal */}
+      <DeliveryCompletionModal
+        isOpen={deliveryModal.isOpen}
+        onClose={() => setDeliveryModal({ isOpen: false, shipment: null })}
+        shipment={deliveryModal.shipment}
+        onDeliveryComplete={handleDeliveryComplete}
+      />
+    </div>
+  );
+};
 
   const fetchPendingConfirmations = async () => {
     try {

@@ -19,6 +19,7 @@ import Contact from './components/Contact/Contact';
 import Profile from './components/Profile/Profile';
 import News from './components/News/News';
 import Carriers from './components/Carriers/Carriers';
+import OrderForm from './components/Orders/OrderForm';
 import Layout from './components/Layout/Layout';
 import './App.scss';
 
@@ -239,6 +240,18 @@ function App() {
             <ProtectedRoute allowedRoles={['admin']}>
               <Layout onLogout={handleLogout}>
                 <PricingForm />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Routes - Orders (Customer only) */}
+        <Route
+          path="/orders/new"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <Layout onLogout={handleLogout}>
+                <OrderForm />
               </Layout>
             </ProtectedRoute>
           }

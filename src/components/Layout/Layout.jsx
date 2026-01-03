@@ -88,41 +88,64 @@ const Layout = ({ children, onLogout }) => {
   return (
     <div className="layout">
       <button className="mobile-menu-toggle" onClick={toggleSidebar}>
-        ☰
+        <span className="hamburger-icon">☰</span>
       </button>
+      
       {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
+      
       <nav className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2>Logistics Pro</h2>
-          <button className="sidebar-close" onClick={closeSidebar}>×</button>
+          <div className="logo">
+            <span className="logo-icon">🚛</span>
+            <h2>Logistics Pro</h2>
+          </div>
+          <button className="sidebar-close" onClick={closeSidebar}>
+            <span>✖️</span>
+          </button>
         </div>
+        
+        <div className="user-info">
+          <div className="user-avatar">
+            <span>{user?.username?.charAt(0).toUpperCase()}</span>
+          </div>
+          <div className="user-details">
+            <div className="user-name">{user?.username}</div>
+            <div className="user-role">{user?.role}</div>
+          </div>
+        </div>
+        
         <ul className="sidebar-menu">
           {menuItems.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={isActive(item.path) ? 'active' : ''}
+                className={`menu-item ${isActive(item.path) ? 'active' : ''}`}
                 onClick={closeSidebar}
               >
-                <span className="icon">{item.icon}</span>
-                <span className="text">{item.text}</span>
+                <span className="menu-icon">{item.icon}</span>
+                <span className="menu-text">{item.text}</span>
+                {isActive(item.path) && <span className="active-indicator"></span>}
               </Link>
             </li>
           ))}
         </ul>
+        
         <div className="sidebar-footer">
           <div className="language-switcher-sidebar">
             <LanguageSwitcher />
           </div>
           <button onClick={onLogout} className="logout-btn">
-            <span className="icon">🚪</span>
-            <span className="text">{t('logout')}</span>
+            <span className="logout-icon">🚪</span>
+            <span className="logout-text">{t('logout')}</span>
           </button>
         </div>
       </nav>
+      
       <main className="main-content">
-        <div className="content-container">
-          {children}
+        <div className="content-wrapper">
+          <div className="container">
+            {children}
+          </div>
         </div>
       </main>
     </div>
