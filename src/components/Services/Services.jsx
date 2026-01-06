@@ -40,19 +40,21 @@ const Services = () => {
 
   return (
     <div className="services-page">
-      <div className="services-hero">
-        <h1>{t('ourServices')}</h1>
-        <p>{t('servicesSubtitle')}</p>
-      </div>
+      <div className="container">
+        <div className="services-hero">
+          <h1>{t('ourServices')}</h1>
+          <p>{t('servicesSubtitle')}</p>
+        </div>
 
-      <div className="services-grid">
-        {services.map((service, index) => (
-          <div key={index} className="service-card">
-            <div className="service-icon">{service.icon}</div>
-            <h3>{service.title}</h3>
-            <p>{service.description}</p>
-          </div>
-        ))}
+        <div className="services-grid">
+          {services.map((service, index) => (
+            <div key={index} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

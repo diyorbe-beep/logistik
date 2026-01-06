@@ -33,12 +33,15 @@ $spacing-lg: 1.5rem;
 $spacing-xl: 2rem;
 $spacing-2xl: 3rem;
 
-// Border radius
+// Border radius - Define base values first
 $radius-sm: 0.25rem;
 $radius-md: 0.5rem;
 $radius-lg: 0.75rem;
 $radius-xl: 1rem;
 $radius-full: 9999px;
+
+// Default border radius - Define after base radius values
+$border-radius: 0.5rem; // Use hardcoded value to avoid dependency issues
 
 // Shadows
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

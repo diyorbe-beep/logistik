@@ -1,35 +1,53 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useUser } from './contexts/UserContext';
 import Navbar from './components/Navbar/Navbar';
-import Home from './components/Home/Home';
-import Login from './components/Login/Login';
-import Register from './components/Register/Register';
-import Dashboard from './components/Dashboard/Dashboard';
-import Shipments from './components/Shipments/Shipments';
-import ShipmentForm from './components/Shipments/ShipmentForm';
-import Users from './components/Users/Users';
-import Vehicles from './components/Vehicles/Vehicles';
-import VehicleForm from './components/Vehicles/VehicleForm.jsx';
-import Pricing from './components/Pricing/Pricing';
-import PricingForm from './components/Pricing/PricingForm';
-import Services from './components/Services/Services';
-import About from './components/About/About';
-import Contact from './components/Contact/Contact';
-import Profile from './components/Profile/Profile';
-import News from './components/News/News';
-import Carriers from './components/Carriers/Carriers';
-import OrderForm from './components/Orders/OrderForm';
-import Layout from './components/Layout/Layout';
+import Loading from './components/Loading/Loading';
 import './App.scss';
 
-// Role-based route wrapper
+// Lazy load components for better performance
+const Home = lazy(() => import('./components/Home/Home'));
+const Login = lazy(() => import('./components/Login/Login'));
+const Register = lazy(() => import('./components/Register/Register'));
+const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
+const Shipments = lazy(() => import('./components/Shipments/Shipments'));
+const ShipmentForm = lazy(() => import('./components/Shipments/ShipmentForm'));
+const Users = lazy(() => import('./components/Users/Users'));
+const Vehicles = lazy(() => import('./components/Vehicles/Vehicles'));
+const VehicleForm = lazy(() => import('./components/Vehicles/VehicleForm.jsx'));
+const Pricing = lazy(() => import('./components/Pricing/Pricing'));
+const PricingForm = lazy(() => import('./components/Pricing/PricingForm'));
+const Services = lazy(() => import('./components/Services/Services'));
+const About = lazy(() => import('./components/About/About'));
+const Contact = lazy(() => import('./components/Contact/Contact'));
+const Profile = lazy(() => import('./components/Profile/ProfileNew'));
+const News = lazy(() => import('./components/News/News'));
+const Carriers = lazy(() => import('./components/Carriers/Carriers'));
+const OrderForm = lazy(() => import('./components/Orders/OrderForm'));
+const Layout = lazy(() => import('./components/Layout/Layout'));
+
+// Optimized loading component
+const PageLoader = ({ message = 'Sahifa yuklanmoqda...' }) => (
+  <Loading message={message} size="medium" />
+);
+
+// Role-based route wrapper with better loading
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { user, loading } = useUser();
+  const { user, loading, error } = useUser();
   const token = localStorage.getItem('token');
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <PageLoader message="Foydalanuvchi ma'lumotlari tekshirilmoqda..." />;
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <h3>Xatolik yuz berdi</h3>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Qayta yuklash</button>
+      </div>
+    );
   }
 
   if (!token || !user) {
@@ -71,10 +89,10 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
-    if (token && !user) {
+    if (token && !user && !loading) {
       refetchUser();
     }
-  }, [user, refetchUser]);
+  }, [user, refetchUser, loading]);
 
   const handleLogin = async (token, userData) => {
     localStorage.setItem('token', token);
@@ -88,187 +106,187 @@ function App() {
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <PageLoader message="Ilova yuklanmoqda..." />;
   }
 
   return (
     <Router>
       <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/news" element={<News />} />
-        <Route
-          path="/login"
-          element={
-            isAuthenticated ? (
-              <Navigate to={getDefaultRoute(user?.role)} replace />
-            ) : (
-              <Login onLogin={handleLogin} />
-            )
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            isAuthenticated ? (
-              <Navigate to={getDefaultRoute(user?.role)} replace />
-            ) : (
-              <Register />
-            )
-          }
-        />
-        
-        {/* Protected Routes - Dashboard (Operator & Admin only) */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'operator']}>
-              <Layout onLogout={handleLogout}>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/news" element={<News />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? (
+                <Navigate to={getDefaultRoute(user?.role)} replace />
+              ) : (
+                <Login onLogin={handleLogin} />
+              )
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              isAuthenticated ? (
+                <Navigate to={getDefaultRoute(user?.role)} replace />
+              ) : (
+                <Register />
+              )
+            }
+          />
+          
+          {/* Protected Routes - Dashboard (Operator & Admin only) */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                <Layout onLogout={handleLogout}>
+                  <Dashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Shipments (Operator & Admin only) */}
-        <Route
-          path="/shipments"
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'operator']}>
-              <Layout onLogout={handleLogout}>
-                <Shipments />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/shipments/new"
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'operator']}>
-              <Layout onLogout={handleLogout}>
-                <ShipmentForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/shipments/edit/:id"
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'operator']}>
-              <Layout onLogout={handleLogout}>
-                <ShipmentForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Shipments (Operator & Admin only) */}
+          <Route
+            path="/shipments"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                <Layout onLogout={handleLogout}>
+                  <Shipments />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shipments/new"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                <Layout onLogout={handleLogout}>
+                  <ShipmentForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shipments/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                <Layout onLogout={handleLogout}>
+                  <ShipmentForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Users (Admin only) */}
-        <Route
-          path="/users"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <Users />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Users (Admin only) */}
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <Users />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Vehicles (Admin only) */}
-        <Route
-          path="/vehicles"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <Vehicles />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/vehicles/new"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <VehicleForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/vehicles/edit/:id"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <VehicleForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Vehicles (Admin only) */}
+          <Route
+            path="/vehicles"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <Vehicles />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vehicles/new"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <VehicleForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vehicles/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <VehicleForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Carriers (Admin & Operator only) */}
-        <Route
-          path="/carriers"
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'operator']}>
-              <Layout onLogout={handleLogout}>
-                <Carriers />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Carriers (Admin & Operator only) */}
+          <Route
+            path="/carriers"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                <Layout onLogout={handleLogout}>
+                  <Carriers />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Pricing Management (Admin only) */}
-        <Route
-          path="/pricing/new"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <PricingForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/pricing/edit/:id"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout onLogout={handleLogout}>
-                <PricingForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Pricing Management (Admin only) */}
+          <Route
+            path="/pricing/new"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <PricingForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pricing/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Layout onLogout={handleLogout}>
+                  <PricingForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Orders (Customer only) */}
-        <Route
-          path="/orders/new"
-          element={
-            <ProtectedRoute allowedRoles={['customer']}>
-              <Layout onLogout={handleLogout}>
-                <OrderForm />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes - Orders (Customer only) */}
+          <Route
+            path="/orders/new"
+            element={
+              <ProtectedRoute allowedRoles={['customer']}>
+                <Layout onLogout={handleLogout}>
+                  <OrderForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Protected Routes - Profile (All authenticated users) */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Layout onLogout={handleLogout}>
+          {/* Protected Routes - Profile (All authenticated users) - No Layout */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
                 <Profile />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

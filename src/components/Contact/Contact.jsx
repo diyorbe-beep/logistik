@@ -45,112 +45,114 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <div className="contact-hero">
-        <h1>{t('contactUs')}</h1>
-        <p>{t('contactSubtitle')}</p>
-      </div>
-
-      <div className="contact-content">
-        <div className="contact-info">
-          <div className="info-card">
-            <div className="info-icon">
-              <Icons.Phone size={32} color="#2563eb" />
-            </div>
-            <h3>{t('phone')}</h3>
-            <p>+998 90 123 45 67</p>
-            <p>+998 71 234 56 78</p>
-          </div>
-          <div className="info-card">
-            <div className="info-icon">
-              <Icons.Mail size={32} color="#2563eb" />
-            </div>
-            <h3>{t('email')}</h3>
-            <p>info@logisticspro.uz</p>
-            <p>support@logisticspro.uz</p>
-          </div>
-          <div className="info-card">
-            <div className="info-icon">
-              <Icons.MapPin size={32} color="#2563eb" />
-            </div>
-            <h3>{t('address')}</h3>
-            <p>{t('addressText')}</p>
-          </div>
+      <div className="container">
+        <div className="contact-hero">
+          <h1>{t('contactUs')}</h1>
+          <p>{t('contactSubtitle')}</p>
         </div>
 
-        <div className="contact-form-container">
-          {success && (
-            <div className="success-message">
-              {t('messageSent')}
+        <div className="contact-content">
+          <div className="contact-info">
+            <div className="info-card">
+              <div className="info-icon">
+                <Icons.Phone size={32} color="#2563eb" />
+              </div>
+              <h3>{t('phone')}</h3>
+              <p>+998 90 123 45 67</p>
+              <p>+998 71 234 56 78</p>
             </div>
-          )}
-          <form onSubmit={handleSubmit} className="contact-form">
-            <div className="form-row">
+            <div className="info-card">
+              <div className="info-icon">
+                <Icons.Mail size={32} color="#2563eb" />
+              </div>
+              <h3>{t('email')}</h3>
+              <p>info@logisticspro.uz</p>
+              <p>support@logisticspro.uz</p>
+            </div>
+            <div className="info-card">
+              <div className="info-icon">
+                <Icons.MapPin size={32} color="#2563eb" />
+              </div>
+              <h3>{t('address')}</h3>
+              <p>{t('addressText')}</p>
+            </div>
+          </div>
+
+          <div className="contact-form-container">
+            {success && (
+              <div className="success-message">
+                {t('messageSent')}
+              </div>
+            )}
+            <form onSubmit={handleSubmit} className="contact-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">{t('name')} *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder={t('enterName')}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">{t('email')} *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder={t('enterEmail')}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="phone">{t('phone')}</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder={t('enterPhone')}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="subject">{t('subject')} *</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    placeholder={t('enterSubject')}
+                  />
+                </div>
+              </div>
               <div className="form-group">
-                <label htmlFor="name">{t('name')} *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                <label htmlFor="message">{t('message')} *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
                   required
-                  placeholder={t('enterName')}
+                  rows="6"
+                  placeholder={t('enterMessage')}
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="email">{t('email')} *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('enterEmail')}
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="phone">{t('phone')}</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t('enterPhone')}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="subject">{t('subject')} *</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('enterSubject')}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="message">{t('message')} *</label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                rows="6"
-                placeholder={t('enterMessage')}
-              />
-            </div>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? t('sending') : t('sendMessage')}
-            </button>
-          </form>
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? t('sending') : t('sendMessage')}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

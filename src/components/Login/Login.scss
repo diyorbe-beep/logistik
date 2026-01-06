@@ -1,3 +1,4 @@
+// Login Component Styles - Senior Level
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
@@ -34,6 +35,57 @@
     color: $text-secondary;
     font-size: 0.9rem;
   }
+
+  .api-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-lg;
+    font-size: 0.8rem;
+    font-weight: 500;
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    &--checking {
+      background: #fff3cd;
+      color: #856404;
+      
+      .status-dot {
+        background: #ffc107;
+        animation: pulse 1.5s infinite;
+      }
+    }
+
+    &--connected {
+      background: #d4edda;
+      color: #155724;
+      
+      .status-dot {
+        background: #28a745;
+      }
+    }
+
+    &--disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      
+      .status-dot {
+        background: #dc3545;
+      }
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
 }
 
 .login-form {
@@ -61,6 +113,22 @@
   }
 }
 
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: $spacing-md;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  .error-icon {
+    font-size: 1.2rem;
+  }
+}
+
 .login-footer {
   margin-top: $spacing-xl;
   text-align: center;
@@ -81,11 +149,42 @@
         text-decoration: underline;
       }
     }
+  }
 
-    &.login-hint {
-      margin-top: $spacing-md;
-      font-size: 0.75rem;
-      opacity: 0.7;
+  .login-hint {
+    margin-top: $spacing-md;
+    padding: $spacing-md;
+    background: #f8f9fa;
+    border-radius: $radius-lg;
+    border-left: 4px solid $primary;
+
+    p {
+      margin: 0;
+      font-size: 0.8rem;
+      
+      &:first-child {
+        font-weight: 600;
+        color: $text-primary;
+      }
+    }
+  }
+
+  .quick-login {
+    margin: $spacing-md 0;
+    padding: $spacing-md;
+    background: #e3f2fd;
+    border-radius: $radius-lg;
+
+    p {
+      margin: 0 0 $spacing-sm 0;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    .quick-login-btn {
+      @include button-secondary;
+      font-size: 0.8rem;
+      padding: $spacing-sm $spacing-md;
     }
   }
 }

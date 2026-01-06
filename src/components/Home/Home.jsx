@@ -203,6 +203,59 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Order Section */}
+      <section className="order-section section">
+        <div className="container">
+          <div className="section-header">
+            <h2>{t('placeOrder')}</h2>
+            <p>{t('placeOrderDesc')}</p>
+          </div>
+          <div className="order-content">
+            <div className="order-info">
+              <div className="order-features">
+                <div className="order-feature">
+                  <Icons.Clock size={32} color="#3b82f6" />
+                  <div>
+                    <h4>{t('fastDelivery')}</h4>
+                    <p>{t('fastDeliveryDesc')}</p>
+                  </div>
+                </div>
+                <div className="order-feature">
+                  <Icons.Shield size={32} color="#10b981" />
+                  <div>
+                    <h4>{t('safeDelivery')}</h4>
+                    <p>{t('safeDeliveryDesc')}</p>
+                  </div>
+                </div>
+                <div className="order-feature">
+                  <Icons.DollarSign size={32} color="#f59e0b" />
+                  <div>
+                    <h4>{t('affordablePrices')}</h4>
+                    <p>{t('affordablePricesDesc')}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="order-actions">
+              <div className="order-card">
+                <h3>{t('readyToShip')}</h3>
+                <p>{t('readyToShipDesc')}</p>
+                <div className="order-buttons">
+                  <Link to="/orders/new" className="btn-primary btn-large">
+                    <Icons.Plus size={20} />
+                    {t('createOrder')}
+                  </Link>
+                  <Link to="/pricing" className="btn-secondary">
+                    <Icons.DollarSign size={20} />
+                    {t('calculatePrice')}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="cta-section">
         <div className="container">

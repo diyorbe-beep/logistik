@@ -861,3 +861,85 @@
     background-position: 100% 0%;
   }
 }
+// Order Section
+.order-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  
+  .order-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+  
+  .order-info {
+    .order-features {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .order-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      
+      h4 {
+        margin: 0 0 0.5rem 0;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      
+      p {
+        margin: 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+    }
+  }
+  
+  .order-actions {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .order-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    
+    h3 {
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    p {
+      margin: 0 0 2rem 0;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .order-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+    }
+  }
+}

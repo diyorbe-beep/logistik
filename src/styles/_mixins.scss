@@ -1,3 +1,5 @@
+// Import animations after variables to avoid circular dependency
+@import './variables';
 @import './animations';
 
 // Container mixins

@@ -1,112 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useUser } from '../../contexts/UserContext';
 import { API_URL } from '../../config/api';
+import { Icons } from '../Icons/Icons';
 import './OrderForm.scss';
 
 const OrderForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user } = useUser();
   const [loading, setLoading] = useState(false);
-  const [pricing, setPricing] = useState([]);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    // Pickup Information
     origin: '',
+    pickupAddress: '',
+    pickupDate: '',
+    pickupTime: '',
+    
+    // Delivery Information
     destination: '',
-    customerName: user?.username || '',
-    customerEmail: user?.email || '',
-    customerPhone: user?.phone || '',
+    deliveryAddress: '',
+    recipientName: '',
+    recipientPhone: '',
+    deliveryDate: '',
+    
+    // Package Information
     weight: '',
     dimensions: '',
     description: '',
-    specialInstructions: '',
-    urgency: 'normal',
-    insuranceRequired: false,
-    estimatedValue: '',
-    recipientName: '',
-    recipientPhone: '',
-    recipientAddress: '',
-    preferredDeliveryDate: '',
-    preferredDeliveryTime: ''
+    packageType: 'standard',
+    
+    // Customer Information
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
+    
+    // Additional Options
+    urgency: 'standard',
+    insurance: false,
+    specialInstructions: ''
   });
-  const [estimatedPrice, setEstimatedPrice] = useState(0);
-  const [selectedRoute, setSelectedRoute] = useState(null);
 
-  useEffect(() => {
-    fetchPricing();
-  }, []);
-
-  useEffect(() => {
-    calculateEstimatedPrice();
-  }, [formData.origin, formData.destination, formData.weight, formData.urgency]);
-
-  const fetchPricing = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/pricing`);
-      if (response.ok) {
-        const data = await response.json();
-        setPricing(data);
-      }
-    } catch (error) {
-      console.error('Error fetching pricing:', error);
-    }
-  };
-
-  const calculateEstimatedPrice = () => {
-    if (!formData.origin || !formData.destination || !formData.weight) {
-      setEstimatedPrice(0);
-      setSelectedRoute(null);
-      return;
-    }
-
-    // Find matching route
-    const route = pricing.find(p => 
-      p.route.toLowerCase().includes(formData.origin.toLowerCase()) &&
-      p.route.toLowerCase().includes(formData.destination.toLowerCase())
-    );
-
-    if (route) {
-      let basePrice = route.totalPrice;
-      const weight = parseFloat(formData.weight) || 0;
-      
-      // Weight-based pricing (per kg)
-      if (weight > 100) {
-        basePrice += (weight - 100) * 1000; // 1000 so'm per extra kg
-      }
-      
-      // Urgency multiplier
-      if (formData.urgency === 'urgent') {
-        basePrice *= 1.5;
-      } else if (formData.urgency === 'express') {
-        basePrice *= 2;
-      }
-      
-      setEstimatedPrice(Math.round(basePrice));
-      setSelectedRoute(route);
-    } else {
-      // Default pricing calculation
-      const distance = 100; // Default distance
-      const baseRate = 500; // per km
-      let price = distance * baseRate;
-      
-      const weight = parseFloat(formData.weight) || 0;
-      if (weight > 100) {
-        price += (weight - 100) * 1000;
-      }
-      
-      if (formData.urgency === 'urgent') {
-        price *= 1.5;
-      } else if (formData.urgency === 'express') {
-        price *= 2;
-      }
-      
-      setEstimatedPrice(Math.round(price));
-      setSelectedRoute(null);
-    }
-  };
-
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -120,15 +55,15 @@ const OrderForm = () => {
 
     try {
       const token = localStorage.getItem('token');
+      
+      // Calculate estimated price based on weight and distance
+      const estimatedPrice = calculatePrice(formData.weight, formData.urgency);
+      
       const orderData = {
         ...formData,
-        customerId: user.id,
         estimatedPrice,
-        selectedRoute: selectedRoute?.id || null,
-        status: 'Pending', // New status for customer orders
-        orderType: 'customer_order',
-        trackingNumber: `ORD${Date.now()}`,
-        createdAt: new Date().toISOString()
+        trackingNumber: generateTrackingNumber(),
+        status: 'Pending'
       };
 
       const response = await fetch(`${API_URL}/api/orders`, {
@@ -142,263 +77,403 @@ const OrderForm = () => {
 
       if (response.ok) {
         const result = await response.json();
-        alert(t('orderCreatedSuccess'));
+        alert(t('orderCreatedSuccessfully'));
         navigate('/profile');
       } else {
         const error = await response.json();
-        alert(error.message || t('error'));
+        alert(error.message || t('orderCreationFailed'));
       }
     } catch (error) {
       console.error('Error creating order:', error);
-      alert(t('error'));
+      alert(t('orderCreationFailed'));
     } finally {
       setLoading(false);
     }
   };
 
+  const calculatePrice = (weight, urgency) => {
+    let basePrice = 50000; // Base price in UZS
+    
+    // Weight-based pricing
+    if (weight > 10) basePrice += (weight - 10) * 2000;
+    
+    // Urgency multiplier
+    if (urgency === 'express') basePrice *= 1.5;
+    if (urgency === 'urgent') basePrice *= 2;
+    
+    return Math.round(basePrice);
+  };
+
+  const generateTrackingNumber = () => {
+    return 'LP' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 4).toUpperCase();
+  };
+
+  const nextStep = () => {
+    if (step < 4) setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <div className="form-step">
+            <h3>{t('pickupInformation')}</h3>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="origin">{t('pickupCity')} *</label>
+                <input
+                  type="text"
+                  id="origin"
+                  name="origin"
+                  value={formData.origin}
+                  onChange={handleChange}
+                  placeholder={t('enterPickupCity')}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="pickupAddress">{t('pickupAddress')} *</label>
+                <textarea
+                  id="pickupAddress"
+                  name="pickupAddress"
+                  value={formData.pickupAddress}
+                  onChange={handleChange}
+                  placeholder={t('enterPickupAddress')}
+                  required
+                  rows="3"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="pickupDate">{t('pickupDate')} *</label>
+                <input
+                  type="date"
+                  id="pickupDate"
+                  name="pickupDate"
+                  value={formData.pickupDate}
+                  onChange={handleChange}
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="pickupTime">{t('pickupTime')}</label>
+                <input
+                  type="time"
+                  id="pickupTime"
+                  name="pickupTime"
+                  value={formData.pickupTime}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 2:
+        return (
+          <div className="form-step">
+            <h3>{t('deliveryInformation')}</h3>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="destination">{t('deliveryCity')} *</label>
+                <input
+                  type="text"
+                  id="destination"
+                  name="destination"
+                  value={formData.destination}
+                  onChange={handleChange}
+                  placeholder={t('enterDeliveryCity')}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="deliveryAddress">{t('deliveryAddress')} *</label>
+                <textarea
+                  id="deliveryAddress"
+                  name="deliveryAddress"
+                  value={formData.deliveryAddress}
+                  onChange={handleChange}
+                  placeholder={t('enterDeliveryAddress')}
+                  required
+                  rows="3"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="recipientName">{t('recipientName')} *</label>
+                <input
+                  type="text"
+                  id="recipientName"
+                  name="recipientName"
+                  value={formData.recipientName}
+                  onChange={handleChange}
+                  placeholder={t('enterRecipientName')}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="recipientPhone">{t('recipientPhone')} *</label>
+                <input
+                  type="tel"
+                  id="recipientPhone"
+                  name="recipientPhone"
+                  value={formData.recipientPhone}
+                  onChange={handleChange}
+                  placeholder="+998 90 123 45 67"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="deliveryDate">{t('preferredDeliveryDate')}</label>
+                <input
+                  type="date"
+                  id="deliveryDate"
+                  name="deliveryDate"
+                  value={formData.deliveryDate}
+                  onChange={handleChange}
+                  min={formData.pickupDate || new Date().toISOString().split('T')[0]}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 3:
+        return (
+          <div className="form-step">
+            <h3>{t('packageInformation')}</h3>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="weight">{t('weight')} (kg) *</label>
+                <input
+                  type="number"
+                  id="weight"
+                  name="weight"
+                  value={formData.weight}
+                  onChange={handleChange}
+                  placeholder="0.5"
+                  min="0.1"
+                  step="0.1"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="dimensions">{t('dimensions')} (cm)</label>
+                <input
+                  type="text"
+                  id="dimensions"
+                  name="dimensions"
+                  value={formData.dimensions}
+                  onChange={handleChange}
+                  placeholder="20x15x10"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="packageType">{t('packageType')}</label>
+                <select
+                  id="packageType"
+                  name="packageType"
+                  value={formData.packageType}
+                  onChange={handleChange}
+                >
+                  <option value="standard">{t('standard')}</option>
+                  <option value="fragile">{t('fragile')}</option>
+                  <option value="electronics">{t('electronics')}</option>
+                  <option value="documents">{t('documents')}</option>
+                  <option value="food">{t('food')}</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">{t('packageDescription')} *</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder={t('enterPackageDescription')}
+                  required
+                  rows="3"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="urgency">{t('deliveryUrgency')}</label>
+                <select
+                  id="urgency"
+                  name="urgency"
+                  value={formData.urgency}
+                  onChange={handleChange}
+                >
+                  <option value="standard">{t('standard')} (3-5 {t('days')})</option>
+                  <option value="express">{t('express')} (1-2 {t('days')})</option>
+                  <option value="urgent">{t('urgent')} ({t('sameDay')})</option>
+                </select>
+              </div>
+              <div className="form-group checkbox-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="insurance"
+                    checked={formData.insurance}
+                    onChange={handleChange}
+                  />
+                  <span className="checkmark"></span>
+                  {t('addInsurance')}
+                </label>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 4:
+        return (
+          <div className="form-step">
+            <h3>{t('contactInformation')}</h3>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="customerName">{t('yourName')} *</label>
+                <input
+                  type="text"
+                  id="customerName"
+                  name="customerName"
+                  value={formData.customerName}
+                  onChange={handleChange}
+                  placeholder={t('enterYourName')}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="customerEmail">{t('yourEmail')} *</label>
+                <input
+                  type="email"
+                  id="customerEmail"
+                  name="customerEmail"
+                  value={formData.customerEmail}
+                  onChange={handleChange}
+                  placeholder="example@email.com"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="customerPhone">{t('yourPhone')} *</label>
+                <input
+                  type="tel"
+                  id="customerPhone"
+                  name="customerPhone"
+                  value={formData.customerPhone}
+                  onChange={handleChange}
+                  placeholder="+998 90 123 45 67"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="specialInstructions">{t('specialInstructions')}</label>
+                <textarea
+                  id="specialInstructions"
+                  name="specialInstructions"
+                  value={formData.specialInstructions}
+                  onChange={handleChange}
+                  placeholder={t('enterSpecialInstructions')}
+                  rows="3"
+                />
+              </div>
+            </div>
+            
+            {/* Order Summary */}
+            <div className="order-summary">
+              <h4>{t('orderSummary')}</h4>
+              <div className="summary-item">
+                <span>{t('route')}:</span>
+                <span>{formData.origin} → {formData.destination}</span>
+              </div>
+              <div className="summary-item">
+                <span>{t('weight')}:</span>
+                <span>{formData.weight} kg</span>
+              </div>
+              <div className="summary-item">
+                <span>{t('urgency')}:</span>
+                <span>{t(formData.urgency)}</span>
+              </div>
+              <div className="summary-item total">
+                <span>{t('estimatedPrice')}:</span>
+                <span>{calculatePrice(formData.weight, formData.urgency).toLocaleString()} UZS</span>
+              </div>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="order-form">
-      <div className="order-form-header">
-        <h1>{t('createOrder')}</h1>
-        <p>{t('createOrderDescription')}</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="order-form-content">
-        {/* Shipment Details */}
-        <div className="form-section">
-          <h3>{t('shipmentDetails')}</h3>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>{t('origin')} *</label>
-              <input
-                type="text"
-                name="origin"
-                value={formData.origin}
-                onChange={handleInputChange}
-                required
-                placeholder={t('enterOrigin')}
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('destination')} *</label>
-              <input
-                type="text"
-                name="destination"
-                value={formData.destination}
-                onChange={handleInputChange}
-                required
-                placeholder={t('enterDestination')}
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('weight')} (kg) *</label>
-              <input
-                type="number"
-                name="weight"
-                value={formData.weight}
-                onChange={handleInputChange}
-                required
-                min="0.1"
-                step="0.1"
-                placeholder="0.0"
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('dimensions')}</label>
-              <input
-                type="text"
-                name="dimensions"
-                value={formData.dimensions}
-                onChange={handleInputChange}
-                placeholder="L x W x H (cm)"
-              />
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label>{t('description')} *</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              required
-              rows="3"
-              placeholder={t('enterDescription')}
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>{t('specialInstructions')}</label>
-            <textarea
-              name="specialInstructions"
-              value={formData.specialInstructions}
-              onChange={handleInputChange}
-              rows="2"
-              placeholder={t('enterSpecialInstructions')}
-            />
-          </div>
+    <div className="order-form-page">
+      <div className="container">
+        <div className="order-form-header">
+          <h1>{t('createNewOrder')}</h1>
+          <p>{t('fillOrderDetails')}</p>
         </div>
 
-        {/* Delivery Options */}
-        <div className="form-section">
-          <h3>{t('deliveryOptions')}</h3>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>{t('urgency')} *</label>
-              <select
-                name="urgency"
-                value={formData.urgency}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="normal">{t('normal')} (3-5 {t('days')})</option>
-                <option value="urgent">{t('urgent')} (1-2 {t('days')}) +50%</option>
-                <option value="express">{t('express')} ({t('sameDay')}) +100%</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>{t('preferredDeliveryDate')}</label>
-              <input
-                type="date"
-                name="preferredDeliveryDate"
-                value={formData.preferredDeliveryDate}
-                onChange={handleInputChange}
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('preferredDeliveryTime')}</label>
-              <select
-                name="preferredDeliveryTime"
-                value={formData.preferredDeliveryTime}
-                onChange={handleInputChange}
-              >
-                <option value="">{t('anytime')}</option>
-                <option value="morning">09:00 - 12:00</option>
-                <option value="afternoon">12:00 - 17:00</option>
-                <option value="evening">17:00 - 20:00</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Recipient Information */}
-        <div className="form-section">
-          <h3>{t('recipientInformation')}</h3>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>{t('recipientName')} *</label>
-              <input
-                type="text"
-                name="recipientName"
-                value={formData.recipientName}
-                onChange={handleInputChange}
-                required
-                placeholder={t('enterRecipientName')}
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('recipientPhone')} *</label>
-              <input
-                type="tel"
-                name="recipientPhone"
-                value={formData.recipientPhone}
-                onChange={handleInputChange}
-                required
-                placeholder="+998 XX XXX XX XX"
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label>{t('recipientAddress')} *</label>
-            <textarea
-              name="recipientAddress"
-              value={formData.recipientAddress}
-              onChange={handleInputChange}
-              required
-              rows="2"
-              placeholder={t('enterRecipientAddress')}
-            />
-          </div>
-        </div>
-
-        {/* Insurance */}
-        <div className="form-section">
-          <h3>{t('insurance')}</h3>
-          <div className="form-group checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="insuranceRequired"
-                checked={formData.insuranceRequired}
-                onChange={handleInputChange}
-              />
-              <span>{t('insuranceRequired')}</span>
-            </label>
-          </div>
-          {formData.insuranceRequired && (
-            <div className="form-group">
-              <label>{t('estimatedValue')} ({t('currency')})</label>
-              <input
-                type="number"
-                name="estimatedValue"
-                value={formData.estimatedValue}
-                onChange={handleInputChange}
-                min="0"
-                placeholder="0"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Price Estimation */}
-        <div className="form-section price-section">
-          <h3>{t('priceEstimation')}</h3>
-          <div className="price-details">
-            {selectedRoute && (
-              <div className="route-info">
-                <p><strong>{t('selectedRoute')}:</strong> {selectedRoute.route}</p>
-                <p><strong>{t('distance')}:</strong> {selectedRoute.distance} km</p>
-              </div>
-            )}
-            <div className="price-breakdown">
-              <div className="price-item">
-                <span>{t('basePrice')}:</span>
-                <span>{estimatedPrice.toLocaleString()} {t('currency')}</span>
-              </div>
-              {formData.insuranceRequired && (
-                <div className="price-item">
-                  <span>{t('insurance')}:</span>
-                  <span>{Math.round(estimatedPrice * 0.02).toLocaleString()} {t('currency')}</span>
+        <div className="order-form-container">
+          {/* Progress Steps */}
+          <div className="progress-steps">
+            {[1, 2, 3, 4].map((stepNumber) => (
+              <div key={stepNumber} className={`progress-step ${step >= stepNumber ? 'active' : ''}`}>
+                <div className="step-circle">
+                  {step > stepNumber ? (
+                    <Icons.CheckCircle size={20} />
+                  ) : (
+                    <span>{stepNumber}</span>
+                  )}
                 </div>
-              )}
-              <div className="price-total">
-                <span><strong>{t('totalEstimated')}:</strong></span>
-                <span><strong>{(estimatedPrice + (formData.insuranceRequired ? Math.round(estimatedPrice * 0.02) : 0)).toLocaleString()} {t('currency')}</strong></span>
+                <span className="step-label">
+                  {stepNumber === 1 && t('pickup')}
+                  {stepNumber === 2 && t('delivery')}
+                  {stepNumber === 3 && t('package')}
+                  {stepNumber === 4 && t('contact')}
+                </span>
               </div>
-            </div>
-            <p className="price-note">{t('priceNote')}</p>
+            ))}
           </div>
-        </div>
 
-        {/* Submit */}
-        <div className="form-actions">
-          <button
-            type="button"
-            onClick={() => navigate('/profile')}
-            className="btn-secondary"
-          >
-            {t('cancel')}
-          </button>
-          <button
-            type="submit"
-            disabled={loading || !estimatedPrice}
-            className="btn-primary"
-          >
-            {loading ? t('creating') : t('createOrder')}
-          </button>
+          <form onSubmit={handleSubmit} className="order-form">
+            {renderStep()}
+
+            <div className="form-actions">
+              {step > 1 && (
+                <button type="button" onClick={prevStep} className="btn-secondary">
+                  <Icons.ArrowLeft size={16} />
+                  {t('previous')}
+                </button>
+              )}
+              
+              {step < 4 ? (
+                <button type="button" onClick={nextStep} className="btn-primary">
+                  {t('next')}
+                  <Icons.ArrowRight size={16} />
+                </button>
+              ) : (
+                <button type="submit" disabled={loading} className="btn-primary">
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      {t('creating')}
+                    </>
+                  ) : (
+                    <>
+                      <Icons.CheckCircle size={16} />
+                      {t('createOrder')}
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

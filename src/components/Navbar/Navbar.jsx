@@ -35,15 +35,15 @@ const Navbar = () => {
     setMenuOpen(false);
   };
 
-  // Protected routes where navbar should be hidden
+  // Protected routes where navbar should be hidden (excluding profile)
   const protectedRoutes = ['/dashboard', '/shipments', '/users', '/vehicles'];
   const isProtectedRoute = protectedRoutes.some(route => 
     location.pathname === route || location.pathname.startsWith(route + '/')
   );
 
-  // Hide navbar only on protected routes when authenticated
-  if (isAuthenticated && isProtectedRoute) {
-    return null; // Don't show navbar when authenticated on protected routes (Layout has sidebar)
+  // Hide navbar on protected routes when authenticated (but always show on profile)
+  if (isAuthenticated && isProtectedRoute && location.pathname !== '/profile') {
+    return null; // Don't show navbar when authenticated on protected routes except profile
   }
 
   return (

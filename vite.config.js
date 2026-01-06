@@ -10,12 +10,26 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: 'terser',
+    target: 'es2015',
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        // Optimize chunk splitting for better caching
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['./src/components'],
+          utils: ['./src/hooks', './src/contexts']
+        },
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    },
+    // Optimize build performance
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
       }
     }
   },
@@ -26,5 +40,13 @@ export default defineConfig({
   preview: {
     port: 3000,
     host: true
+  },
+  // Performance optimizations
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom']
+  },
+  // Enable gzip compression
+  define: {
+    __DEV__: process.env.NODE_ENV === 'development'
   }
 })
