@@ -240,203 +240,367 @@ const ProfileNew = () => {
         )}
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="profile-tabs">
-        <button 
-          className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => handleTabChange('overview')}
-        >
-          Umumiy ko'rinish
-        </button>
-        
+      {/* Main Content Area */}
+      <div className="profile-main">
+        {/* Sidebar for Carrier */}
         {role === 'carrier' && (
-          <>
-            <button 
-              className={`tab ${activeTab === 'available' ? 'active' : ''}`}
-              onClick={() => handleTabChange('available')}
-            >
-              Mavjud yuklar ({availableShipments.length})
-            </button>
-            <button 
-              className={`tab ${activeTab === 'my-shipments' ? 'active' : ''}`}
-              onClick={() => handleTabChange('my-shipments')}
-            >
-              Mening yuklarim ({myShipments.length})
-            </button>
-          </>
-        )}
-        
-        {role === 'customer' && (
-          <>
-            <button 
-              className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
-              onClick={() => handleTabChange('orders')}
-            >
-              Buyurtmalarim ({orders.length})
-            </button>
-            <button 
-              className={`tab ${activeTab === 'shipments' ? 'active' : ''}`}
-              onClick={() => handleTabChange('shipments')}
-            >
-              Yuk tashishlar ({myShipments.length})
-            </button>
-          </>
-        )}
-        
-        <button 
-          className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => handleTabChange('settings')}
-        >
-          Sozlamalar
-        </button>
-      </div>
-
-      {/* Tab Content */}
-      <div className="tab-content">
-        {activeTab === 'overview' && (
-          <div className="overview-content">
-            <div className="welcome-card">
-              <h2>Xush kelibsiz, {user?.username}!</h2>
-              <p>Bu yerda siz o'zingizning faoliyatingizni kuzatishingiz mumkin.</p>
-            </div>
-            
-            {role === 'carrier' && (
-              <div className="quick-actions">
-                <h3>Tezkor harakatlar</h3>
-                <div className="action-buttons">
-                  <button onClick={() => handleTabChange('available')} className="action-btn">
-                    Mavjud yuklarni ko'rish
-                  </button>
-                  <button onClick={() => handleTabChange('my-shipments')} className="action-btn">
-                    Mening yuklarim
-                  </button>
-                </div>
-              </div>
-            )}
-            
-            {role === 'customer' && (
-              <div className="quick-actions">
-                <h3>Tezkor harakatlar</h3>
-                <div className="action-buttons">
-                  <Link to="/orders/new" className="action-btn">
-                    Yangi buyurtma berish
-                  </Link>
-                  <button onClick={() => handleTabChange('orders')} className="action-btn">
-                    Buyurtmalarimni ko'rish
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'available' && role === 'carrier' && (
-          <div className="shipments-content">
-            <h3>Mavjud yuklar</h3>
-            {availableLoading ? (
-              <CardSkeleton count={3} />
-            ) : availableShipments.length > 0 ? (
-              <div className="shipments-grid">
-                {availableShipments.map(shipment => (
-                  <div key={shipment.id} className="shipment-card">
-                    <div className="shipment-header">
-                      <h4>#{shipment.id}</h4>
-                      <span className="status available">Mavjud</span>
-                    </div>
-                    <div className="shipment-details">
-                      <p><strong>Dan:</strong> {shipment.origin}</p>
-                      <p><strong>Ga:</strong> {shipment.destination}</p>
-                      <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
-                    </div>
-                    <button className="btn-accept">
-                      Qabul qilish
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <p>Hozircha mavjud yuklar yo'q</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'my-shipments' && (
-          <div className="shipments-content">
-            <h3>Mening yuk tashishlarim</h3>
-            {shipmentsLoading ? (
-              <CardSkeleton count={3} />
-            ) : myShipments.length > 0 ? (
-              <div className="shipments-grid">
-                {myShipments.map(shipment => (
-                  <div key={shipment.id} className="shipment-card">
-                    <div className="shipment-header">
-                      <h4>#{shipment.id}</h4>
-                      <span className={`status ${shipment.status.toLowerCase()}`}>
-                        {shipment.status}
-                      </span>
-                    </div>
-                    <div className="shipment-details">
-                      <p><strong>Dan:</strong> {shipment.origin}</p>
-                      <p><strong>Ga:</strong> {shipment.destination}</p>
-                      <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
-                    </div>
-                    {shipment.status === 'In Transit' && (
+          <div className="profile-sidebar">
+            <div className="sidebar-section">
+              <h3>Mavjud yuklar ({availableShipments.length})</h3>
+              <div className="sidebar-content">
+                {availableLoading ? (
+                  <CardSkeleton count={2} />
+                ) : availableShipments.length > 0 ? (
+                  <div className="shipments-list">
+                    {availableShipments.slice(0, 5).map(shipment => (
+                      <div key={shipment.id} className="shipment-card-mini">
+                        <div className="shipment-header">
+                          <h4>#{shipment.id}</h4>
+                          <span className="status available">Mavjud</span>
+                        </div>
+                        <div className="shipment-details">
+                          <p><strong>Dan:</strong> {shipment.origin}</p>
+                          <p><strong>Ga:</strong> {shipment.destination}</p>
+                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                        </div>
+                        <button className="btn-accept-mini">
+                          Qabul qilish
+                        </button>
+                      </div>
+                    ))}
+                    {availableShipments.length > 5 && (
                       <button 
-                        className="btn-complete"
-                        onClick={() => setDeliveryModal({ isOpen: true, shipment })}
+                        className="view-all-btn"
+                        onClick={() => handleTabChange('available')}
                       >
-                        Yetkazib berishni yakunlash
+                        Barchasini ko'rish ({availableShipments.length})
                       </button>
                     )}
                   </div>
-                ))}
+                ) : (
+                  <div className="empty-state-mini">
+                    <p>Mavjud yuklar yo'q</p>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="empty-state">
-                <p>Hozircha yuk tashishlar yo'q</p>
-              </div>
-            )}
-          </div>
-        )}
+            </div>
 
-        {activeTab === 'settings' && (
-          <div className="settings-content">
-            <div className="settings-card">
-              <h3>Profil sozlamalari</h3>
-              <form className="settings-form">
-                <div className="form-group">
-                  <label>Foydalanuvchi nomi</label>
-                  <input 
-                    type="text" 
-                    value={formData.username} 
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input 
-                    type="email" 
-                    value={formData.email} 
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Telefon</label>
-                  <input 
-                    type="tel" 
-                    value={formData.phone} 
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  />
-                </div>
-                <button type="submit" className="btn-save">
-                  Saqlash
-                </button>
-              </form>
+            <div className="sidebar-section">
+              <h3>Mening yuklarim ({myShipments.length})</h3>
+              <div className="sidebar-content">
+                {shipmentsLoading ? (
+                  <CardSkeleton count={2} />
+                ) : myShipments.length > 0 ? (
+                  <div className="shipments-list">
+                    {myShipments.slice(0, 5).map(shipment => (
+                      <div key={shipment.id} className="shipment-card-mini">
+                        <div className="shipment-header">
+                          <h4>#{shipment.id}</h4>
+                          <span className={`status ${shipment.status.toLowerCase()}`}>
+                            {shipment.status}
+                          </span>
+                        </div>
+                        <div className="shipment-details">
+                          <p><strong>Dan:</strong> {shipment.origin}</p>
+                          <p><strong>Ga:</strong> {shipment.destination}</p>
+                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                        </div>
+                        {shipment.status === 'In Transit' && (
+                          <button 
+                            className="btn-complete-mini"
+                            onClick={() => setDeliveryModal({ isOpen: true, shipment })}
+                          >
+                            Yakunlash
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    {myShipments.length > 5 && (
+                      <button 
+                        className="view-all-btn"
+                        onClick={() => handleTabChange('my-shipments')}
+                      >
+                        Barchasini ko'rish ({myShipments.length})
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="empty-state-mini">
+                    <p>Yuk tashishlar yo'q</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
+
+        {/* Main Content */}
+        <div className={`profile-content ${role === 'carrier' ? 'with-sidebar' : ''}`}>
+          {/* Navigation Tabs */}
+          <div className="profile-tabs">
+            <button 
+              className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
+              onClick={() => handleTabChange('overview')}
+            >
+              Umumiy ko'rinish
+            </button>
+            
+            {role === 'carrier' && (
+              <>
+                <button 
+                  className={`tab ${activeTab === 'available' ? 'active' : ''}`}
+                  onClick={() => handleTabChange('available')}
+                >
+                  Barcha mavjud yuklar
+                </button>
+                <button 
+                  className={`tab ${activeTab === 'my-shipments' ? 'active' : ''}`}
+                  onClick={() => handleTabChange('my-shipments')}
+                >
+                  Barcha yuklarim
+                </button>
+              </>
+            )}
+            
+            {role === 'customer' && (
+              <>
+                <button 
+                  className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
+                  onClick={() => handleTabChange('orders')}
+                >
+                  Buyurtmalarim ({orders.length})
+                </button>
+                <button 
+                  className={`tab ${activeTab === 'shipments' ? 'active' : ''}`}
+                  onClick={() => handleTabChange('shipments')}
+                >
+                  Yuk tashishlar ({myShipments.length})
+                </button>
+              </>
+            )}
+            
+            <button 
+              className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
+              onClick={() => handleTabChange('settings')}
+            >
+              Sozlamalar
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="tab-content">
+            {activeTab === 'overview' && (
+              <div className="overview-content">
+                <div className="welcome-card">
+                  <h2>Xush kelibsiz, {user?.username}!</h2>
+                  <p>Bu yerda siz o'zingizning faoliyatingizni kuzatishingiz mumkin.</p>
+                </div>
+                
+                {role === 'carrier' && (
+                  <div className="quick-actions">
+                    <h3>Tezkor harakatlar</h3>
+                    <div className="action-buttons">
+                      <button onClick={() => handleTabChange('available')} className="action-btn">
+                        Barcha mavjud yuklarni ko'rish
+                      </button>
+                      <button onClick={() => handleTabChange('my-shipments')} className="action-btn">
+                        Barcha yuklarimni ko'rish
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                {role === 'customer' && (
+                  <div className="quick-actions">
+                    <h3>Tezkor harakatlar</h3>
+                    <div className="action-buttons">
+                      <Link to="/orders/new" className="action-btn">
+                        Yangi buyurtma berish
+                      </Link>
+                      <button onClick={() => handleTabChange('orders')} className="action-btn">
+                        Buyurtmalarimni ko'rish
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'available' && role === 'carrier' && (
+              <div className="shipments-content">
+                <h3>Barcha mavjud yuklar</h3>
+                {availableLoading ? (
+                  <CardSkeleton count={3} />
+                ) : availableShipments.length > 0 ? (
+                  <div className="shipments-grid">
+                    {availableShipments.map(shipment => (
+                      <div key={shipment.id} className="shipment-card">
+                        <div className="shipment-header">
+                          <h4>#{shipment.id}</h4>
+                          <span className="status available">Mavjud</span>
+                        </div>
+                        <div className="shipment-details">
+                          <p><strong>Dan:</strong> {shipment.origin}</p>
+                          <p><strong>Ga:</strong> {shipment.destination}</p>
+                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                        </div>
+                        <button className="btn-accept">
+                          Qabul qilish
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>Hozircha mavjud yuklar yo'q</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'my-shipments' && (
+              <div className="shipments-content">
+                <h3>Barcha yuk tashishlarim</h3>
+                {shipmentsLoading ? (
+                  <CardSkeleton count={3} />
+                ) : myShipments.length > 0 ? (
+                  <div className="shipments-grid">
+                    {myShipments.map(shipment => (
+                      <div key={shipment.id} className="shipment-card">
+                        <div className="shipment-header">
+                          <h4>#{shipment.id}</h4>
+                          <span className={`status ${shipment.status.toLowerCase()}`}>
+                            {shipment.status}
+                          </span>
+                        </div>
+                        <div className="shipment-details">
+                          <p><strong>Dan:</strong> {shipment.origin}</p>
+                          <p><strong>Ga:</strong> {shipment.destination}</p>
+                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                        </div>
+                        {shipment.status === 'In Transit' && (
+                          <button 
+                            className="btn-complete"
+                            onClick={() => setDeliveryModal({ isOpen: true, shipment })}
+                          >
+                            Yetkazib berishni yakunlash
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>Hozircha yuk tashishlar yo'q</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'orders' && role === 'customer' && (
+              <div className="orders-content">
+                <h3>Buyurtmalarim</h3>
+                {ordersLoading ? (
+                  <CardSkeleton count={3} />
+                ) : orders.length > 0 ? (
+                  <div className="orders-grid">
+                    {orders.map(order => (
+                      <div key={order.id} className="order-card">
+                        <div className="order-header">
+                          <h4>#{order.trackingNumber || order.id}</h4>
+                          <span className={`status ${order.status.toLowerCase()}`}>
+                            {order.status}
+                          </span>
+                        </div>
+                        <div className="order-details">
+                          <p><strong>Dan:</strong> {order.origin}</p>
+                          <p><strong>Ga:</strong> {order.destination}</p>
+                          <p><strong>Og'irligi:</strong> {order.weight} kg</p>
+                          <p><strong>Narxi:</strong> {order.estimatedPrice?.toLocaleString()} UZS</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>Hozircha buyurtmalar yo'q</p>
+                    <Link to="/orders/new" className="btn-primary">
+                      Yangi buyurtma berish
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'shipments' && role === 'customer' && (
+              <div className="shipments-content">
+                <h3>Mening yuk tashishlarim</h3>
+                {shipmentsLoading ? (
+                  <CardSkeleton count={3} />
+                ) : myShipments.length > 0 ? (
+                  <div className="shipments-grid">
+                    {myShipments.map(shipment => (
+                      <div key={shipment.id} className="shipment-card">
+                        <div className="shipment-header">
+                          <h4>#{shipment.id}</h4>
+                          <span className={`status ${shipment.status.toLowerCase()}`}>
+                            {shipment.status}
+                          </span>
+                        </div>
+                        <div className="shipment-details">
+                          <p><strong>Dan:</strong> {shipment.origin}</p>
+                          <p><strong>Ga:</strong> {shipment.destination}</p>
+                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>Hozircha yuk tashishlar yo'q</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="settings-content">
+                <div className="settings-card">
+                  <h3>Profil sozlamalari</h3>
+                  <form className="settings-form">
+                    <div className="form-group">
+                      <label>Foydalanuvchi nomi</label>
+                      <input 
+                        type="text" 
+                        value={formData.username} 
+                        onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Telefon</label>
+                      <input 
+                        type="tel" 
+                        value={formData.phone} 
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      />
+                    </div>
+                    <button type="submit" className="btn-save">
+                      Saqlash
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Delivery Completion Modal */}
