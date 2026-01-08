@@ -36,6 +36,12 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading, error } = useUser();
   const token = localStorage.getItem('token');
 
+  console.log('ProtectedRoute - User:', user);
+  console.log('ProtectedRoute - Loading:', loading);
+  console.log('ProtectedRoute - Error:', error);
+  console.log('ProtectedRoute - Token:', !!token);
+  console.log('ProtectedRoute - Allowed roles:', allowedRoles);
+
   if (loading) {
     return <PageLoader message="Foydalanuvchi ma'lumotlari tekshirilmoqda..." />;
   }
@@ -51,10 +57,12 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (!token || !user) {
+    console.log('ProtectedRoute - Redirecting to login: no token or user');
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    console.log(`ProtectedRoute - Access denied: user role "${user.role}" not in allowed roles:`, allowedRoles);
     // Redirect based on role
     if (user.role === 'customer') {
       return <Navigate to="/profile" replace />;
@@ -65,6 +73,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     }
   }
 
+  console.log('ProtectedRoute - Access granted');
   return children;
 };
 
@@ -264,14 +273,12 @@ function App() {
             }
           />
 
-          {/* Protected Routes - Orders (Customer only) */}
+          {/* Protected Routes - Orders (All authenticated users) */}
           <Route
             path="/orders/new"
             element={
-              <ProtectedRoute allowedRoles={['customer']}>
-                <Layout onLogout={handleLogout}>
-                  <OrderForm />
-                </Layout>
+              <ProtectedRoute allowedRoles={['customer', 'user']}>
+                <OrderForm />
               </ProtectedRoute>
             }
           />

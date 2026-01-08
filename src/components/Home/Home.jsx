@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useUser } from '../../contexts/UserContext';
 import { Icons } from '../Icons/Icons';
 import './Home.scss';
 
 const Home = () => {
   const { t } = useTranslation();
+  const { user } = useUser();
 
   const features = [
     {
@@ -67,14 +69,31 @@ const Home = () => {
                 {t('heroDescription')}
               </p>
               <div className="hero-buttons">
-                <Link to="/register" className="btn-primary btn-large">
-                  <Icons.Rocket size={20} />
-                  {t('getStarted')}
-                </Link>
-                <Link to="/login" className="btn-secondary btn-large">
-                  <Icons.Lock size={20} />
-                  {t('login')}
-                </Link>
+                {user ? (
+                  // Authenticated user buttons
+                  <>
+                    <Link to="/orders/new" className="btn-primary btn-large">
+                      <Icons.Package size={20} />
+                      Buyurtma berish
+                    </Link>
+                    <Link to="/profile" className="btn-secondary btn-large">
+                      <Icons.User size={20} />
+                      Profil
+                    </Link>
+                  </>
+                ) : (
+                  // Non-authenticated user buttons
+                  <>
+                    <Link to="/register" className="btn-primary btn-large">
+                      <Icons.Rocket size={20} />
+                      {t('getStarted')}
+                    </Link>
+                    <Link to="/login" className="btn-secondary btn-large">
+                      <Icons.Lock size={20} />
+                      {t('login')}
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
             <div className="hero-visual">

@@ -48,6 +48,55 @@ const Login = ({ onLogin }) => {
 
     // Check API connection first
     if (apiStatus !== 'connected') {
+      setError('Server bilan bog\'lanish yo\'q. Iltimos, kuting...');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      console.log('Attempting login with:', { username, password: '***' });
+      
+      const response = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      console.log('Login response status:', response.status);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login successful, user data:', data);
+        
+        localStorage.setItem('token', data.token);
+        
+        // Show user role info
+        console.log(`Logged in as: ${data.user.username} (${data.user.role})`);
+        
+        if (onLogin) {
+          await onLogin(data.token, data.user);
+        }
+        
+        // Redirect based on role
+        if (data.user.role === 'admin' || data.user.role === 'operator') {
+          navigate('/dashboard');
+        } else {
+          navigate('/profile');
+        }
+      } else {
+        const errorData = await response.json();
+        console.error('Login failed:', errorData);
+        setError(errorData.error || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
       setError('Server bilan aloqa yo\'q. Iltimos, sahifani yangilang.');
       setLoading(false);
       return;
@@ -133,6 +182,9 @@ const Login = ({ onLogin }) => {
     if (role === 'admin') {
       setUsername('admin');
       setPassword('admin123');
+    } else if (role === 'operator') {
+      setUsername('operator');
+      setPassword('admin123');
     }
   };
 
@@ -163,6 +215,34 @@ const Login = ({ onLogin }) => {
               {error}
             </div>
           )}
+          
+          {/* Default Credentials Helper */}
+          <div className="default-credentials">
+            <h4>Dashboard uchun:</h4>
+            <div className="credential-item">
+              <strong>Admin:</strong> admin / admin123
+              <button 
+                type="button" 
+                onClick={() => quickLogin('admin')}
+                className="quick-login-btn"
+              >
+                To'ldirish
+              </button>
+            </div>
+            <div className="credential-item">
+              <strong>Operator:</strong> operator / admin123
+              <button 
+                type="button" 
+                onClick={() => quickLogin('operator')}
+                className="quick-login-btn"
+              >
+                To'ldirish
+              </button>
+            </div>
+            <div className="current-user-info">
+              <small>Customer userlar: Dashboard ko'rmaydi, faqat buyurtma beradi</small>
+            </div>
+          </div>
           
           <div className="form-group">
             <label htmlFor="username">Foydalanuvchi nomi</label>

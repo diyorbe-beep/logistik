@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import { API_URL, testApiConnection } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import Loading from '../Loading/Loading';
 import './Dashboard.scss';
 
 const Dashboard = () => {
@@ -16,38 +17,100 @@ const Dashboard = () => {
   });
   const [shipments, setShipments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    fetchStats();
-    fetchRecentShipments();
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // First test API connection
+        console.log('Testing API connection...');
+        const connectionTest = await testApiConnection();
+        if (!connectionTest.success) {
+          throw new Error(`API connection failed: ${connectionTest.error}`);
+        }
+        console.log('API connection successful');
+        
+        await Promise.all([fetchStats(), fetchRecentShipments()]);
+      } catch (err) {
+        console.error('Dashboard loading error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboardData();
   }, []);
 
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      console.log('Fetching stats from:', `${API_URL}/api/stats`);
+      
       const response = await fetch(`${API_URL}/api/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
+      console.log('Stats response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Stats API error:', errorText);
+        throw new Error(`Stats API error: ${response.status} - ${errorText}`);
       }
+
+      const data = await response.json();
+      console.log('Stats data received:', data);
+      setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
   const fetchRecentShipments = async () => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      console.log('Fetching shipments from:', `${API_URL}/api/shipments`);
+      
       const response = await fetch(`${API_URL}/api/shipments`, {
         headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Shipments response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Shipments API error:', errorText);
+        throw new Error(`Shipments API error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('Shipments data received:', data);
+      setShipments(data.slice(0, 5)); // Show only recent 5
+    } catch (error) {
+      console.error('Error fetching shipments:', error);
+      throw error;
+    }
+  };
           'Authorization': `Bearer ${token}`,
         },
       });
@@ -79,7 +142,24 @@ const Dashboard = () => {
   }) || [];
 
   if (loading) {
-    return <div className="dashboard-loading">{t('loadingDashboard')}</div>;
+    return <Loading message="Dashboard yuklanmoqda..." size="large" />;
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-error">
+        <div className="error-content">
+          <h2>Dashboard yuklanmadi</h2>
+          <p>Xatolik: {error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn-primary"
+          >
+            Qayta yuklash
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

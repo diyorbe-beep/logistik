@@ -89,6 +89,60 @@
 }
 
 .login-form {
+  .default-credentials {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+
+    h4 {
+      margin: 0 0 $spacing-sm 0;
+      color: $text-primary;
+      font-size: 0.9rem;
+    }
+
+    .credential-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: $text-secondary;
+      margin-bottom: 0.5rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .quick-login-btn {
+        background: $primary;
+        color: white;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        @include smooth-transition(all, 0.2s);
+
+        &:hover {
+          background: $primary-dark;
+        }
+      }
+    }
+
+    .current-user-info {
+      margin-top: $spacing-sm;
+      padding-top: $spacing-sm;
+      border-top: 1px solid #e9ecef;
+      
+      small {
+        color: $text-secondary;
+        font-size: 0.8rem;
+        font-style: italic;
+      }
+    }
+  }
+
   .form-group {
     margin-bottom: $spacing-lg;
 

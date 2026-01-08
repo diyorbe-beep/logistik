@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useUser } from '../../contexts/UserContext';
 import { Icons } from '../Icons/Icons';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import './Navbar.scss';
@@ -10,6 +11,10 @@ const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
+  const { user } = useUser();
+
+  // Check if user can access dashboard
+  const canAccessDashboard = user && (user.role === 'admin' || user.role === 'operator');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -99,9 +104,14 @@ const Navbar = () => {
             )}
             {isAuthenticated && (
               <>
-                <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
-                  {t('dashboard')}
+                <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
+                  Buyurtma berish
                 </Link>
+                {canAccessDashboard && (
+                  <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
+                    {t('dashboard')}
+                  </Link>
+                )}
                 <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={closeMenu}>
                   {t('profile')}
                 </Link>
@@ -151,9 +161,14 @@ const Navbar = () => {
               )}
               {isAuthenticated && (
                 <>
-                  <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
-                    {t('dashboard')}
+                  <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
+                    Buyurtma berish
                   </Link>
+                  {canAccessDashboard && (
+                    <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
+                      {t('dashboard')}
+                    </Link>
+                  )}
                   <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={closeMenu}>
                     {t('profile')}
                   </Link>

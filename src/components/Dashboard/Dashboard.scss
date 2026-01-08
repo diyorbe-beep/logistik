@@ -23,6 +23,36 @@
   }
 }
 
+.dashboard-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: $spacing-xl;
+
+  .error-content {
+    text-align: center;
+    max-width: 500px;
+
+    h2 {
+      color: $error;
+      margin-bottom: $spacing-md;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: $text-secondary;
+      margin-bottom: $spacing-lg;
+      line-height: 1.6;
+    }
+
+    .btn-primary {
+      @include button-primary;
+      padding: $spacing-md $spacing-xl;
+    }
+  }
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
