@@ -111,18 +111,6 @@ const Dashboard = () => {
       throw error;
     }
   };
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setShipments(data.slice(0, 5)); // Get last 5 shipments
-      }
-    } catch (error) {
-      console.error('Error fetching shipments:', error);
-    }
-  };
 
   // Prepare chart data
   const statusChartData = [
