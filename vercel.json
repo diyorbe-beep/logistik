@@ -1,13 +1,10 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
-    {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
@@ -50,11 +47,11 @@
       ]
     },
     {
-      "source": "/index.html",
+      "source": "/(.*\\.css)",
       "headers": [
         {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
         }
       ]
     }
