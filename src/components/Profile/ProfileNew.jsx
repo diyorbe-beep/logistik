@@ -21,7 +21,7 @@ const ProfileNew = () => {
 
   // Optimized API calls with caching
   const { 
-    data: myShipments = [], 
+    data: rawMyShipments = [], 
     loading: shipmentsLoading, 
     refetch: refetchShipments 
   } = useApi('/api/my-shipments', {
@@ -30,7 +30,7 @@ const ProfileNew = () => {
   });
 
   const { 
-    data: availableShipments = [], 
+    data: rawAvailableShipments = [], 
     loading: availableLoading, 
     refetch: refetchAvailable 
   } = useApi('/api/available-shipments', {
@@ -39,13 +39,18 @@ const ProfileNew = () => {
   });
 
   const { 
-    data: orders = [], 
+    data: rawOrders = [], 
     loading: ordersLoading, 
     refetch: refetchOrders 
   } = useApi('/api/orders', {
     immediate: contextUser?.role === 'customer',
     dependencies: [contextUser?.role]
   });
+
+  // Ensure arrays are always arrays (additional safety)
+  const myShipments = Array.isArray(rawMyShipments) ? rawMyShipments : [];
+  const availableShipments = Array.isArray(rawAvailableShipments) ? rawAvailableShipments : [];
+  const orders = Array.isArray(rawOrders) ? rawOrders : [];
 
   // Combined loading state
   const loading = userLoading || shipmentsLoading || availableLoading || ordersLoading;
@@ -109,22 +114,37 @@ const ProfileNew = () => {
   };
 
   const getStats = () => {
-    if (role === 'carrier') {
+    // Get role from user or contextUser
+    const currentRole = user?.role || contextUser?.role;
+    
+    // Ensure arrays are not null/undefined
+    const safeMyShipments = myShipments || [];
+    const safeAvailableShipments = availableShipments || [];
+    const safeOrders = orders || [];
+    
+    if (currentRole === 'carrier') {
       return {
-        total: myShipments.length,
-        completed: myShipments.filter(s => s.status === 'Delivered').length,
-        inProgress: myShipments.filter(s => s.status === 'In Transit').length,
-        available: availableShipments.length
+        total: safeMyShipments.length,
+        completed: safeMyShipments.filter(s => s.status === 'Delivered').length,
+        inProgress: safeMyShipments.filter(s => s.status === 'In Transit').length,
+        available: safeAvailableShipments.length
       };
-    } else if (role === 'customer') {
+    } else if (currentRole === 'customer') {
       return {
-        total: orders.length,
-        completed: orders.filter(o => o.status === 'Completed').length,
-        pending: orders.filter(o => o.status === 'Pending').length,
-        shipments: myShipments.length
+        total: safeOrders.length,
+        completed: safeOrders.filter(o => o.status === 'Completed').length,
+        pending: safeOrders.filter(o => o.status === 'Pending').length,
+        shipments: safeMyShipments.length
       };
     }
-    return {};
+    return {
+      total: 0,
+      completed: 0,
+      pending: 0,
+      available: 0,
+      shipments: 0,
+      inProgress: 0
+    };
   };
 
   const stats = getStats();
@@ -246,13 +266,13 @@ const ProfileNew = () => {
         {role === 'carrier' && (
           <div className="profile-sidebar">
             <div className="sidebar-section">
-              <h3>Mavjud yuklar ({availableShipments.length})</h3>
+              <h3>Mavjud yuklar ({(availableShipments || []).length})</h3>
               <div className="sidebar-content">
                 {availableLoading ? (
                   <CardSkeleton count={2} />
-                ) : availableShipments.length > 0 ? (
+                ) : (availableShipments || []).length > 0 ? (
                   <div className="shipments-list">
-                    {availableShipments.slice(0, 5).map(shipment => (
+                    {(availableShipments || []).slice(0, 5).map(shipment => (
                       <div key={shipment.id} className="shipment-card-mini">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
@@ -268,12 +288,12 @@ const ProfileNew = () => {
                         </button>
                       </div>
                     ))}
-                    {availableShipments.length > 5 && (
+                    {(availableShipments || []).length > 5 && (
                       <button 
                         className="view-all-btn"
                         onClick={() => handleTabChange('available')}
                       >
-                        Barchasini ko'rish ({availableShipments.length})
+                        Barchasini ko'rish ({(availableShipments || []).length})
                       </button>
                     )}
                   </div>
@@ -286,13 +306,13 @@ const ProfileNew = () => {
             </div>
 
             <div className="sidebar-section">
-              <h3>Mening yuklarim ({myShipments.length})</h3>
+              <h3>Mening yuklarim ({(myShipments || []).length})</h3>
               <div className="sidebar-content">
                 {shipmentsLoading ? (
                   <CardSkeleton count={2} />
-                ) : myShipments.length > 0 ? (
+                ) : (myShipments || []).length > 0 ? (
                   <div className="shipments-list">
-                    {myShipments.slice(0, 5).map(shipment => (
+                    {(myShipments || []).slice(0, 5).map(shipment => (
                       <div key={shipment.id} className="shipment-card-mini">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
@@ -315,12 +335,12 @@ const ProfileNew = () => {
                         )}
                       </div>
                     ))}
-                    {myShipments.length > 5 && (
+                    {(myShipments || []).length > 5 && (
                       <button 
                         className="view-all-btn"
                         onClick={() => handleTabChange('my-shipments')}
                       >
-                        Barchasini ko'rish ({myShipments.length})
+                        Barchasini ko'rish ({(myShipments || []).length})
                       </button>
                     )}
                   </div>
@@ -368,13 +388,13 @@ const ProfileNew = () => {
                   className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
                   onClick={() => handleTabChange('orders')}
                 >
-                  Buyurtmalarim ({orders.length})
+                  Buyurtmalarim ({(orders || []).length})
                 </button>
                 <button 
                   className={`tab ${activeTab === 'shipments' ? 'active' : ''}`}
                   onClick={() => handleTabChange('shipments')}
                 >
-                  Yuk tashishlar ({myShipments.length})
+                  Yuk tashishlar ({(myShipments || []).length})
                 </button>
               </>
             )}
@@ -431,9 +451,9 @@ const ProfileNew = () => {
                 <h3>Barcha mavjud yuklar</h3>
                 {availableLoading ? (
                   <CardSkeleton count={3} />
-                ) : availableShipments.length > 0 ? (
+                ) : (availableShipments || []).length > 0 ? (
                   <div className="shipments-grid">
-                    {availableShipments.map(shipment => (
+                    {(availableShipments || []).map(shipment => (
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
@@ -463,9 +483,9 @@ const ProfileNew = () => {
                 <h3>Barcha yuk tashishlarim</h3>
                 {shipmentsLoading ? (
                   <CardSkeleton count={3} />
-                ) : myShipments.length > 0 ? (
+                ) : (myShipments || []).length > 0 ? (
                   <div className="shipments-grid">
-                    {myShipments.map(shipment => (
+                    {(myShipments || []).map(shipment => (
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
@@ -502,9 +522,9 @@ const ProfileNew = () => {
                 <h3>Buyurtmalarim</h3>
                 {ordersLoading ? (
                   <CardSkeleton count={3} />
-                ) : orders.length > 0 ? (
+                ) : (orders || []).length > 0 ? (
                   <div className="orders-grid">
-                    {orders.map(order => (
+                    {(orders || []).map(order => (
                       <div key={order.id} className="order-card">
                         <div className="order-header">
                           <h4>#{order.trackingNumber || order.id}</h4>
@@ -537,9 +557,9 @@ const ProfileNew = () => {
                 <h3>Mening yuk tashishlarim</h3>
                 {shipmentsLoading ? (
                   <CardSkeleton count={3} />
-                ) : myShipments.length > 0 ? (
+                ) : (myShipments || []).length > 0 ? (
                   <div className="shipments-grid">
-                    {myShipments.map(shipment => (
+                    {(myShipments || []).map(shipment => (
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>

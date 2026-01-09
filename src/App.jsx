@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { useUser } from './contexts/UserContext';
 import Navbar from './components/Navbar/Navbar';
 import Loading from './components/Loading/Loading';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.scss';
 
 // Lazy load components for better performance
@@ -119,7 +120,12 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router 
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
       <Navbar />
       <Suspense fallback={<PageLoader />}>
         <Routes>
@@ -288,7 +294,9 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute>
-                <Profile />
+                <ErrorBoundary>
+                  <Profile />
+                </ErrorBoundary>
               </ProtectedRoute>
             }
           />

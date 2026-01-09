@@ -46,6 +46,9 @@ const Login = ({ onLogin }) => {
     setError('');
     setLoading(true);
 
+    // Clear any existing tokens to prevent conflicts
+    localStorage.removeItem('token');
+
     // Check API connection first
     if (apiStatus !== 'connected') {
       setError('Server bilan aloqa yo\'q. Iltimos, sahifani yangilang.');
