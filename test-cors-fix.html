@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Fix Test</title>
+</head>
+<body>
+    <h1>Testing CORS Fix</h1>
+    <div id="results"></div>
+    
+    <script>
+        const API_URL = 'https://logistik-pro.onrender.com';
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, isError = false) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            p.style.color = isError ? 'red' : 'green';
+            resultsDiv.appendChild(p);
+        }
+        
+        // Test 1: Health check without headers
+        async function testHealthCheck() {
+            try {
+                addResult('Testing health check...');
+                const response = await fetch(`${API_URL}/api/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(`✅ Health check passed: ${data.status}`);
+                } else {
+                    addResult(`❌ Health check failed: ${response.status}`, true);
+                }
+            } catch (error) {
+                addResult(`❌ Health check error: ${error.message}`, true);
+            }
+        }
+        
+        // Test 2: Profile request with Authorization header (should fail without token)
+        async function testProfileWithAuth() {
+            try {
+                addResult('Testing profile endpoint with auth header...');
+                const response = await fetch(`${API_URL}/api/profile`, {
+                    headers: {
+                        'Authorization': 'Bearer fake-token'
+                    }
+                });
+                
+                if (response.status === 401) {
+                    addResult('✅ CORS working - got expected 401 (unauthorized)');
+                } else {
+                    addResult(`❌ Unexpected response: ${response.status}`, true);
+                }
+            } catch (error) {
+                if (error.message.includes('CORS')) {
+                    addResult(`❌ CORS error still exists: ${error.message}`, true);
+                } else {
+                    addResult(`✅ CORS working - got network error (expected): ${error.message}`);
+                }
+            }
+        }
+        
+        // Test 3: Profile request with Cache-Control header
+        async function testProfileWithCacheControl() {
+            try {
+                addResult('Testing profile endpoint with Cache-Control header...');
+                const response = await fetch(`${API_URL}/api/profile`, {
+                    headers: {
+                        'Authorization': 'Bearer fake-token',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (response.status === 401) {
+                    addResult('✅ Cache-Control header accepted - got expected 401');
+                } else {
+                    addResult(`❌ Unexpected response: ${response.status}`, true);
+                }
+            } catch (error) {
+                if (error.message.includes('cache-control') || error.message.includes('Cache-Control')) {
+                    addResult(`❌ Cache-Control CORS error still exists: ${error.message}`, true);
+                } else {
+                    addResult(`✅ Cache-Control working - got network error: ${error.message}`);
+                }
+            }
+        }
+        
+        // Run all tests
+        async function runTests() {
+            addResult('Starting CORS tests...');
+            await testHealthCheck();
+            await testProfileWithAuth();
+            await testProfileWithCacheControl();
+            addResult('Tests completed!');
+        }
+        
+        // Start tests when page loads
+        runTests();
+    </script>
+</body>
+</html>

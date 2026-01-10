@@ -34,8 +34,7 @@ export const UserProvider = ({ children }) => {
 
       const response = await fetch(`${API_URL}/api/profile`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Cache-Control': 'no-cache'
+          'Authorization': `Bearer ${token}`
         },
         signal: controller.signal
       });
