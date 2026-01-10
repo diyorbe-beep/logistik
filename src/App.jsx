@@ -11,6 +11,7 @@ const Home = lazy(() => import('./components/Home/Home'));
 const Login = lazy(() => import('./components/Login/Login'));
 const Register = lazy(() => import('./components/Register/Register'));
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
+const Orders = lazy(() => import('./components/Orders/Orders'));
 const Shipments = lazy(() => import('./components/Shipments/Shipments'));
 const ShipmentForm = lazy(() => import('./components/Shipments/ShipmentForm'));
 const Users = lazy(() => import('./components/Users/Users'));
@@ -160,6 +161,18 @@ function App() {
                 <ProtectedRoute allowedRoles={['admin', 'operator']}>
                   <Layout onLogout={handleLogout}>
                     <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Protected Routes - Orders (Operator & Admin only) */}
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'operator']}>
+                  <Layout onLogout={handleLogout}>
+                    <Orders />
                   </Layout>
                 </ProtectedRoute>
               }

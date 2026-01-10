@@ -38,6 +38,15 @@ const Layout = ({ children, onLogout }) => {
       });
     }
 
+    // Orders - Only for operator and admin
+    if (role === 'admin' || role === 'operator') {
+      items.push({
+        path: '/orders',
+        icon: <Icons.FileText size={20} />,
+        text: t('orders'),
+      });
+    }
+
     // Shipments - Only for operator and admin
     if (role === 'admin' || role === 'operator') {
       items.push({

@@ -8,6 +8,7 @@ import './Vehicles.scss';
 const Vehicles = () => {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -26,11 +27,39 @@ const Vehicles = () => {
       if (response.ok) {
         const data = await response.json();
         setVehicles(data);
+      } else {
+        setError(t('error'));
       }
     } catch (err) {
       console.error('Error fetching vehicles:', err);
+      setError(t('error'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm(t('deleteVehicleConfirm'))) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/vehicles/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setVehicles(vehicles.filter(v => v.id !== id));
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || t('error'));
+      }
+    } catch (err) {
+      alert(t('error'));
     }
   };
 
@@ -47,6 +76,19 @@ const Vehicles = () => {
     }
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Available':
+        return 'status-available';
+      case 'In Use':
+        return 'status-in-use';
+      case 'Maintenance':
+        return 'status-maintenance';
+      default:
+        return '';
+    }
+  };
+
   if (loading) {
     return <div className="loading">{t('loadingVehicles')}</div>;
   }
@@ -60,20 +102,57 @@ const Vehicles = () => {
         </Link>
       </div>
 
-      <div className="vehicles-grid">
-        {vehicles.map((vehicle) => (
-          <div key={vehicle.id} className="vehicle-card">
-            <div className="vehicle-icon">
-              <Icons.Truck size={48} color="#2563eb" />
+      {error && <div className="error-message">{error}</div>}
+
+      {vehicles.length === 0 ? (
+        <div className="empty-state">
+          <p>{t('noVehicles')}</p>
+          <Link to="/vehicles/new" className="btn-primary">
+            {t('createVehicle')}
+          </Link>
+        </div>
+      ) : (
+        <div className="vehicles-grid">
+          {vehicles.map((vehicle) => (
+            <div key={vehicle.id} className="vehicle-card">
+              <div className="vehicle-icon">
+                <Icons.Truck size={48} color="#2563eb" />
+              </div>
+              <div className="vehicle-info">
+                <h3>{vehicle.name}</h3>
+                <p className="vehicle-type">{vehicle.type}</p>
+                {vehicle.licensePlate && (
+                  <p className="license-plate">{vehicle.licensePlate}</p>
+                )}
+                {vehicle.capacity && (
+                  <p className="capacity">{t('capacity')}: {vehicle.capacity}</p>
+                )}
+                <span className={`status-badge ${getStatusClass(vehicle.status)}`}>
+                  {getStatusTranslation(vehicle.status)}
+                </span>
+              </div>
+              <div className="vehicle-actions">
+                <Link 
+                  to={`/vehicles/edit/${vehicle.id}`} 
+                  className="btn-edit"
+                  title={t('editVehicle')}
+                >
+                  <Icons.Edit size={16} />
+                  {t('edit')}
+                </Link>
+                <button
+                  onClick={() => handleDelete(vehicle.id)}
+                  className="btn-delete"
+                  title={t('deleteVehicle')}
+                >
+                  <Icons.Trash size={16} />
+                  {t('delete')}
+                </button>
+              </div>
             </div>
-            <h3>{vehicle.name}</h3>
-            <p className="vehicle-type">{vehicle.type}</p>
-            <span className={`status-badge ${vehicle.status.toLowerCase().replace(' ', '-')}`}>
-              {getStatusTranslation(vehicle.status)}
-            </span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
