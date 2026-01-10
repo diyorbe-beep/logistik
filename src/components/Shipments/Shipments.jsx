@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useUser } from '../../contexts/UserContext';
 import { API_URL } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import './Shipments.scss';
@@ -13,6 +14,10 @@ const Shipments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const { t } = useTranslation();
+  const { user } = useUser();
+
+  // Check if user can edit/delete shipments
+  const canEditDelete = user && (user.role === 'admin' || user.role === 'operator');
 
   useEffect(() => {
     fetchShipments();
@@ -127,9 +132,11 @@ const Shipments = () => {
     <div className="shipments">
       <div className="shipments-header">
         <h1>{t('shipments')}</h1>
-        <Link to="/shipments/new" className="btn-primary">
-          {t('newShipment')}
-        </Link>
+        {canEditDelete && (
+          <Link to="/shipments/new" className="btn-primary">
+            {t('newShipment')}
+          </Link>
+        )}
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -167,9 +174,11 @@ const Shipments = () => {
       {shipments.length === 0 ? (
         <div className="empty-state">
           <p>{t('noShipments')}</p>
-          <Link to="/shipments/new" className="btn-primary">
-            {t('createShipment')}
-          </Link>
+          {canEditDelete && (
+            <Link to="/shipments/new" className="btn-primary">
+              {t('createShipment')}
+            </Link>
+          )}
         </div>
       ) : filteredShipments.length === 0 ? (
         <div className="empty-state">
@@ -189,7 +198,7 @@ const Shipments = () => {
                   <th>{t('status')}</th>
                   <th>{t('vehicle')}</th>
                   <th>{t('created')}</th>
-                  <th>{t('actions')}</th>
+                  {canEditDelete && <th>{t('actions')}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -206,19 +215,21 @@ const Shipments = () => {
                     </td>
                     <td>{shipment.vehicle || t('nA')}</td>
                     <td>{new Date(shipment.createdAt).toLocaleDateString()}</td>
-                    <td className="actions">
-                      <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
-                        <Icons.Edit size={16} />
-                        {t('edit')}
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(shipment.id)}
-                        className="btn-delete"
-                      >
-                        <Icons.Trash size={16} />
-                        {t('delete')}
-                      </button>
-                    </td>
+                    {canEditDelete && (
+                      <td className="actions">
+                        <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                          <Icons.Edit size={16} />
+                          {t('edit')}
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(shipment.id)}
+                          className="btn-delete"
+                        >
+                          <Icons.Trash size={16} />
+                          {t('delete')}
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -253,19 +264,21 @@ const Shipments = () => {
                     <span className="value">{new Date(shipment.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
-                <div className="card-actions">
-                  <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
-                    <Icons.Edit size={16} />
-                    {t('edit')}
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(shipment.id)}
-                    className="btn-delete"
-                  >
-                    <Icons.Trash size={16} />
-                    {t('delete')}
-                  </button>
-                </div>
+                {canEditDelete && (
+                  <div className="card-actions">
+                    <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                      <Icons.Edit size={16} />
+                      {t('edit')}
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(shipment.id)}
+                      className="btn-delete"
+                    >
+                      <Icons.Trash size={16} />
+                      {t('delete')}
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

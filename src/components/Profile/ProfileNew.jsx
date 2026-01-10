@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import { useApi } from '../../hooks/useApi';
+import { API_URL } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import Loading, { SkeletonLoader, CardSkeleton } from '../Loading/Loading';
 import DeliveryCompletionModal from '../DeliveryCompletion/DeliveryCompletionModal';
@@ -76,6 +77,32 @@ const ProfileNew = () => {
       refetchOrders();
     }
   }, [contextUser?.role, refetchUser, refetchShipments, refetchAvailable, refetchOrders]);
+
+  // Accept shipment function
+  const handleAcceptShipment = async (shipmentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/shipments/${shipmentId}/accept`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Refresh data after accepting
+        refreshData();
+        alert('Yuk tashish muvaffaqiyatli qabul qilindi!');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Xatolik yuz berdi');
+      }
+    } catch (error) {
+      console.error('Error accepting shipment:', error);
+      alert('Xatolik yuz berdi');
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -283,7 +310,10 @@ const ProfileNew = () => {
                           <p><strong>Ga:</strong> {shipment.destination}</p>
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
-                        <button className="btn-accept-mini">
+                        <button 
+                          className="btn-accept-mini"
+                          onClick={() => handleAcceptShipment(shipment.id)}
+                        >
                           Qabul qilish
                         </button>
                       </div>
@@ -464,7 +494,10 @@ const ProfileNew = () => {
                           <p><strong>Ga:</strong> {shipment.destination}</p>
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
-                        <button className="btn-accept">
+                        <button 
+                          className="btn-accept"
+                          onClick={() => handleAcceptShipment(shipment.id)}
+                        >
                           Qabul qilish
                         </button>
                       </div>
