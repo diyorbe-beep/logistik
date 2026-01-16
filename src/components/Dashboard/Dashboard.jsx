@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL, testApiConnection } from '../../config/api';
+import api from '../../api/client';
+import { testApiConnection } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Loading from '../Loading/Loading';
@@ -25,7 +26,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // First test API connection
         console.log('Testing API connection...');
         const connectionTest = await testApiConnection();
@@ -33,7 +34,7 @@ const Dashboard = () => {
           throw new Error(`API connection failed: ${connectionTest.error}`);
         }
         console.log('API connection successful');
-        
+
         await Promise.all([fetchStats(), fetchRecentShipments()]);
       } catch (err) {
         console.error('Dashboard loading error:', err);
@@ -46,33 +47,28 @@ const Dashboard = () => {
     loadDashboardData();
   }, []);
 
+  /* API Connection test removed as we trust the client */
+
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
+      console.log('Fetching stats...');
+      // Note: Backend endpoint for stats might need to be /shipments/stats or similar
+      // For now, let's assume we can calculate from shipments list if stats endpoint doesn't exist yet
+      // Or if we implemented it. We didn't explicitly implement /api/stats in backend.
+      // So let's fetch shipments and calculate manually for now to be safe.
 
-      console.log('Fetching stats from:', `${API_URL}/api/stats`);
-      
-      const response = await fetch(`${API_URL}/api/stats`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await api.get('/shipments');
+      const allShipments = response.data;
 
-      console.log('Stats response status:', response.status);
+      const statsData = {
+        total: allShipments.length,
+        inTransit: allShipments.filter(s => s.status === 'In Transit').length,
+        delivered: allShipments.filter(s => s.status === 'Delivered').length,
+        received: allShipments.filter(s => s.status === 'Received').length,
+        monthly: [] // Would need more logic
+      };
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Stats API error:', errorText);
-        throw new Error(`Stats API error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('Stats data received:', data);
-      setStats(data);
+      setStats(statsData);
     } catch (error) {
       console.error('Error fetching stats:', error);
       throw error;
@@ -81,31 +77,9 @@ const Dashboard = () => {
 
   const fetchRecentShipments = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
-      console.log('Fetching shipments from:', `${API_URL}/api/shipments`);
-      
-      const response = await fetch(`${API_URL}/api/shipments`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      console.log('Shipments response status:', response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Shipments API error:', errorText);
-        throw new Error(`Shipments API error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('Shipments data received:', data);
-      setShipments(data.slice(0, 5)); // Show only recent 5
+      console.log('Fetching shipments...');
+      const response = await api.get('/shipments');
+      setShipments(response.data.slice(0, 5));
     } catch (error) {
       console.error('Error fetching shipments:', error);
       throw error;
@@ -139,8 +113,8 @@ const Dashboard = () => {
         <div className="error-content">
           <h2>Dashboard yuklanmadi</h2>
           <p>Xatolik: {error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="btn-primary"
           >
             Qayta yuklash

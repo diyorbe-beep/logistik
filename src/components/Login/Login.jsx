@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import { AuthService } from '../../services/authService';
 import { testApiConnection, wakeUpServer } from '../../utils/apiTest';
 import Loading from '../Loading/Loading';
 import './Login.scss';
@@ -19,7 +19,7 @@ const Login = ({ onLogin }) => {
   useEffect(() => {
     const checkApiConnection = async () => {
       const result = await testApiConnection();
-      
+
       if (result.success) {
         setApiStatus('connected');
       } else {
@@ -27,7 +27,7 @@ const Login = ({ onLogin }) => {
         // Try to wake up the server
         console.log('API not responding, attempting to wake up server...');
         setError('Server uyg\'onmoqda, iltimos kuting...');
-        
+
         const wakeResult = await wakeUpServer();
         if (wakeResult.success) {
           setApiStatus('connected');
@@ -57,75 +57,48 @@ const Login = ({ onLogin }) => {
     }
 
     try {
-      console.log('Attempting login with:', { username, apiUrl: API_URL });
-      
-      // Add timeout for better UX
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      console.log('Attempting login with:', { username });
 
-      const response = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (e) {
-        console.error('JSON parse error:', e);
-        throw new Error('Server javob berish xatosi. Iltimos, qayta urinib ko\'ring.');
-      }
-
-      console.log('Login response:', { status: response.status, data });
-
-      if (!response.ok) {
-        let errorMessage = data.error || 'Noma\'lum xatolik yuz berdi';
-        
-        // Handle specific error cases
-        if (response.status === 401) {
-          errorMessage = 'Noto\'g\'ri foydalanuvchi nomi yoki parol';
-        } else if (response.status === 400) {
-          errorMessage = 'Foydalanuvchi nomi va parol kiritish majburiy';
-        } else if (response.status >= 500) {
-          errorMessage = 'Server xatosi. Iltimos, keyinroq urinib ko\'ring.';
-        }
-        
-        setError(errorMessage);
-        return;
-      }
+      const data = await AuthService.login(username, password);
 
       // Successful login
       console.log('Login successful:', data.user);
-      
+
       if (onLogin) {
         await onLogin(data.token, data.user);
       }
-      
+
       // Small delay before navigation to allow context to update
       setTimeout(() => {
-        const defaultRoute = data.user?.role === 'admin' || data.user?.role === 'operator' 
-          ? '/dashboard' 
+        const defaultRoute = data.user?.role === 'admin' || data.user?.role === 'operator'
+          ? '/dashboard'
           : '/profile';
-        
+
         navigate(defaultRoute);
       }, 500); // 500ms delay
-      
+
+
     } catch (err) {
       console.error('Login error:', err);
-      
-      if (err.name === 'AbortError') {
-        setError('So\'rov vaqti tugadi. Server sekin javob bermoqda, qayta urinib ko\'ring.');
-      } else if (err.message.includes('fetch')) {
-        setError('Tarmoq xatosi. Internet aloqangizni tekshiring.');
-      } else {
-        setError(err.message || 'Kirish jarayonida xatolik yuz berdi');
+
+      let errorMessage = 'Kirish jarayonida xatolik yuz berdi';
+
+      if (err.response) {
+        // Axios error
+        if (err.response.status === 401) {
+          errorMessage = 'Noto\'g\'ri foydalanuvchi nomi yoki parol';
+        } else if (err.response.status === 400) {
+          errorMessage = err.response.data.error || 'Ma\'lumotlar noto\'g\'ri';
+        } else {
+          errorMessage = err.response.data.error || errorMessage;
+        }
+      } else if (err.code === 'ECONNABORTED') {
+        errorMessage = 'So\'rov vaqti tugadi. Server sekin javob bermoqda, qayta urinib ko\'ring.';
+      } else if (err.message && err.message.includes('Network Error')) {
+        errorMessage = 'Tarmoq xatosi. Internet aloqangizni tekshiring.';
       }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -152,7 +125,7 @@ const Login = ({ onLogin }) => {
         <div className="login-header">
           <h1>Tizimga kirish</h1>
           <p>Logistics Pro platformasiga xush kelibsiz</p>
-          
+
           {/* API Status Indicator */}
           <div className={`api-status api-status--${apiStatus}`}>
             <span className="status-dot"></span>
@@ -161,7 +134,7 @@ const Login = ({ onLogin }) => {
             {apiStatus === 'disconnected' && 'Server bilan aloqa yo\'q'}
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="login-form">
           {error && (
             <div className="error-message">
@@ -169,14 +142,14 @@ const Login = ({ onLogin }) => {
               {error}
             </div>
           )}
-          
+
           {/* Default Credentials Helper */}
           <div className="default-credentials">
             <h4>Dashboard uchun:</h4>
             <div className="credential-item">
               <strong>Admin:</strong> admin / admin123
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => quickLogin('admin')}
                 className="quick-login-btn"
               >
@@ -185,8 +158,8 @@ const Login = ({ onLogin }) => {
             </div>
             <div className="credential-item">
               <strong>Operator:</strong> operator / admin123
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => quickLogin('operator')}
                 className="quick-login-btn"
               >
@@ -197,7 +170,7 @@ const Login = ({ onLogin }) => {
               <small>Customer userlar: Dashboard ko'rmaydi, faqat buyurtma beradi</small>
             </div>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="username">Foydalanuvchi nomi</label>
             <input
@@ -210,7 +183,7 @@ const Login = ({ onLogin }) => {
               autoComplete="username"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Parol</label>
             <input
@@ -223,25 +196,25 @@ const Login = ({ onLogin }) => {
               autoComplete="current-password"
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className="login-btn" 
+
+          <button
+            type="submit"
+            className="login-btn"
             disabled={loading || apiStatus !== 'connected'}
           >
             {loading ? 'Kirilmoqda...' : 'Kirish'}
           </button>
         </form>
-        
+
         <div className="login-footer">
           <p>Hisobingiz yo'qmi? <Link to="/register">Ro'yxatdan o'ting</Link></p>
-          
+
           {/* Quick login for development */}
           {process.env.NODE_ENV === 'development' && (
             <div className="quick-login">
               <p>Tez kirish:</p>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => quickLogin('admin')}
                 className="quick-login-btn"
               >
@@ -249,7 +222,7 @@ const Login = ({ onLogin }) => {
               </button>
             </div>
           )}
-          
+
           <div className="login-hint">
             <p><strong>Test uchun:</strong></p>
             <p>Admin: admin / admin123</p>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import './Shipments.scss';
 
@@ -29,20 +29,9 @@ const Shipments = () => {
 
   const fetchShipments = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/shipments`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setShipments(data);
-        setFilteredShipments(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get('/shipments');
+      setShipments(response.data);
+      setFilteredShipments(response.data);
     } catch (err) {
       setError(t('error'));
     } finally {
@@ -80,19 +69,8 @@ const Shipments = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/shipments/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setShipments(shipments.filter(s => s.id !== id));
-      } else {
-        alert(t('error'));
-      }
+      await api.delete(`/shipments/${id}`);
+      setShipments(shipments.filter(s => s.id !== id));
     } catch (err) {
       alert(t('error'));
     }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import { AuthService } from '../../services/authService';
 import './Register.scss';
 
 const Register = () => {
@@ -54,61 +54,30 @@ const Register = () => {
 
       console.log('Register request:', requestBody);
 
-      const response = await fetch(`${API_URL}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (e) {
-        data = { error: 'Server error occurred' };
-      }
-
-      if (!response.ok) {
-        console.error('Register error:', data);
-        let errorMessage = data.error || t('error');
-        
-        // Translate common error messages to user-friendly text
-        if (errorMessage.toLowerCase().includes('username already exists')) {
-          errorMessage = t('usernameAlreadyExists');
-        } else if (errorMessage.toLowerCase().includes('email already exists')) {
-          errorMessage = t('emailAlreadyExists');
-        } else if (errorMessage.toLowerCase().includes('required')) {
-          errorMessage = t('fillAllFields');
-        }
-        
-        setError(errorMessage);
-        setLoading(false);
-        return;
-      }
+      await AuthService.register(requestBody);
 
       // Auto login after registration
-      const loginResponse = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
-      });
+      const loginData = await AuthService.login(formData.username, formData.password);
 
-      const loginData = await loginResponse.json();
+      localStorage.setItem('token', loginData.token);
+      navigate('/dashboard');
 
-      if (loginResponse.ok) {
-        localStorage.setItem('token', loginData.token);
-        navigate('/dashboard');
-      } else {
-        navigate('/login');
-      }
     } catch (err) {
-      setError(err.message);
+      console.error('Register error:', err);
+      let errorMessage = t('error');
+
+      if (err.response && err.response.data && err.response.data.error) {
+        const serverError = err.response.data.error;
+        if (serverError.toLowerCase().includes('username already exists')) {
+          errorMessage = t('usernameAlreadyExists');
+        } else if (serverError.toLowerCase().includes('email already exists')) {
+          errorMessage = t('emailAlreadyExists');
+        } else {
+          errorMessage = serverError;
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

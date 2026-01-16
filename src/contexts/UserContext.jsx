@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { API_URL } from '../config/api';
-import { preloadCriticalData } from '../hooks/useApi';
+import api, { preloadCriticalData } from '../api/client';
 
 const UserContext = createContext();
 
@@ -27,7 +27,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       setError(null);
-      
+
       // Add timeout for faster failure detection
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -44,7 +44,7 @@ export const UserProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
-        
+
         // Preload critical data after successful login (with delay to avoid overwhelming server)
         setTimeout(() => {
           preloadCriticalData().catch((error) => {
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }) => {
       }
     } catch (err) {
       console.error('Error fetching user profile:', err);
-      
+
       // Retry logic for network issues
       if (retryCount < 2 && (err.name === 'AbortError' || err.message.includes('fetch'))) {
         setTimeout(() => {
@@ -69,9 +69,9 @@ export const UserProvider = ({ children }) => {
         }, 2000 * (retryCount + 1)); // Exponential backoff
         return;
       }
-      
+
       setError(err.message);
-      
+
       // If persistent error, clear token
       if (retryCount >= 2) {
         localStorage.removeItem('token');
@@ -121,13 +121,13 @@ export const UserProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <UserContext.Provider value={{ 
-      user, 
-      loading, 
+    <UserContext.Provider value={{
+      user,
+      loading,
       error,
-      updateUser, 
-      logout, 
-      refetchUser: fetchUserProfile 
+      updateUser,
+      logout,
+      refetchUser: fetchUserProfile
     }}>
       {children}
     </UserContext.Provider>
