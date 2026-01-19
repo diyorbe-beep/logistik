@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { Icons } from '../Icons/Icons';
+import { Icons } from '../Icons/Icons';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
+import NotificationBell from '../Notifications/NotificationBell';
 import './Navbar.scss';
 
 const Navbar = () => {
@@ -42,7 +44,7 @@ const Navbar = () => {
 
   // Protected routes where navbar should be hidden (excluding profile)
   const protectedRoutes = ['/dashboard', '/shipments', '/users', '/vehicles'];
-  const isProtectedRoute = protectedRoutes.some(route => 
+  const isProtectedRoute = protectedRoutes.some(route =>
     location.pathname === route || location.pathname.startsWith(route + '/')
   );
 
@@ -59,9 +61,9 @@ const Navbar = () => {
           <Link to="/" className="navbar-logo" onClick={closeMenu}>
             <div className="logo-icon-wrapper">
               <svg className="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 8H17L15 4H9L7 8H4C2.9 8 2 8.9 2 10V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V10C22 8.9 21.1 8 20 8Z" fill="currentColor" opacity="0.9"/>
-                <path d="M12 17C13.6569 17 15 15.6569 15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17Z" fill="white"/>
-                <rect x="3" y="10" width="18" height="2" fill="currentColor" opacity="0.3"/>
+                <path d="M20 8H17L15 4H9L7 8H4C2.9 8 2 8.9 2 10V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V10C22 8.9 21.1 8 20 8Z" fill="currentColor" opacity="0.9" />
+                <path d="M12 17C13.6569 17 15 15.6569 15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17Z" fill="white" />
+                <rect x="3" y="10" width="18" height="2" fill="currentColor" opacity="0.3" />
               </svg>
             </div>
             <div className="logo-text">
@@ -97,6 +99,7 @@ const Navbar = () => {
           </div>
           <div className="navbar-actions">
             <LanguageSwitcher />
+            {isAuthenticated && <NotificationBell />}
             {!isAuthenticated && (
               <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>
                 {t('login')}
@@ -154,6 +157,7 @@ const Navbar = () => {
             </div>
             <div className="navbar-actions-mobile">
               <LanguageSwitcher />
+              {isAuthenticated && <NotificationBell />}
               {!isAuthenticated && (
                 <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>
                   {t('login')}

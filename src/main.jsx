@@ -37,6 +37,8 @@ const preloadCriticalResources = () => {
 
 // Initialize performance optimizations
 preloadCriticalResources();
+// V2.1 Build Force
+
 
 // Optimize rendering
 const root = createRoot(document.getElementById('root'));
