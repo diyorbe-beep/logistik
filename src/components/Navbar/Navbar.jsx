@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { Icons } from '../Icons/Icons';
-import { Icons } from '../Icons/Icons';
+
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import NotificationBell from '../Notifications/NotificationBell';
 import './Navbar.scss';
