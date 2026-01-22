@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { AuthService } from '../../services/authService';
+import { API_URL } from '../../config/api';
 import { testApiConnection, wakeUpServer } from '../../utils/apiTest';
 import Loading from '../Loading/Loading';
 import './Login.scss';
