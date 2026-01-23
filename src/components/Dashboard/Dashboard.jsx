@@ -65,7 +65,20 @@ const Dashboard = () => {
         inTransit: allShipments.filter(s => s.status === 'In Transit').length,
         delivered: allShipments.filter(s => s.status === 'Delivered').length,
         received: allShipments.filter(s => s.status === 'Received').length,
-        monthly: [] // Would need more logic
+        monthly: (() => {
+          const stats = {};
+          allShipments.forEach(s => {
+            if (s.createdAt) {
+              const date = new Date(s.createdAt);
+              const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+              stats[key] = (stats[key] || 0) + 1;
+            }
+          });
+          return Object.entries(stats)
+            .map(([month, count]) => ({ month, count }))
+            .sort((a, b) => a.month.localeCompare(b.month))
+            .slice(-6);
+        })()
       };
 
       setStats(statsData);

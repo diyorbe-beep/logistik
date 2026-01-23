@@ -16,22 +16,28 @@ const Shipments = () => {
   const { t } = useTranslation();
   const { user } = useUser();
 
-  // Check if user can edit/delete shipments
-  const canEditDelete = user && (user.role === 'admin' || user.role === 'operator');
+  const isCarrier = user?.role === 'carrier';
+  const [activeTab, setActiveTab] = useState('my_shipments'); // 'my_shipments' or 'available_shipments'
+
+  // Permissions
+  const canDelete = user && (user.role === 'admin' || user.role === 'operator');
+  const canEdit = user && (user.role === 'admin' || user.role === 'operator' || user.role === 'carrier');
 
   useEffect(() => {
     fetchShipments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     filterShipments();
-  }, [searchTerm, statusFilter, shipments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, statusFilter, shipments, activeTab]);
 
   const fetchShipments = async () => {
     try {
       const response = await api.get('/shipments');
       setShipments(response.data);
-      setFilteredShipments(response.data);
+      // Removed setFilteredShipments here to let the effect handle it
     } catch (err) {
       setError(t('error'));
     } finally {
@@ -41,6 +47,15 @@ const Shipments = () => {
 
   const filterShipments = () => {
     let filtered = [...shipments];
+
+    // Carrier Tab Filter
+    if (isCarrier) {
+      if (activeTab === 'available_shipments') {
+        filtered = filtered.filter(s => !s.carrierId);
+      } else {
+        filtered = filtered.filter(s => String(s.carrierId) === String(user.id));
+      }
+    }
 
     // Search filter
     if (searchTerm) {
@@ -70,9 +85,30 @@ const Shipments = () => {
 
     try {
       await api.delete(`/shipments/${id}`);
-      setShipments(shipments.filter(s => s.id !== id));
+      // Optimistic update
+      const updatedShipments = shipments.filter(s => s.id !== id);
+      setShipments(updatedShipments);
     } catch (err) {
       alert(t('error'));
+    }
+  };
+
+  const handleAcceptShipment = async (id) => {
+    try {
+      setLoading(true);
+      await api.put(`/shipments/${id}`, {
+        carrierId: user.id,
+        status: 'In Transit', // Auto-update status when accepting
+        note: 'Shipment accepted by carrier'
+      });
+      // Refresh to move from available to my shipments
+      await fetchShipments();
+      setActiveTab('my_shipments');
+      alert('Yuk muvaffaqiyatli qabul qilindi!');
+    } catch (err) {
+      alert(t('error'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,12 +146,29 @@ const Shipments = () => {
     <div className="shipments">
       <div className="shipments-header">
         <h1>{t('shipments')}</h1>
-        {canEditDelete && (
+        {(user?.role === 'admin' || user?.role === 'operator') && (
           <Link to="/shipments/new" className="btn-primary">
             {t('newShipment')}
           </Link>
         )}
       </div>
+
+      {isCarrier && (
+        <div className="shipment-tabs">
+          <button
+            className={`tab-btn ${activeTab === 'my_shipments' ? 'active' : ''}`}
+            onClick={() => setActiveTab('my_shipments')}
+          >
+            Mening yuklarim
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'available_shipments' ? 'active' : ''}`}
+            onClick={() => setActiveTab('available_shipments')}
+          >
+            Mavjud yuklar (Yangi)
+          </button>
+        </div>
+      )}
 
       {error && <div className="error-message">{error}</div>}
 
@@ -145,14 +198,14 @@ const Shipments = () => {
           </select>
         </div>
         <div className="results-count">
-          {t('showing')} {filteredShipments.length} {t('of')} {shipments.length} {t('shipments')}
+          {t('showing')} {filteredShipments.length} {t('shipments')}
         </div>
       </div>
 
       {shipments.length === 0 ? (
         <div className="empty-state">
           <p>{t('noShipments')}</p>
-          {canEditDelete && (
+          {(user?.role === 'admin' || user?.role === 'operator') && (
             <Link to="/shipments/new" className="btn-primary">
               {t('createShipment')}
             </Link>
@@ -169,20 +222,20 @@ const Shipments = () => {
             <table className="shipments-table">
               <thead>
                 <tr>
-                  <th>{t('id')}</th>
+                  <th>T/r</th>
                   <th>{t('trackingNumber')}</th>
                   <th>{t('origin')}</th>
                   <th>{t('destination')}</th>
                   <th>{t('status')}</th>
                   <th>{t('vehicle')}</th>
                   <th>{t('created')}</th>
-                  {canEditDelete && <th>{t('actions')}</th>}
+                  <th>{t('actions')}</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredShipments.map((shipment) => (
+                {filteredShipments.map((shipment, index) => (
                   <tr key={shipment.id}>
-                    <td>{shipment.id}</td>
+                    <td><strong>{index + 1}</strong></td>
                     <td className="tracking-number">{shipment.trackingNumber || t('nA')}</td>
                     <td>{shipment.origin}</td>
                     <td>{shipment.destination}</td>
@@ -193,21 +246,36 @@ const Shipments = () => {
                     </td>
                     <td>{shipment.vehicle || t('nA')}</td>
                     <td>{new Date(shipment.createdAt).toLocaleDateString()}</td>
-                    {canEditDelete && (
-                      <td className="actions">
-                        <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
-                          <Icons.Edit size={16} />
-                          {t('edit')}
-                        </Link>
+                    <td className="actions">
+                      {/* Carrier Accept Button */}
+                      {isCarrier && activeTab === 'available_shipments' ? (
                         <button
-                          onClick={() => handleDelete(shipment.id)}
-                          className="btn-delete"
+                          onClick={() => handleAcceptShipment(shipment.id)}
+                          className="btn-primary btn-sm"
+                          style={{ padding: '5px 10px', fontSize: '13px' }}
                         >
-                          <Icons.Trash size={16} />
-                          {t('delete')}
+                          Qabul qilish
                         </button>
-                      </td>
-                    )}
+                      ) : (
+                        <>
+                          {canEdit && (
+                            <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                              <Icons.Edit size={16} />
+                              {t('edit')}
+                            </Link>
+                          )}
+                          {canDelete && (
+                            <button
+                              onClick={() => handleDelete(shipment.id)}
+                              className="btn-delete"
+                            >
+                              <Icons.Trash size={16} />
+                              {t('delete')}
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -216,10 +284,10 @@ const Shipments = () => {
 
           {/* Mobile Card View */}
           <div className="shipments-cards mobile-view">
-            {filteredShipments.map((shipment) => (
+            {filteredShipments.map((shipment, index) => (
               <div key={shipment.id} className="shipment-card">
                 <div className="card-header">
-                  <span className="tracking-number">#{shipment.trackingNumber || shipment.id}</span>
+                  <span className="tracking-number">#{index + 1} - {shipment.trackingNumber || shipment.id}</span>
                   <span className={`status-badge ${getStatusClass(shipment.status)}`}>
                     {getStatusTranslation(shipment.status)}
                   </span>
@@ -242,21 +310,36 @@ const Shipments = () => {
                     <span className="value">{new Date(shipment.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
-                {canEditDelete && (
-                  <div className="card-actions">
-                    <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
-                      <Icons.Edit size={16} />
-                      {t('edit')}
-                    </Link>
+                <div className="card-actions">
+                  {/* Carrier Accept Button Mobile */}
+                  {isCarrier && activeTab === 'available_shipments' ? (
                     <button
-                      onClick={() => handleDelete(shipment.id)}
-                      className="btn-delete"
+                      onClick={() => handleAcceptShipment(shipment.id)}
+                      className="btn-primary"
+                      style={{ width: '100%' }}
                     >
-                      <Icons.Trash size={16} />
-                      {t('delete')}
+                      Qabul qilish
                     </button>
-                  </div>
-                )}
+                  ) : (
+                    <>
+                      {canEdit && (
+                        <Link to={`/shipments/edit/${shipment.id}`} className="btn-edit">
+                          <Icons.Edit size={16} />
+                          {t('edit')}
+                        </Link>
+                      )}
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDelete(shipment.id)}
+                          className="btn-delete"
+                        >
+                          <Icons.Trash size={16} />
+                          {t('delete')}
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>
