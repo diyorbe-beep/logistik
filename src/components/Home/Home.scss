@@ -414,12 +414,14 @@
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          word-break: break-all; // Prevent massive numbers breaking layout
         }
         
         .stat-label {
           font-size: 1rem;
           color: $text-secondary;
           font-weight: 500;
+          word-break: break-word; // Wrap long labels
         }
       }
     }
@@ -430,15 +432,16 @@
     background: $bg-secondary;
     
     .features-grid {
-      @include auto-grid(350px, 2rem);
+      @include auto-grid(300px, 2rem); // Reduced min-width to prevent overflow on small screens
       
       .feature-card {
         position: relative;
-        padding: 2.5rem;
+        padding: 2rem; // Slightly reduced padding
         text-align: center;
         border-radius: 20px;
         @include smooth-transition(all, 0.4s);
         overflow: hidden;
+        word-break: break-word; // Global break-word for feature cards
         
         &::before {
           content: '';

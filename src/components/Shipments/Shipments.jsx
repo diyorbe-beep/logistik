@@ -31,7 +31,7 @@ const Shipments = () => {
   useEffect(() => {
     filterShipments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, statusFilter, shipments, activeTab]);
+  }, [searchTerm, statusFilter, shipments, activeTab, user]);
 
   const fetchShipments = async () => {
     try {
@@ -51,7 +51,7 @@ const Shipments = () => {
     // Carrier Tab Filter
     if (isCarrier) {
       if (activeTab === 'available_shipments') {
-        filtered = filtered.filter(s => !s.carrierId);
+        filtered = filtered.filter(s => !s.carrierId || s.carrierId === 'null');
       } else {
         filtered = filtered.filter(s => String(s.carrierId) === String(user.id));
       }
@@ -104,9 +104,11 @@ const Shipments = () => {
       // Refresh to move from available to my shipments
       await fetchShipments();
       setActiveTab('my_shipments');
-      alert('Yuk muvaffaqiyatli qabul qilindi!');
+      alert(t('shipmentAccepted'));
     } catch (err) {
-      alert(t('error'));
+      console.error('Accept shipment error:', err);
+      const message = err.response?.data?.error || err.message || t('error');
+      alert(`${t('error')}: ${message}`);
     } finally {
       setLoading(false);
     }
@@ -159,13 +161,19 @@ const Shipments = () => {
             className={`tab-btn ${activeTab === 'my_shipments' ? 'active' : ''}`}
             onClick={() => setActiveTab('my_shipments')}
           >
-            Mening yuklarim
+            {t('myShipments')}
+            <span className="badge">
+              {shipments.filter(s => String(s.carrierId) === String(user.id)).length}
+            </span>
           </button>
           <button
             className={`tab-btn ${activeTab === 'available_shipments' ? 'active' : ''}`}
             onClick={() => setActiveTab('available_shipments')}
           >
-            Mavjud yuklar (Yangi)
+            {t('availableShipments')}
+            <span className="badge badge-new">
+              {shipments.filter(s => !s.carrierId || s.carrierId === 'null').length}
+            </span>
           </button>
         </div>
       )}
@@ -254,7 +262,7 @@ const Shipments = () => {
                           className="btn-primary btn-sm"
                           style={{ padding: '5px 10px', fontSize: '13px' }}
                         >
-                          Qabul qilish
+                          {t('accept')}
                         </button>
                       ) : (
                         <>
@@ -318,7 +326,7 @@ const Shipments = () => {
                       className="btn-primary"
                       style={{ width: '100%' }}
                     >
-                      Qabul qilish
+                      {t('accept')}
                     </button>
                   ) : (
                     <>

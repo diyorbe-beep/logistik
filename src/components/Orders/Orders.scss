@@ -161,12 +161,16 @@
             &.price {
               font-weight: 600;
               color: #059669;
+              white-space: nowrap; // Prices usually short
             }
 
             .recipient-info {
+              max-width: 200px; // Cap width
+              
               .name {
                 font-weight: 500;
                 color: #1f2937;
+                word-break: break-word;
               }
               .phone {
                 font-size: 0.85rem;
@@ -278,6 +282,11 @@
             color: #1f2937;
             font-size: 0.9rem;
             text-align: right;
+            border-left: 1px solid transparent; // visual separation hack if needed
+            flex: 1; 
+            margin-left: 1rem;
+            word-break: break-word; // Ensure value wraps
+            max-width: 60%; // Prevent value from eating label space
           }
         }
       }

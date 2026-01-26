@@ -112,9 +112,11 @@
   .stat-content {
     flex: 1;
     margin-left: $spacing-lg;
+    min-width: 0; // Crucial for text-overflow to work in flex child
 
     @include responsive(sm) {
       margin-left: 0;
+      width: 100%; // Ensure full width on mobile
     }
 
     h3 {
@@ -122,12 +124,16 @@
       color: $text-secondary;
       font-weight: 500;
       margin-bottom: $spacing-xs;
+      white-space: normal; // Allow wrapping
+      word-break: break-word; // Break long words if necessary
+      line-height: 1.4;
     }
 
     .stat-value {
       font-size: 2rem;
       font-weight: 700;
       color: $text-primary;
+      word-break: break-all; // Prevent long numbers from overflowing
 
       @include responsive(sm) {
         font-size: 1.5rem;

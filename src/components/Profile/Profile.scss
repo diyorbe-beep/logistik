@@ -401,19 +401,22 @@
     .shipment-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start; // Align top to handle wrapping
       margin-bottom: 0.5rem;
+      gap: 0.5rem;
 
       .tracking-number {
         font-weight: 600;
         color: var(--text-primary);
         font-size: 0.9rem;
+        word-break: break-all; // Tracking numbers can be long
       }
 
       .shipment-price {
         color: var(--success-color);
         font-weight: 600;
         font-size: 0.9rem;
+        white-space: nowrap; // Keep price on one line if possible
       }
     }
 
@@ -424,6 +427,9 @@
         color: var(--text-secondary);
         font-size: 0.85rem;
         font-weight: 500;
+        display: block; // Stack route items
+        word-break: break-word; // Wrap long city names
+        line-height: 1.3;
       }
     }
 

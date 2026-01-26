@@ -87,6 +87,7 @@
       color: $text-secondary;
       margin-bottom: $spacing-sm;
       font-weight: 500;
+      word-break: break-word;
     }
 
     .license-plate {
@@ -98,6 +99,8 @@
       padding: 0.25rem 0.5rem;
       border-radius: 0.25rem;
       display: inline-block;
+      max-width: 100%;
+      overflow-wrap: break-word;
     }
 
     .capacity {

@@ -18,6 +18,62 @@
     }
   }
 
+  .shipment-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 0.5rem;
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: $text-secondary;
+      cursor: pointer;
+      border-radius: $radius-md;
+      transition: all 0.2s;
+
+      &.active {
+        background-color: rgba(37, 99, 235, 0.1); // primary-light
+        color: $primary;
+        font-weight: 600;
+
+        .badge {
+          background-color: $primary;
+          color: white;
+        }
+      }
+
+      &:hover:not(.active) {
+        background-color: $bg-secondary;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        margin-left: 8px;
+        border-radius: 10px;
+        background-color: $bg-secondary;
+        color: $text-secondary;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.2s;
+
+        &.badge-new {
+          background-color: $warning;
+          color: white;
+        }
+      }
+    }
+  }
+
   .empty-state {
     @include card;
     text-align: center;
@@ -236,6 +292,9 @@
       text-align: right;
       flex: 1;
       margin-left: $spacing-md;
+      white-space: normal;
+      word-break: break-word;
+      min-width: 0; // Allow flex item to shrink
     }
   }
 
