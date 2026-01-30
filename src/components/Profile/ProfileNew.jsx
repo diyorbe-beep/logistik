@@ -40,9 +40,10 @@ const ProfileNew = () => {
   });
 
   // Derived state based on role
-  const myShipments = allShipments.filter(s => String(s.carrierId) === String(user?.id));
+  const safeAllShipments = allShipments || [];
+  const myShipments = safeAllShipments.filter(s => String(s.carrierId) === String(user?.id));
 
-  const availableShipments = allShipments.filter(s =>
+  const availableShipments = safeAllShipments.filter(s =>
     (!s.carrierId || String(s.carrierId) === 'null') && s.status !== 'Delivered'
   );
 
