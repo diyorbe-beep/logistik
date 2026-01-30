@@ -49,8 +49,13 @@ self.addEventListener('fetch', (event) => {
 
   // Handle API requests
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(handleApiRequest(request));
-    return;
+    // Only intercept cacheable GET requests
+    const isCacheable = request.method === 'GET' && API_ENDPOINTS.some(endpoint => url.pathname.includes(endpoint));
+    
+    if (isCacheable) {
+      event.respondWith(handleApiRequest(request));
+      return;
+    }
   }
 
   // Handle static assets
