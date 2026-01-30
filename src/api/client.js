@@ -32,7 +32,10 @@ api.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Only redirect to login if we aren't already there
+      if (!window.location.pathname.includes('/login')) {
+         window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
