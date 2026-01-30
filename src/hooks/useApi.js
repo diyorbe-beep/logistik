@@ -186,7 +186,7 @@ export const preloadCriticalData = async () => {
   // Get user info first to determine role-based endpoints
   let userRole = null;
   try {
-    const profileData = await apiRequest('/api/profile');
+    const profileData = await apiRequest('/api/users/profile');
     userRole = profileData.role;
     console.log(`👤 User role: ${userRole}`);
   } catch (error) {
