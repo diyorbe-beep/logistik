@@ -21,40 +21,36 @@ const ProfileNew = () => {
   const [deliveryModal, setDeliveryModal] = useState({ isOpen: false, shipment: null });
 
   // Optimized API calls with caching
-  const { 
-    data: rawMyShipments = [], 
-    loading: shipmentsLoading, 
-    refetch: refetchShipments 
-  } = useApi('/api/my-shipments', {
+  const {
+    data: allShipments = [],
+    loading: shipmentsLoading,
+    refetch: refetchShipments
+  } = useApi('/api/shipments', {
     immediate: !!contextUser,
-    dependencies: [contextUser?.id]
+    dependencies: [contextUser?.id, contextUser?.role]
   });
 
-  const { 
-    data: rawAvailableShipments = [], 
-    loading: availableLoading, 
-    refetch: refetchAvailable 
-  } = useApi('/api/available-shipments', {
-    immediate: contextUser?.role === 'carrier',
-    dependencies: [contextUser?.role]
-  });
-
-  const { 
-    data: rawOrders = [], 
-    loading: ordersLoading, 
-    refetch: refetchOrders 
+  const {
+    data: rawOrders = [],
+    loading: ordersLoading,
+    refetch: refetchOrders
   } = useApi('/api/orders', {
     immediate: contextUser?.role === 'customer',
     dependencies: [contextUser?.role]
   });
 
+  // Derived state based on role
+  const myShipments = allShipments.filter(s => String(s.carrierId) === String(user?.id));
+
+  const availableShipments = allShipments.filter(s =>
+    (!s.carrierId || String(s.carrierId) === 'null') && s.status !== 'Delivered'
+  );
+
   // Ensure arrays are always arrays (additional safety)
-  const myShipments = Array.isArray(rawMyShipments) ? rawMyShipments : [];
-  const availableShipments = Array.isArray(rawAvailableShipments) ? rawAvailableShipments : [];
   const orders = Array.isArray(rawOrders) ? rawOrders : [];
 
   // Combined loading state
-  const loading = userLoading || shipmentsLoading || availableLoading || ordersLoading;
+  const loading = userLoading || shipmentsLoading || ordersLoading;
 
   useEffect(() => {
     if (contextUser) {
@@ -71,23 +67,26 @@ const ProfileNew = () => {
   const refreshData = useCallback(() => {
     refetchUser();
     refetchShipments();
-    if (contextUser?.role === 'carrier') {
-      refetchAvailable();
-    } else if (contextUser?.role === 'customer') {
+    if (contextUser?.role === 'customer') {
       refetchOrders();
     }
-  }, [contextUser?.role, refetchUser, refetchShipments, refetchAvailable, refetchOrders]);
+  }, [contextUser?.role, refetchUser, refetchShipments, refetchOrders]);
 
   // Accept shipment function
   const handleAcceptShipment = async (shipmentId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/shipments/${shipmentId}/accept`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/api/shipments/${shipmentId}`, {
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          carrierId: user.id,
+          status: 'In Transit',
+          note: 'Shipment accepted by carrier'
+        })
       });
 
       if (response.ok) {
@@ -143,12 +142,12 @@ const ProfileNew = () => {
   const getStats = () => {
     // Get role from user or contextUser
     const currentRole = user?.role || contextUser?.role;
-    
+
     // Ensure arrays are not null/undefined
     const safeMyShipments = myShipments || [];
     const safeAvailableShipments = availableShipments || [];
     const safeOrders = orders || [];
-    
+
     if (currentRole === 'carrier') {
       return {
         total: safeMyShipments.length,
@@ -244,7 +243,7 @@ const ProfileNew = () => {
             </div>
           </>
         )}
-        
+
         {role === 'customer' && (
           <>
             <div className="stat-card">
@@ -310,7 +309,7 @@ const ProfileNew = () => {
                           <p><strong>Ga:</strong> {shipment.destination}</p>
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
-                        <button 
+                        <button
                           className="btn-accept-mini"
                           onClick={() => handleAcceptShipment(shipment.id)}
                         >
@@ -319,7 +318,7 @@ const ProfileNew = () => {
                       </div>
                     ))}
                     {(availableShipments || []).length > 5 && (
-                      <button 
+                      <button
                         className="view-all-btn"
                         onClick={() => handleTabChange('available')}
                       >
@@ -356,7 +355,7 @@ const ProfileNew = () => {
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
                         {shipment.status === 'In Transit' && (
-                          <button 
+                          <button
                             className="btn-complete-mini"
                             onClick={() => setDeliveryModal({ isOpen: true, shipment })}
                           >
@@ -366,7 +365,7 @@ const ProfileNew = () => {
                       </div>
                     ))}
                     {(myShipments || []).length > 5 && (
-                      <button 
+                      <button
                         className="view-all-btn"
                         onClick={() => handleTabChange('my-shipments')}
                       >
@@ -388,22 +387,22 @@ const ProfileNew = () => {
         <div className={`profile-content ${role === 'carrier' ? 'with-sidebar' : ''}`}>
           {/* Navigation Tabs */}
           <div className="profile-tabs">
-            <button 
+            <button
               className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => handleTabChange('overview')}
             >
               Umumiy ko'rinish
             </button>
-            
+
             {role === 'carrier' && (
               <>
-                <button 
+                <button
                   className={`tab ${activeTab === 'available' ? 'active' : ''}`}
                   onClick={() => handleTabChange('available')}
                 >
                   Barcha mavjud yuklar
                 </button>
-                <button 
+                <button
                   className={`tab ${activeTab === 'my-shipments' ? 'active' : ''}`}
                   onClick={() => handleTabChange('my-shipments')}
                 >
@@ -411,16 +410,16 @@ const ProfileNew = () => {
                 </button>
               </>
             )}
-            
+
             {role === 'customer' && (
               <>
-                <button 
+                <button
                   className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
                   onClick={() => handleTabChange('orders')}
                 >
                   Buyurtmalarim ({(orders || []).length})
                 </button>
-                <button 
+                <button
                   className={`tab ${activeTab === 'shipments' ? 'active' : ''}`}
                   onClick={() => handleTabChange('shipments')}
                 >
@@ -428,8 +427,8 @@ const ProfileNew = () => {
                 </button>
               </>
             )}
-            
-            <button 
+
+            <button
               className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
               onClick={() => handleTabChange('settings')}
             >
@@ -445,7 +444,7 @@ const ProfileNew = () => {
                   <h2>Xush kelibsiz, {user?.username}!</h2>
                   <p>Bu yerda siz o'zingizning faoliyatingizni kuzatishingiz mumkin.</p>
                 </div>
-                
+
                 {role === 'carrier' && (
                   <div className="quick-actions">
                     <h3>Tezkor harakatlar</h3>
@@ -459,7 +458,7 @@ const ProfileNew = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {role === 'customer' && (
                   <div className="quick-actions">
                     <h3>Tezkor harakatlar</h3>
@@ -494,7 +493,7 @@ const ProfileNew = () => {
                           <p><strong>Ga:</strong> {shipment.destination}</p>
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
-                        <button 
+                        <button
                           className="btn-accept"
                           onClick={() => handleAcceptShipment(shipment.id)}
                         >
@@ -532,7 +531,7 @@ const ProfileNew = () => {
                           <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
                         </div>
                         {shipment.status === 'In Transit' && (
-                          <button 
+                          <button
                             className="btn-complete"
                             onClick={() => setDeliveryModal({ isOpen: true, shipment })}
                           >
@@ -623,26 +622,26 @@ const ProfileNew = () => {
                   <form className="settings-form">
                     <div className="form-group">
                       <label>Foydalanuvchi nomi</label>
-                      <input 
-                        type="text" 
-                        value={formData.username} 
-                        onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      <input
+                        type="text"
+                        value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                       />
                     </div>
                     <div className="form-group">
                       <label>Email</label>
-                      <input 
-                        type="email" 
-                        value={formData.email} 
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       />
                     </div>
                     <div className="form-group">
                       <label>Telefon</label>
-                      <input 
-                        type="tel" 
-                        value={formData.phone} 
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       />
                     </div>
                     <button type="submit" className="btn-save">
