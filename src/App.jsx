@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useUser } from './contexts/UserContext';
 import Navbar from './components/Navbar/Navbar';
@@ -32,6 +32,49 @@ const Layout = lazy(() => import('./components/Layout/Layout'));
 const PageLoader = ({ message = 'Sahifa yuklanmoqda...' }) => (
   <Loading message={message} size="medium" />
 );
+
+// Conditional Navbar Component
+const ConditionalNavbar = () => {
+  const location = useLocation();
+  const path = location.pathname;
+
+  // Routes where the main Navbar should be hidden
+  // (because they use the Sidebar Layout or don't need a navbar)
+  const hideNavbarRoutes = [
+    '/dashboard',
+    '/orders', // List view for operators (hidden)
+    '/shipments',
+    '/users',
+    '/vehicles',
+    '/carriers',
+    '/pricing/new'
+  ];
+
+  // Specific check: /orders/new needs Navbar, but /orders does not.
+  // Simple "startsWith" might be dangerous.
+  // We hide if:
+  // 1. Exact match in list
+  // 2. Starts with /shipments (except tracking maybe? but tracking isn't here)
+  // 3. Starts with /vehicles
+  // 4. Starts with /users
+  // 5. Starts with /carriers
+
+  const shouldHide =
+    path.startsWith('/dashboard') ||
+    (path === '/orders') || // Exact match only - allows /orders/new
+    path.startsWith('/shipments') || // Hides /shipments, /shipments/new, /shipments/edit... which use Layout
+    path.startsWith('/users') ||
+    path.startsWith('/vehicles') ||
+    path.startsWith('/carriers') ||
+    path.startsWith('/pricing/new') ||
+    path.includes('/pricing/edit');
+
+  if (shouldHide) {
+    return null;
+  }
+
+  return <Navbar />;
+};
 
 // Role-based route wrapper with better loading
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -123,7 +166,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router basename="/">
-        <Navbar />
+        <ConditionalNavbar />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public Routes */}
@@ -153,7 +196,7 @@ function App() {
                 )
               }
             />
-            
+
             {/* Protected Routes - Dashboard (Operator & Admin only) */}
             <Route
               path="/dashboard"
