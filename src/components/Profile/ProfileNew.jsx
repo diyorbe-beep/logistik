@@ -30,6 +30,9 @@ const ProfileNew = () => {
     dependencies: [contextUser?.id, contextUser?.role]
   });
 
+  // Alias for availableLoading since it uses the same data source
+  const availableLoading = shipmentsLoading;
+
   const {
     data: rawOrders = [],
     loading: ordersLoading,
