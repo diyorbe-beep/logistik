@@ -139,7 +139,7 @@ const ShipmentForm = () => {
               value={formData.trackingNumber}
               onChange={handleChange}
               required
-              placeholder="TRK-123456"
+              placeholder={t('trackingNumberPlaceholder')}
               disabled={isCarrier}
             />
           </div>
@@ -170,7 +170,7 @@ const ShipmentForm = () => {
               value={formData.origin}
               onChange={handleChange}
               required
-              placeholder="City, Country"
+              placeholder={t('enterOrigin')}
               disabled={isCarrier}
             />
           </div>
@@ -184,7 +184,7 @@ const ShipmentForm = () => {
               value={formData.destination}
               onChange={handleChange}
               required
-              placeholder="City, Country"
+              placeholder={t('enterDestination')}
               disabled={isCarrier}
             />
           </div>
@@ -232,7 +232,7 @@ const ShipmentForm = () => {
               value={formData.customerName}
               onChange={handleChange}
               required
-              placeholder="John Doe"
+              placeholder={t('enterContactName')}
             />
           </div>
 

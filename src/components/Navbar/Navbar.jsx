@@ -108,7 +108,7 @@ const Navbar = () => {
             {isAuthenticated && (
               <>
                 <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
-                  Buyurtma berish
+                  {t('createOrder')}
                 </Link>
                 {canAccessDashboard && (
                   <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
@@ -166,7 +166,7 @@ const Navbar = () => {
               {isAuthenticated && (
                 <>
                   <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
-                    Buyurtma berish
+                    {t('createOrder')}
                   </Link>
                   {canAccessDashboard && (
                     <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>

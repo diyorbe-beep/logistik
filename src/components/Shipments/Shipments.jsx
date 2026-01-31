@@ -4,6 +4,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Shipments.scss';
 
 const Shipments = () => {
@@ -114,31 +115,7 @@ const Shipments = () => {
     }
   };
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'Received':
-        return 'status-received';
-      case 'In Transit':
-        return 'status-in-transit';
-      case 'Delivered':
-        return 'status-delivered';
-      default:
-        return '';
-    }
-  };
-
-  const getStatusTranslation = (status) => {
-    switch (status) {
-      case 'Received':
-        return t('received');
-      case 'In Transit':
-        return t('inTransit');
-      case 'Delivered':
-        return t('delivered');
-      default:
-        return status;
-    }
-  };
+  // Status helpers removed as they are now in statusUtils
 
   if (loading) {
     return <div className="loading">{t('loadingShipments')}</div>;
@@ -249,7 +226,7 @@ const Shipments = () => {
                     <td>{shipment.destination}</td>
                     <td>
                       <span className={`status-badge ${getStatusClass(shipment.status)}`}>
-                        {getStatusTranslation(shipment.status)}
+                        {translateStatus(t, shipment.status)}
                       </span>
                     </td>
                     <td>{shipment.vehicle || t('nA')}</td>
@@ -297,7 +274,7 @@ const Shipments = () => {
                 <div className="card-header">
                   <span className="tracking-number">#{index + 1} - {shipment.trackingNumber || shipment.id}</span>
                   <span className={`status-badge ${getStatusClass(shipment.status)}`}>
-                    {getStatusTranslation(shipment.status)}
+                    {translateStatus(t, shipment.status)}
                   </span>
                 </div>
                 <div className="card-body">

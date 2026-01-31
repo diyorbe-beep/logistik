@@ -129,8 +129,8 @@ const Carriers = () => {
                           </span>
                         </div>
                         <p className="history-route">{item.from} → {item.to}</p>
-                        <span className={`history-status status-${item.status.toLowerCase()}`}>
-                          {item.status}
+                        <span className={`history-status ${getStatusClass(item.status)}`}>
+                          {translateStatus(t, item.status)}
                         </span>
                       </div>
                     ))}

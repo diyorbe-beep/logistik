@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { useApi } from '../../hooks/useApi';
 import { API_URL } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import Loading, { SkeletonLoader, CardSkeleton } from '../Loading/Loading';
 import DeliveryCompletionModal from '../DeliveryCompletion/DeliveryCompletionModal';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './ProfileNew.scss';
 
 const ProfileNew = () => {
@@ -19,6 +21,9 @@ const ProfileNew = () => {
     phone: '',
   });
   const [deliveryModal, setDeliveryModal] = useState({ isOpen: false, shipment: null });
+  const { t } = useTranslation();
+
+  // Helper for status translation removed as it's now in statusUtils
 
   // Optimized API calls with caching
   const {
@@ -96,14 +101,14 @@ const ProfileNew = () => {
       if (response.ok) {
         // Refresh data after accepting
         refreshData();
-        alert('Yuk tashish muvaffaqiyatli qabul qilindi!');
+        alert(t('shipmentAccepted'));
       } else {
         const errorData = await response.json();
-        alert(errorData.error || 'Xatolik yuz berdi');
+        alert(errorData.error || t('error'));
       }
     } catch (error) {
       console.error('Error accepting shipment:', error);
-      alert('Xatolik yuz berdi');
+      alert(t('error'));
     }
   };
 
@@ -118,7 +123,7 @@ const ProfileNew = () => {
 
   // Loading state with better UX
   if (loading && !user) {
-    return <Loading message="Profil ma'lumotlari yuklanmoqda..." size="large" />;
+    return <Loading message={t('loadingProfile')} size="large" />;
   }
 
   const role = user?.role || 'customer';
@@ -189,17 +194,17 @@ const ProfileNew = () => {
               <span className="avatar-icon">{getRoleIcon()}</span>
             </div>
             <div className="user-details">
-              <h1>{user?.username || 'Foydalanuvchi'}</h1>
-              <p className="user-role">{role.charAt(0).toUpperCase() + role.slice(1)}</p>
+              <h1>{user?.username || t('nA')}</h1>
+              <p className="user-role">{t(role)}</p>
               <p className="user-email">{user?.email}</p>
             </div>
           </div>
           <div className="header-actions">
             <button onClick={refreshData} className="btn-refresh">
-              Yangilash
+              {t('refresh')}
             </button>
             <button onClick={handleLogout} className="btn-logout">
-              Chiqish
+              {t('logout')}
             </button>
           </div>
         </div>
@@ -211,38 +216,38 @@ const ProfileNew = () => {
           <>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Jami</span>
+                <span>{t('total')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.total}</h3>
-                <p>Jami yuk tashishlar</p>
+                <p>{t('totalShipments')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Tugal</span>
+                <span>{t('completed')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.completed}</h3>
-                <p>Yakunlangan</p>
+                <p>{t('completed')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Jarayon</span>
+                <span>{t('inProgress')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.inProgress}</h3>
-                <p>Jarayonda</p>
+                <p>{t('inProgress')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Yangi</span>
+                <span>{t('new')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.available}</h3>
-                <p>Mavjud yuklar</p>
+                <p>{t('availableShipments')}</p>
               </div>
             </div>
           </>
@@ -252,38 +257,38 @@ const ProfileNew = () => {
           <>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Buyurtma</span>
+                <span>{t('orders')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.total}</h3>
-                <p>Jami buyurtmalar</p>
+                <p>{t('totalShipments')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Tugal</span>
+                <span>{t('completed')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.completed}</h3>
-                <p>Yakunlangan</p>
+                <p>{t('completed')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Kutish</span>
+                <span>{t('wait')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.pending}</h3>
-                <p>Kutilmoqda</p>
+                <p>{t('pending')}</p>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <span>Yuk</span>
+                <span>{t('shipment')}</span>
               </div>
               <div className="stat-info">
                 <h3>{stats.shipments}</h3>
-                <p>Yuk tashishlar</p>
+                <p>{t('shipments')}</p>
               </div>
             </div>
           </>
@@ -296,7 +301,7 @@ const ProfileNew = () => {
         {role === 'carrier' && (
           <div className="profile-sidebar">
             <div className="sidebar-section">
-              <h3>Mavjud yuklar ({(availableShipments || []).length})</h3>
+              <h3>{t('availableShipments')} ({(availableShipments || []).length})</h3>
               <div className="sidebar-content">
                 {availableLoading ? (
                   <CardSkeleton count={2} />
@@ -306,18 +311,18 @@ const ProfileNew = () => {
                       <div key={shipment.id} className="shipment-card-mini">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
-                          <span className="status available">Mavjud</span>
+                          <span className="status available">{t('available')}</span>
                         </div>
                         <div className="shipment-details">
-                          <p><strong>Dan:</strong> {shipment.origin}</p>
-                          <p><strong>Ga:</strong> {shipment.destination}</p>
-                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                          <p><strong>{t('from')}:</strong> {shipment.origin}</p>
+                          <p><strong>{t('to')}:</strong> {shipment.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {shipment.weight} kg</p>
                         </div>
                         <button
                           className="btn-accept-mini"
                           onClick={() => handleAcceptShipment(shipment.id)}
                         >
-                          Qabul qilish
+                          {t('accept')}
                         </button>
                       </div>
                     ))}
@@ -326,20 +331,20 @@ const ProfileNew = () => {
                         className="view-all-btn"
                         onClick={() => handleTabChange('available')}
                       >
-                        Barchasini ko'rish ({(availableShipments || []).length})
+                        {t('viewAll')} ({(availableShipments || []).length})
                       </button>
                     )}
                   </div>
                 ) : (
                   <div className="empty-state-mini">
-                    <p>Mavjud yuklar yo'q</p>
+                    <p>{t('noAvailableShipments')}</p>
                   </div>
                 )}
               </div>
             </div>
 
             <div className="sidebar-section">
-              <h3>Mening yuklarim ({(myShipments || []).length})</h3>
+              <h3>{t('myShipments')} ({(myShipments || []).length})</h3>
               <div className="sidebar-content">
                 {shipmentsLoading ? (
                   <CardSkeleton count={2} />
@@ -349,21 +354,21 @@ const ProfileNew = () => {
                       <div key={shipment.id} className="shipment-card-mini">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
-                          <span className={`status ${shipment.status.toLowerCase()}`}>
-                            {shipment.status}
+                          <span className={`status ${shipment.status.toLowerCase().replace(' ', '-')}`}>
+                            {getStatusTranslation(shipment.status)}
                           </span>
                         </div>
                         <div className="shipment-details">
-                          <p><strong>Dan:</strong> {shipment.origin}</p>
-                          <p><strong>Ga:</strong> {shipment.destination}</p>
-                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                          <p><strong>{t('from')}:</strong> {shipment.origin}</p>
+                          <p><strong>{t('to')}:</strong> {shipment.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {shipment.weight} kg</p>
                         </div>
                         {shipment.status === 'In Transit' && (
                           <button
                             className="btn-complete-mini"
                             onClick={() => setDeliveryModal({ isOpen: true, shipment })}
                           >
-                            Yakunlash
+                            {t('finish')}
                           </button>
                         )}
                       </div>
@@ -373,13 +378,13 @@ const ProfileNew = () => {
                         className="view-all-btn"
                         onClick={() => handleTabChange('my-shipments')}
                       >
-                        Barchasini ko'rish ({(myShipments || []).length})
+                        {t('viewAll')} ({(myShipments || []).length})
                       </button>
                     )}
                   </div>
                 ) : (
                   <div className="empty-state-mini">
-                    <p>Yuk tashishlar yo'q</p>
+                    <p>{t('noShipments')}</p>
                   </div>
                 )}
               </div>
@@ -395,7 +400,7 @@ const ProfileNew = () => {
               className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => handleTabChange('overview')}
             >
-              Umumiy ko'rinish
+              {t('overview')}
             </button>
 
             {role === 'carrier' && (
@@ -404,13 +409,13 @@ const ProfileNew = () => {
                   className={`tab ${activeTab === 'available' ? 'active' : ''}`}
                   onClick={() => handleTabChange('available')}
                 >
-                  Barcha mavjud yuklar
+                  {t('allAvailableShipments')}
                 </button>
                 <button
                   className={`tab ${activeTab === 'my-shipments' ? 'active' : ''}`}
                   onClick={() => handleTabChange('my-shipments')}
                 >
-                  Barcha yuklarim
+                  {t('allMyShipments')}
                 </button>
               </>
             )}
@@ -421,13 +426,13 @@ const ProfileNew = () => {
                   className={`tab ${activeTab === 'orders' ? 'active' : ''}`}
                   onClick={() => handleTabChange('orders')}
                 >
-                  Buyurtmalarim ({(orders || []).length})
+                  {t('myOrdersList')} ({(orders || []).length})
                 </button>
                 <button
                   className={`tab ${activeTab === 'shipments' ? 'active' : ''}`}
                   onClick={() => handleTabChange('shipments')}
                 >
-                  Yuk tashishlar ({(myShipments || []).length})
+                  {t('myShipmentsList')} ({(myShipments || []).length})
                 </button>
               </>
             )}
@@ -436,7 +441,7 @@ const ProfileNew = () => {
               className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
               onClick={() => handleTabChange('settings')}
             >
-              Sozlamalar
+              {t('settings')}
             </button>
           </div>
 
@@ -445,19 +450,19 @@ const ProfileNew = () => {
             {activeTab === 'overview' && (
               <div className="overview-content">
                 <div className="welcome-card">
-                  <h2>Xush kelibsiz, {user?.username}!</h2>
-                  <p>Bu yerda siz o'zingizning faoliyatingizni kuzatishingiz mumkin.</p>
+                  <h2>{t('welcomeUser')}, {user?.username}!</h2>
+                  <p>{t('welcomeSubtitle')}</p>
                 </div>
 
                 {role === 'carrier' && (
                   <div className="quick-actions">
-                    <h3>Tezkor harakatlar</h3>
+                    <h3>{t('quickActions')}</h3>
                     <div className="action-buttons">
                       <button onClick={() => handleTabChange('available')} className="action-btn">
-                        Barcha mavjud yuklarni ko'rish
+                        {t('allAvailableShipments')}
                       </button>
                       <button onClick={() => handleTabChange('my-shipments')} className="action-btn">
-                        Barcha yuklarimni ko'rish
+                        {t('allMyShipments')}
                       </button>
                     </div>
                   </div>
@@ -465,13 +470,13 @@ const ProfileNew = () => {
 
                 {role === 'customer' && (
                   <div className="quick-actions">
-                    <h3>Tezkor harakatlar</h3>
+                    <h3>{t('quickActions')}</h3>
                     <div className="action-buttons">
                       <Link to="/orders/new" className="action-btn">
-                        Yangi buyurtma berish
+                        {t('createOrder')}
                       </Link>
                       <button onClick={() => handleTabChange('orders')} className="action-btn">
-                        Buyurtmalarimni ko'rish
+                        {t('myOrdersList')}
                       </button>
                     </div>
                   </div>
@@ -481,7 +486,7 @@ const ProfileNew = () => {
 
             {activeTab === 'available' && role === 'carrier' && (
               <div className="shipments-content">
-                <h3>Barcha mavjud yuklar</h3>
+                <h3>{t('allAvailableShipments')}</h3>
                 {availableLoading ? (
                   <CardSkeleton count={3} />
                 ) : (availableShipments || []).length > 0 ? (
@@ -490,25 +495,25 @@ const ProfileNew = () => {
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
-                          <span className="status available">Mavjud</span>
+                          <span className="status available">{t('available')}</span>
                         </div>
                         <div className="shipment-details">
-                          <p><strong>Dan:</strong> {shipment.origin}</p>
-                          <p><strong>Ga:</strong> {shipment.destination}</p>
-                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                          <p><strong>{t('from')}:</strong> {shipment.origin}</p>
+                          <p><strong>{t('to')}:</strong> {shipment.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {shipment.weight} kg</p>
                         </div>
                         <button
                           className="btn-accept"
                           onClick={() => handleAcceptShipment(shipment.id)}
                         >
-                          Qabul qilish
+                          {t('accept')}
                         </button>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="empty-state">
-                    <p>Hozircha mavjud yuklar yo'q</p>
+                    <p>{t('noAvailableShipments')}</p>
                   </div>
                 )}
               </div>
@@ -516,7 +521,7 @@ const ProfileNew = () => {
 
             {activeTab === 'my-shipments' && (
               <div className="shipments-content">
-                <h3>Barcha yuk tashishlarim</h3>
+                <h3>{t('allMyShipments')}</h3>
                 {shipmentsLoading ? (
                   <CardSkeleton count={3} />
                 ) : (myShipments || []).length > 0 ? (
@@ -525,21 +530,21 @@ const ProfileNew = () => {
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
-                          <span className={`status ${shipment.status.toLowerCase()}`}>
-                            {shipment.status}
+                          <span className={`status ${getStatusClass(shipment.status)}`}>
+                            {translateStatus(t, shipment.status)}
                           </span>
                         </div>
                         <div className="shipment-details">
-                          <p><strong>Dan:</strong> {shipment.origin}</p>
-                          <p><strong>Ga:</strong> {shipment.destination}</p>
-                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                          <p><strong>{t('from')}:</strong> {shipment.origin}</p>
+                          <p><strong>{t('to')}:</strong> {shipment.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {shipment.weight} kg</p>
                         </div>
                         {shipment.status === 'In Transit' && (
                           <button
                             className="btn-complete"
                             onClick={() => setDeliveryModal({ isOpen: true, shipment })}
                           >
-                            Yetkazib berishni yakunlash
+                            {t('completeDelivery')}
                           </button>
                         )}
                       </div>
@@ -547,7 +552,7 @@ const ProfileNew = () => {
                   </div>
                 ) : (
                   <div className="empty-state">
-                    <p>Hozircha yuk tashishlar yo'q</p>
+                    <p>{t('noShipments')}</p>
                   </div>
                 )}
               </div>
@@ -555,7 +560,7 @@ const ProfileNew = () => {
 
             {activeTab === 'orders' && role === 'customer' && (
               <div className="orders-content">
-                <h3>Buyurtmalarim</h3>
+                <h3>{t('myOrdersList')}</h3>
                 {ordersLoading ? (
                   <CardSkeleton count={3} />
                 ) : (orders || []).length > 0 ? (
@@ -564,24 +569,24 @@ const ProfileNew = () => {
                       <div key={order.id} className="order-card">
                         <div className="order-header">
                           <h4>#{order.trackingNumber || order.id}</h4>
-                          <span className={`status ${order.status.toLowerCase()}`}>
-                            {order.status}
+                          <span className={`status ${getStatusClass(order.status)}`}>
+                            {translateStatus(t, order.status)}
                           </span>
                         </div>
                         <div className="order-details">
-                          <p><strong>Dan:</strong> {order.origin}</p>
-                          <p><strong>Ga:</strong> {order.destination}</p>
-                          <p><strong>Og'irligi:</strong> {order.weight} kg</p>
-                          <p><strong>Narxi:</strong> {order.estimatedPrice?.toLocaleString()} UZS</p>
+                          <p><strong>{t('from')}:</strong> {order.origin}</p>
+                          <p><strong>{t('to')}:</strong> {order.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {order.weight} kg</p>
+                          <p><strong>{t('price')}:</strong> {order.estimatedPrice?.toLocaleString()} {t('sum')}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="empty-state">
-                    <p>Hozircha buyurtmalar yo'q</p>
+                    <p>{t('noOrders')}</p>
                     <Link to="/orders/new" className="btn-primary">
-                      Yangi buyurtma berish
+                      {t('createOrder')}
                     </Link>
                   </div>
                 )}
@@ -590,7 +595,7 @@ const ProfileNew = () => {
 
             {activeTab === 'shipments' && role === 'customer' && (
               <div className="shipments-content">
-                <h3>Mening yuk tashishlarim</h3>
+                <h3>{t('myShipmentsList')}</h3>
                 {shipmentsLoading ? (
                   <CardSkeleton count={3} />
                 ) : (myShipments || []).length > 0 ? (
@@ -599,21 +604,21 @@ const ProfileNew = () => {
                       <div key={shipment.id} className="shipment-card">
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
-                          <span className={`status ${shipment.status.toLowerCase()}`}>
-                            {shipment.status}
+                          <span className={`status ${getStatusClass(shipment.status)}`}>
+                            {translateStatus(t, shipment.status)}
                           </span>
                         </div>
                         <div className="shipment-details">
-                          <p><strong>Dan:</strong> {shipment.origin}</p>
-                          <p><strong>Ga:</strong> {shipment.destination}</p>
-                          <p><strong>Og'irligi:</strong> {shipment.weight} kg</p>
+                          <p><strong>{t('from')}:</strong> {shipment.origin}</p>
+                          <p><strong>{t('to')}:</strong> {shipment.destination}</p>
+                          <p><strong>{t('weight_kg')}:</strong> {shipment.weight} kg</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="empty-state">
-                    <p>Hozircha yuk tashishlar yo'q</p>
+                    <p>{t('noShipments')}</p>
                   </div>
                 )}
               </div>
@@ -622,10 +627,10 @@ const ProfileNew = () => {
             {activeTab === 'settings' && (
               <div className="settings-content">
                 <div className="settings-card">
-                  <h3>Profil sozlamalari</h3>
+                  <h3>{t('profileSettings')}</h3>
                   <form className="settings-form">
                     <div className="form-group">
-                      <label>Foydalanuvchi nomi</label>
+                      <label>{t('username')}</label>
                       <input
                         type="text"
                         value={formData.username}
@@ -633,7 +638,7 @@ const ProfileNew = () => {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Email</label>
+                      <label>{t('email')}</label>
                       <input
                         type="email"
                         value={formData.email}
@@ -641,7 +646,7 @@ const ProfileNew = () => {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Telefon</label>
+                      <label>{t('phone')}</label>
                       <input
                         type="tel"
                         value={formData.phone}
@@ -649,7 +654,7 @@ const ProfileNew = () => {
                       />
                     </div>
                     <button type="submit" className="btn-save">
-                      Saqlash
+                      {t('save')}
                     </button>
                   </form>
                 </div>

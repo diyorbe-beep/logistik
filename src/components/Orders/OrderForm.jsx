@@ -16,7 +16,7 @@ const OrderForm = () => {
   const [errors, setErrors] = useState({});
   const [estimatedPrice, setEstimatedPrice] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     // Pickup Information
     origin: '',
@@ -25,7 +25,7 @@ const OrderForm = () => {
     pickupTime: '',
     pickupContactName: user?.username || '',
     pickupContactPhone: user?.phone || '',
-    
+
     // Delivery Information
     destination: '',
     deliveryAddress: '',
@@ -33,14 +33,14 @@ const OrderForm = () => {
     recipientPhone: '',
     deliveryDate: '',
     deliveryInstructions: '',
-    
+
     // Package Information
     weight: '',
     dimensions: '',
     description: '',
     packageType: 'standard',
     packageValue: '',
-    
+
     // Service Options
     urgency: 'standard',
     insurance: false,
@@ -70,57 +70,57 @@ const OrderForm = () => {
 
   const calculatePrice = () => {
     let basePrice = 50000; // Base price in UZS
-    
+
     // Weight-based pricing
     const weight = parseFloat(formData.weight) || 0;
     if (weight > 1) basePrice += (weight - 1) * 15000;
     if (weight > 10) basePrice += (weight - 10) * 10000;
-    
+
     // Urgency multiplier
     if (formData.urgency === 'express') basePrice *= 1.5;
     if (formData.urgency === 'urgent') basePrice *= 2.2;
-    
+
     // Insurance
     if (formData.insurance && formData.packageValue) {
       const value = parseFloat(formData.packageValue) || 0;
       basePrice += value * 0.02; // 2% of package value
     }
-    
+
     // Additional services
     if (formData.signature) basePrice += 10000;
     if (formData.fragile) basePrice += 15000;
-    
+
     return Math.round(basePrice);
   };
 
   const validateStep = (stepNumber) => {
     const newErrors = {};
-    
+
     switch (stepNumber) {
       case 1: // Pickup Information
-        if (!formData.origin.trim()) newErrors.origin = 'Olib ketish shahri majburiy';
-        if (!formData.pickupAddress.trim()) newErrors.pickupAddress = 'Olib ketish manzili majburiy';
-        if (!formData.pickupDate) newErrors.pickupDate = 'Olib ketish sanasi majburiy';
-        if (!formData.pickupContactName.trim()) newErrors.pickupContactName = 'Aloqa shaxsi majburiy';
-        if (!formData.pickupContactPhone.trim()) newErrors.pickupContactPhone = 'Telefon raqami majburiy';
+        if (!formData.origin.trim()) newErrors.origin = t('requiredOrigin');
+        if (!formData.pickupAddress.trim()) newErrors.pickupAddress = t('requiredAddress');
+        if (!formData.pickupDate) newErrors.pickupDate = t('requiredDate');
+        if (!formData.pickupContactName.trim()) newErrors.pickupContactName = t('requiredContact');
+        if (!formData.pickupContactPhone.trim()) newErrors.pickupContactPhone = t('requiredPhone');
         break;
-        
+
       case 2: // Delivery Information
-        if (!formData.destination.trim()) newErrors.destination = 'Yetkazish shahri majburiy';
-        if (!formData.deliveryAddress.trim()) newErrors.deliveryAddress = 'Yetkazish manzili majburiy';
-        if (!formData.recipientName.trim()) newErrors.recipientName = 'Qabul qiluvchi ismi majburiy';
-        if (!formData.recipientPhone.trim()) newErrors.recipientPhone = 'Qabul qiluvchi telefoni majburiy';
+        if (!formData.destination.trim()) newErrors.destination = t('requiredDestination');
+        if (!formData.deliveryAddress.trim()) newErrors.deliveryAddress = t('requiredAddress');
+        if (!formData.recipientName.trim()) newErrors.recipientName = t('requiredRecipient');
+        if (!formData.recipientPhone.trim()) newErrors.recipientPhone = t('requiredPhone');
         break;
-        
+
       case 3: // Package Information
-        if (!formData.weight || parseFloat(formData.weight) <= 0) newErrors.weight = 'Og\'irlik majburiy va 0 dan katta bo\'lishi kerak';
-        if (!formData.description.trim()) newErrors.description = 'Yuk tavsifi majburiy';
+        if (!formData.weight || parseFloat(formData.weight) <= 0) newErrors.weight = t('requiredWeight');
+        if (!formData.description.trim()) newErrors.description = t('requiredDescription');
         if (formData.insurance && (!formData.packageValue || parseFloat(formData.packageValue) <= 0)) {
-          newErrors.packageValue = 'Sug\'urta uchun yuk qiymati majburiy';
+          newErrors.packageValue = t('requiredInsuranceValue');
         }
         break;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -131,7 +131,7 @@ const OrderForm = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -153,14 +153,14 @@ const OrderForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateStep(step)) return;
-    
+
     setLoading(true);
 
     try {
       const token = localStorage.getItem('token');
-      
+
       const orderData = {
         ...formData,
         estimatedPrice,
@@ -182,18 +182,18 @@ const OrderForm = () => {
       if (response.ok) {
         const result = await response.json();
         setShowSuccess(true);
-        
+
         // Redirect after success animation
         setTimeout(() => {
           navigate('/profile');
         }, 3000);
       } else {
         const error = await response.json();
-        setErrors({ submit: error.message || 'Buyurtma yaratishda xatolik yuz berdi' });
+        setErrors({ submit: error.message || t('orderCreateError') });
       }
     } catch (error) {
       console.error('Error creating order:', error);
-      setErrors({ submit: 'Tarmoq xatosi. Qayta urinib ko\'ring.' });
+      setErrors({ submit: t('networkError') });
     } finally {
       setLoading(false);
     }
@@ -204,14 +204,14 @@ const OrderForm = () => {
   };
 
   const steps = [
-    { number: 1, title: 'Olib ketish', icon: 'MapPin', description: 'Yuk olib ketish ma\'lumotlari' },
-    { number: 2, title: 'Yetkazish', icon: 'Navigation', description: 'Yuk yetkazish ma\'lumotlari' },
-    { number: 3, title: 'Yuk haqida', icon: 'Package', description: 'Yuk va xizmat turlari' },
-    { number: 4, title: 'Tasdiqlash', icon: 'CheckCircle', description: 'Ma\'lumotlarni tekshirish' }
+    { number: 1, title: t('pickupInfo'), icon: 'MapPin', description: t('pickupDesc') },
+    { number: 2, title: t('deliveryInfo'), icon: 'Navigation', description: t('deliveryDesc') },
+    { number: 3, title: t('packageInfo'), icon: 'Package', description: t('packageDesc') },
+    { number: 4, title: t('confirmation'), icon: 'CheckCircle', description: t('confirmDesc') }
   ];
 
   if (loading) {
-    return <Loading message="Buyurtma yaratilmoqda..." size="large" />;
+    return <Loading message={t('creating')} size="large" />;
   }
 
   if (showSuccess) {
@@ -221,8 +221,8 @@ const OrderForm = () => {
           <div className="success-icon">
             <Icons.CheckCircle size={80} color="#10b981" />
           </div>
-          <h2>Buyurtma muvaffaqiyatli yaratildi!</h2>
-          <p>Tez orada siz bilan bog'lanamiz</p>
+          <h2>{t('orderSuccessTitle')}</h2>
+          <p>{t('orderSuccessDesc')}</p>
           <div className="confetti">
             {[...Array(20)].map((_, i) => (
               <div key={i} className={`confetti-piece confetti-${i % 4}`}></div>
@@ -241,42 +241,43 @@ const OrderForm = () => {
             <div className="step-header">
               <Icons.MapPin size={32} color="#3b82f6" />
               <div>
-                <h3>Olib ketish ma'lumotlari</h3>
-                <p>Yuk qayerdan olib ketilishini belgilang</p>
+                <h3>{t('pickupInfo')} {t('orderDetails')}</h3>
+                <p>{t('pickupDesc')}</p>
               </div>
             </div>
-            
+
             <div className="form-grid">
               <div className="form-group">
-                <label htmlFor="origin">Olib ketish shahri *</label>
+                <label htmlFor="origin">{t('originRequired')}</label>
                 <input
                   type="text"
                   id="origin"
                   name="origin"
                   value={formData.origin}
                   onChange={handleChange}
-                  placeholder="Masalan: Toshkent"
+                  placeholder={t('enterOrigin')}
                   className={errors.origin ? 'error' : ''}
                 />
                 {errors.origin && <span className="error-text">{errors.origin}</span>}
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="pickupAddress">To'liq manzil *</label>
-                <textarea
+                <label htmlFor="pickupAddress">{t('pickupAddress')} *</label>
+                <input
+                  type="text"
                   id="pickupAddress"
                   name="pickupAddress"
                   value={formData.pickupAddress}
                   onChange={handleChange}
-                  placeholder="Ko'cha, uy raqami, orientir..."
-                  rows="3"
+                  placeholder={t('enterAddress')}
+                  required
                   className={errors.pickupAddress ? 'error' : ''}
                 />
                 {errors.pickupAddress && <span className="error-text">{errors.pickupAddress}</span>}
               </div>
 
               <div className="form-group">
-                <label htmlFor="pickupDate">Olib ketish sanasi *</label>
+                <label htmlFor="pickupDate">{t('pickupDate')} *</label>
                 <input
                   type="date"
                   id="pickupDate"
@@ -290,7 +291,7 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="pickupTime">Olib ketish vaqti</label>
+                <label htmlFor="pickupTime">{t('pickupTime')}</label>
                 <input
                   type="time"
                   id="pickupTime"
@@ -301,21 +302,22 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="pickupContactName">Aloqa shaxsi *</label>
+                <label htmlFor="pickupContactName">{t('contactPerson')} *</label>
                 <input
                   type="text"
                   id="pickupContactName"
                   name="pickupContactName"
                   value={formData.pickupContactName}
                   onChange={handleChange}
-                  placeholder="Ism familiya"
+                  placeholder={t('enterContactName')}
+                  required
                   className={errors.pickupContactName ? 'error' : ''}
                 />
                 {errors.pickupContactName && <span className="error-text">{errors.pickupContactName}</span>}
               </div>
 
               <div className="form-group">
-                <label htmlFor="pickupContactPhone">Telefon raqami *</label>
+                <label htmlFor="pickupContactPhone">{t('phone')} *</label>
                 <input
                   type="tel"
                   id="pickupContactPhone"
@@ -337,34 +339,34 @@ const OrderForm = () => {
             <div className="step-header">
               <Icons.Navigation size={32} color="#10b981" />
               <div>
-                <h3>Yetkazish ma'lumotlari</h3>
-                <p>Yuk qayerga yetkazilishini belgilang</p>
+                <h3>{t('deliveryInfo')} {t('orderDetails')}</h3>
+                <p>{t('deliveryDesc')}</p>
               </div>
             </div>
-            
+
             <div className="form-grid">
               <div className="form-group">
-                <label htmlFor="destination">Yetkazish shahri *</label>
+                <label htmlFor="destination">{t('destinationRequired')}</label>
                 <input
                   type="text"
                   id="destination"
                   name="destination"
                   value={formData.destination}
                   onChange={handleChange}
-                  placeholder="Masalan: Samarqand"
+                  placeholder={t('enterDestination')}
                   className={errors.destination ? 'error' : ''}
                 />
                 {errors.destination && <span className="error-text">{errors.destination}</span>}
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="deliveryAddress">To'liq manzil *</label>
+                <label htmlFor="deliveryAddress">{t('deliveryAddress')} *</label>
                 <textarea
                   id="deliveryAddress"
                   name="deliveryAddress"
                   value={formData.deliveryAddress}
                   onChange={handleChange}
-                  placeholder="Ko'cha, uy raqami, orientir..."
+                  placeholder={t('enterRecipientAddress')}
                   rows="3"
                   className={errors.deliveryAddress ? 'error' : ''}
                 />
@@ -372,21 +374,21 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="recipientName">Qabul qiluvchi *</label>
+                <label htmlFor="recipientName">{t('recipient')} *</label>
                 <input
                   type="text"
                   id="recipientName"
                   name="recipientName"
                   value={formData.recipientName}
                   onChange={handleChange}
-                  placeholder="Ism familiya"
+                  placeholder={t('recipientName')}
                   className={errors.recipientName ? 'error' : ''}
                 />
                 {errors.recipientName && <span className="error-text">{errors.recipientName}</span>}
               </div>
 
               <div className="form-group">
-                <label htmlFor="recipientPhone">Qabul qiluvchi telefoni *</label>
+                <label htmlFor="recipientPhone">{t('recipientPhone')} *</label>
                 <input
                   type="tel"
                   id="recipientPhone"
@@ -400,7 +402,7 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="deliveryDate">Yetkazish sanasi</label>
+                <label htmlFor="deliveryDate">{t('deliveryDate')}</label>
                 <input
                   type="date"
                   id="deliveryDate"
@@ -412,13 +414,13 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="deliveryInstructions">Yetkazish bo'yicha ko'rsatmalar</label>
+                <label htmlFor="deliveryInstructions">{t('deliveryInstructions')}</label>
                 <textarea
                   id="deliveryInstructions"
                   name="deliveryInstructions"
                   value={formData.deliveryInstructions}
                   onChange={handleChange}
-                  placeholder="Qo'shimcha ma'lumotlar..."
+                  placeholder={t('additionalNotes')}
                   rows="2"
                 />
               </div>
@@ -432,14 +434,14 @@ const OrderForm = () => {
             <div className="step-header">
               <Icons.Package size={32} color="#f59e0b" />
               <div>
-                <h3>Yuk va xizmat turlari</h3>
-                <p>Yuk haqida ma'lumot va qo'shimcha xizmatlar</p>
+                <h3>{t('packageInfo')}</h3>
+                <p>{t('packageDesc')}</p>
               </div>
             </div>
-            
+
             <div className="form-grid">
               <div className="form-group">
-                <label htmlFor="weight">Og'irligi (kg) *</label>
+                <label htmlFor="weight">{t('weight_kg')} *</label>
                 <input
                   type="number"
                   id="weight"
@@ -455,7 +457,7 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="dimensions">O'lchamlari (sm)</label>
+                <label htmlFor="dimensions">{t('dimensions')} (sm)</label>
                 <input
                   type="text"
                   id="dimensions"
@@ -467,44 +469,44 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="packageType">Yuk turi</label>
+                <label htmlFor="packageType">{t('packageType')}</label>
                 <select
                   id="packageType"
                   name="packageType"
                   value={formData.packageType}
                   onChange={handleChange}
                 >
-                  <option value="standard">Oddiy</option>
-                  <option value="fragile">Mo'rt</option>
-                  <option value="electronics">Elektronika</option>
-                  <option value="documents">Hujjatlar</option>
-                  <option value="food">Oziq-ovqat</option>
-                  <option value="clothing">Kiyim</option>
+                  <option value="standard">{t('standardPackage')}</option>
+                  <option value="fragile">{t('fragilePackage')}</option>
+                  <option value="electronics">{t('electronicsPackage')}</option>
+                  <option value="documents">{t('documentsPackage')}</option>
+                  <option value="food">{t('foodPackage')}</option>
+                  <option value="clothing">{t('clothingPackage')}</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label htmlFor="urgency">Yetkazish tezligi</label>
+                <label htmlFor="urgency">{t('urgency')}</label>
                 <select
                   id="urgency"
                   name="urgency"
                   value={formData.urgency}
                   onChange={handleChange}
                 >
-                  <option value="standard">Oddiy (3-5 kun)</option>
-                  <option value="express">Tez (1-2 kun)</option>
-                  <option value="urgent">Shoshilinch (1 kun)</option>
+                  <option value="standard">{t('urgencyStandard')}</option>
+                  <option value="express">{t('urgencyExpress')}</option>
+                  <option value="urgent">{t('urgencyUrgent')}</option>
                 </select>
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="description">Yuk tavsifi *</label>
+                <label htmlFor="description">{t('description')} *</label>
                 <textarea
                   id="description"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Yuk haqida batafsil ma'lumot..."
+                  placeholder={t('enterDescription')}
                   rows="3"
                   className={errors.description ? 'error' : ''}
                 />
@@ -512,7 +514,7 @@ const OrderForm = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="packageValue">Yuk qiymati (UZS)</label>
+                <label htmlFor="packageValue">{t('estimatedValue')} ({t('currency')})</label>
                 <input
                   type="number"
                   id="packageValue"
@@ -536,7 +538,7 @@ const OrderForm = () => {
                       onChange={handleChange}
                     />
                     <span className="checkmark"></span>
-                    Sug'urta (yuk qiymatining 2%)
+                    {t('insuranceLabel')}
                   </label>
 
                   <label className="checkbox-label">
@@ -547,7 +549,7 @@ const OrderForm = () => {
                       onChange={handleChange}
                     />
                     <span className="checkmark"></span>
-                    Imzo bilan qabul qilish (+10,000 UZS)
+                    {t('signatureLabel')}
                   </label>
 
                   <label className="checkbox-label">
@@ -558,19 +560,19 @@ const OrderForm = () => {
                       onChange={handleChange}
                     />
                     <span className="checkmark"></span>
-                    Mo'rt yuk (+15,000 UZS)
+                    {t('fragileLabel')}
                   </label>
                 </div>
               </div>
 
               <div className="form-group full-width">
-                <label htmlFor="specialInstructions">Maxsus ko'rsatmalar</label>
+                <label htmlFor="specialInstructions">{t('specialInstructions')}</label>
                 <textarea
                   id="specialInstructions"
                   name="specialInstructions"
                   value={formData.specialInstructions}
                   onChange={handleChange}
-                  placeholder="Qo'shimcha talablar..."
+                  placeholder={t('enterSpecialInstructions')}
                   rows="2"
                 />
               </div>
@@ -579,9 +581,9 @@ const OrderForm = () => {
             {estimatedPrice > 0 && (
               <div className="price-estimate">
                 <div className="price-card">
-                  <h4>Taxminiy narx</h4>
-                  <div className="price-amount">{estimatedPrice.toLocaleString()} UZS</div>
-                  <p>Aniq narx operator tomonidan tasdiqlanadi</p>
+                  <h4>{t('estimatedPriceTitle')}</h4>
+                  <div className="price-amount">{estimatedPrice.toLocaleString()} {t('currency')}</div>
+                  <p>{t('priceNotice')}</p>
                 </div>
               </div>
             )}
@@ -594,72 +596,72 @@ const OrderForm = () => {
             <div className="step-header">
               <Icons.CheckCircle size={32} color="#8b5cf6" />
               <div>
-                <h3>Ma'lumotlarni tasdiqlash</h3>
-                <p>Barcha ma'lumotlarni tekshiring va buyurtmani yarating</p>
+                <h3>{t('confirmOrderTitle')}</h3>
+                <p>{t('confirmOrderDesc')}</p>
               </div>
             </div>
 
             <div className="summary-sections">
               <div className="summary-section">
-                <h4><Icons.MapPin size={20} /> Olib ketish</h4>
+                <h4><Icons.MapPin size={20} /> {t('pickupInfo')}</h4>
                 <div className="summary-content">
-                  <p><strong>Shahar:</strong> {formData.origin}</p>
-                  <p><strong>Manzil:</strong> {formData.pickupAddress}</p>
-                  <p><strong>Sana:</strong> {formData.pickupDate} {formData.pickupTime && `soat ${formData.pickupTime}`}</p>
-                  <p><strong>Aloqa:</strong> {formData.pickupContactName} ({formData.pickupContactPhone})</p>
+                  <p><strong>{t('from')}:</strong> {formData.origin}</p>
+                  <p><strong>{t('address')}:</strong> {formData.pickupAddress}</p>
+                  <p><strong>{t('sana')}:</strong> {formData.pickupDate} {formData.pickupTime && `soat ${formData.pickupTime}`}</p>
+                  <p><strong>{t('contactPerson')}:</strong> {formData.pickupContactName} ({formData.pickupContactPhone})</p>
                 </div>
               </div>
 
               <div className="summary-section">
-                <h4><Icons.Navigation size={20} /> Yetkazish</h4>
+                <h4><Icons.Navigation size={20} /> {t('deliveryInfo')}</h4>
                 <div className="summary-content">
-                  <p><strong>Shahar:</strong> {formData.destination}</p>
-                  <p><strong>Manzil:</strong> {formData.deliveryAddress}</p>
-                  <p><strong>Qabul qiluvchi:</strong> {formData.recipientName} ({formData.recipientPhone})</p>
-                  {formData.deliveryDate && <p><strong>Sana:</strong> {formData.deliveryDate}</p>}
+                  <p><strong>{t('to')}:</strong> {formData.destination}</p>
+                  <p><strong>{t('address')}:</strong> {formData.deliveryAddress}</p>
+                  <p><strong>{t('recipient')}:</strong> {formData.recipientName} ({formData.recipientPhone})</p>
+                  {formData.deliveryDate && <p><strong>{t('sana')}:</strong> {formData.deliveryDate}</p>}
                 </div>
               </div>
 
               <div className="summary-section">
-                <h4><Icons.Package size={20} /> Yuk ma'lumotlari</h4>
+                <h4><Icons.Package size={20} /> {t('packageInfo')}</h4>
                 <div className="summary-content">
-                  <p><strong>Og'irligi:</strong> {formData.weight} kg</p>
-                  <p><strong>Turi:</strong> {formData.packageType}</p>
-                  <p><strong>Tavsif:</strong> {formData.description}</p>
-                  <p><strong>Tezlik:</strong> {formData.urgency}</p>
-                  {formData.dimensions && <p><strong>O'lcham:</strong> {formData.dimensions} sm</p>}
+                  <p><strong>{t('weight')}:</strong> {formData.weight} kg</p>
+                  <p><strong>{t('type')}:</strong> {t(formData.packageType + 'Package')}</p>
+                  <p><strong>{t('description')}:</strong> {formData.description}</p>
+                  <p><strong>{t('urgency')}:</strong> {t('urgency' + formData.urgency.charAt(0).toUpperCase() + formData.urgency.slice(1))}</p>
+                  {formData.dimensions && <p><strong>{t('dimensions')}:</strong> {formData.dimensions} sm</p>}
                 </div>
               </div>
 
               <div className="summary-section">
-                <h4><Icons.DollarSign size={20} /> Xizmatlar va narx</h4>
+                <h4><Icons.DollarSign size={20} /> {t('services')} {t('price')}</h4>
                 <div className="summary-content">
                   <div className="price-breakdown">
                     <div className="price-item">
-                      <span>Asosiy xizmat:</span>
-                      <span>{(estimatedPrice - (formData.signature ? 10000 : 0) - (formData.fragile ? 15000 : 0)).toLocaleString()} UZS</span>
+                      <span>{t('basePrice')}:</span>
+                      <span>{(estimatedPrice - (formData.signature ? 10000 : 0) - (formData.fragile ? 15000 : 0) - (formData.insurance && formData.packageValue ? Math.round(parseFloat(formData.packageValue) * 0.02) : 0)).toLocaleString()} {t('currency')}</span>
                     </div>
                     {formData.signature && (
                       <div className="price-item">
-                        <span>Imzo bilan qabul:</span>
-                        <span>10,000 UZS</span>
+                        <span>{t('signatureLabel')}:</span>
+                        <span>10,000 {t('currency')}</span>
                       </div>
                     )}
                     {formData.fragile && (
                       <div className="price-item">
-                        <span>Mo'rt yuk:</span>
-                        <span>15,000 UZS</span>
+                        <span>{t('fragileLabel')}:</span>
+                        <span>15,000 {t('currency')}</span>
                       </div>
                     )}
                     {formData.insurance && (
                       <div className="price-item">
-                        <span>Sug'urta:</span>
-                        <span>{Math.round((parseFloat(formData.packageValue) || 0) * 0.02).toLocaleString()} UZS</span>
+                        <span>{t('insurance')}:</span>
+                        <span>{Math.round((parseFloat(formData.packageValue) || 0) * 0.02).toLocaleString()} {t('currency')}</span>
                       </div>
                     )}
                     <div className="price-item total">
-                      <span><strong>Jami:</strong></span>
-                      <span><strong>{estimatedPrice.toLocaleString()} UZS</strong></span>
+                      <span><strong>{t('total')}:</strong></span>
+                      <span><strong>{estimatedPrice.toLocaleString()} {t('currency')}</strong></span>
                     </div>
                   </div>
                 </div>
@@ -684,8 +686,8 @@ const OrderForm = () => {
     <div className="order-form-new">
       <div className="container">
         <div className="order-header">
-          <h1>Yangi buyurtma yaratish</h1>
-          <p>Yuk tashish xizmatidan foydalanish uchun quyidagi ma'lumotlarni to'ldiring</p>
+          <h1>{t('createOrder')}</h1>
+          <p>{t('createOrderDescription')}</p>
         </div>
 
         <div className="order-progress">
@@ -715,13 +717,13 @@ const OrderForm = () => {
               {step > 1 && (
                 <button type="button" onClick={prevStep} className="btn-secondary">
                   <Icons.ArrowLeft size={20} />
-                  Orqaga
+                  {t('back')}
                 </button>
               )}
-              
+
               {step < 4 ? (
                 <button type="button" onClick={nextStep} className="btn-primary">
-                  Davom etish
+                  {t('continue')}
                   <Icons.ArrowRight size={20} />
                 </button>
               ) : (
@@ -729,12 +731,12 @@ const OrderForm = () => {
                   {loading ? (
                     <>
                       <div className="spinner"></div>
-                      Yaratilmoqda...
+                      {t('creating')}
                     </>
                   ) : (
                     <>
                       <Icons.CheckCircle size={20} />
-                      Buyurtmani yaratish
+                      {t('createOrderSubmit')}
                     </>
                   )}
                 </button>

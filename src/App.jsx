@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useUser } from './contexts/UserContext';
+import { useTranslation } from './hooks/useTranslation';
 import Navbar from './components/Navbar/Navbar';
 import Loading from './components/Loading/Loading';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
@@ -79,6 +80,7 @@ const ConditionalNavbar = () => {
 // Role-based route wrapper with better loading
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading, error } = useUser();
+  const { t } = useTranslation();
   const token = localStorage.getItem('token');
 
   console.log('ProtectedRoute - User:', user);
@@ -88,15 +90,15 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   console.log('ProtectedRoute - Allowed roles:', allowedRoles);
 
   if (loading) {
-    return <PageLoader message="Foydalanuvchi ma'lumotlari tekshirilmoqda..." />;
+    return <PageLoader message={t('loadingProfile')} />;
   }
 
   if (error) {
     return (
       <div className="error-container">
-        <h3>Xatolik yuz berdi</h3>
+        <h3>{t('error')}</h3>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Qayta yuklash</button>
+        <button onClick={() => window.location.reload()}>{t('refresh')}</button>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
 import { Icons } from '../Icons/Icons';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Orders.scss';
 
 const Orders = () => {
@@ -95,31 +96,7 @@ const Orders = () => {
     }
   };
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'Pending':
-        return 'status-pending';
-      case 'Completed':
-        return 'status-completed';
-      case 'Converted to Shipment':
-        return 'status-converted';
-      default:
-        return '';
-    }
-  };
-
-  const getStatusTranslation = (status) => {
-    switch (status) {
-      case 'Pending':
-        return t('pending');
-      case 'Completed':
-        return t('completed');
-      case 'Converted to Shipment':
-        return t('convertedToShipment');
-      default:
-        return status;
-    }
-  };
+  // Status helpers removed as they are now in statusUtils
 
   const getUrgencyClass = (urgency) => {
     switch (urgency) {
@@ -228,7 +205,7 @@ const Orders = () => {
                     <td className="price">{order.estimatedPrice?.toLocaleString()} {t('sum')}</td>
                     <td>
                       <span className={`status-badge ${getStatusClass(order.status)}`}>
-                        {getStatusTranslation(order.status)}
+                        {translateStatus(t, order.status)}
                       </span>
                     </td>
                     <td>{new Date(order.createdAt).toLocaleDateString()}</td>
@@ -268,7 +245,7 @@ const Orders = () => {
                 <div className="card-header">
                   <span className="tracking-number">#{order.trackingNumber || order.id}</span>
                   <span className={`status-badge ${getStatusClass(order.status)}`}>
-                    {getStatusTranslation(order.status)}
+                    {translateStatus(t, order.status)}
                   </span>
                 </div>
                 <div className="card-body">

@@ -6,6 +6,7 @@ import { testApiConnection } from '../../config/api';
 import { Icons } from '../Icons/Icons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Loading from '../Loading/Loading';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Dashboard.scss';
 
 const Dashboard = () => {
@@ -20,6 +21,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { t } = useTranslation();
+
+  // Helper for status translation removed as it's now in statusUtils
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -117,20 +120,20 @@ const Dashboard = () => {
   }) || [];
 
   if (loading) {
-    return <Loading message="Dashboard yuklanmoqda..." size="large" />;
+    return <Loading message={t('loadingDashboard')} size="large" />;
   }
 
   if (error) {
     return (
       <div className="dashboard-error">
         <div className="error-content">
-          <h2>Dashboard yuklanmadi</h2>
-          <p>Xatolik: {error}</p>
+          <h2>{t('error')}</h2>
+          <p>{t('error')}: {error}</p>
           <button
             onClick={() => window.location.reload()}
             className="btn-primary"
           >
-            Qayta yuklash
+            {t('refresh')}
           </button>
         </div>
       </div>
@@ -236,8 +239,8 @@ const Dashboard = () => {
                   <span className="tracking-number">#{shipment.trackingNumber || shipment.id}</span>
                   <span className="route">{shipment.origin} → {shipment.destination}</span>
                 </div>
-                <span className={`status-badge status-${shipment.status.toLowerCase().replace(' ', '-')}`}>
-                  {shipment.status}
+                <span className={`status-badge ${getStatusClass(shipment.status)}`}>
+                  {translateStatus(t, shipment.status)}
                 </span>
               </div>
             ))}
