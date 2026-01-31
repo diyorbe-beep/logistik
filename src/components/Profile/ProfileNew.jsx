@@ -669,7 +669,7 @@ const ProfileNew = () => {
         <DeliveryCompletionModal
           shipment={deliveryModal.shipment}
           onClose={() => setDeliveryModal({ isOpen: false, shipment: null })}
-          onComplete={refreshData}
+          onDeliveryComplete={refreshData}
         />
       )}
     </div>

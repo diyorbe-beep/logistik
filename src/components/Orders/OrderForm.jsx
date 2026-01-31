@@ -159,8 +159,6 @@ const OrderForm = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-
       const orderData = {
         ...formData,
         estimatedPrice,
@@ -170,30 +168,18 @@ const OrderForm = () => {
         customerId: user?.id
       };
 
-      const response = await fetch(`${API_URL}/api/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderData),
-      });
+      const response = await api.post('/orders', orderData);
 
-      if (response.ok) {
-        const result = await response.json();
+      if (response.data) {
         setShowSuccess(true);
-
-        // Redirect after success animation
+        // Reset form or navigate after success
         setTimeout(() => {
-          navigate('/profile');
+          navigate('/dashboard');
         }, 3000);
-      } else {
-        const error = await response.json();
-        setErrors({ submit: error.message || t('orderCreateError') });
       }
-    } catch (error) {
-      console.error('Error creating order:', error);
-      setErrors({ submit: t('networkError') });
+    } catch (err) {
+      console.error('Error creating order:', err);
+      alert(t('error'));
     } finally {
       setLoading(false);
     }

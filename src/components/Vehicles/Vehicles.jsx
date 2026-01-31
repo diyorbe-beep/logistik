@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import './Vehicles.scss';
 
@@ -17,19 +17,8 @@ const Vehicles = () => {
 
   const fetchVehicles = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/vehicles`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setVehicles(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get('/vehicles');
+      setVehicles(response.data);
     } catch (err) {
       console.error('Error fetching vehicles:', err);
       setError(t('error'));
@@ -132,8 +121,8 @@ const Vehicles = () => {
                 </span>
               </div>
               <div className="vehicle-actions">
-                <Link 
-                  to={`/vehicles/edit/${vehicle.id}`} 
+                <Link
+                  to={`/vehicles/edit/${vehicle.id}`}
                   className="btn-edit"
                   title={t('editVehicle')}
                 >

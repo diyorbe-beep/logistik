@@ -35,7 +35,7 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.deliveryCode.trim()) {
       alert(t('deliveryCodeRequired'));
       return;
@@ -44,8 +44,6 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      
       // Create delivery completion data
       const deliveryData = {
         deliveryCode: formData.deliveryCode.trim(),
@@ -56,36 +54,23 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
         status: 'Delivered'
       };
 
-      const response = await fetch(`${API_URL}/api/shipments/${shipment.id}/complete-delivery`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(deliveryData),
-      });
+      const response = await api.post(`/shipments/${shipment.id}/complete-delivery`, deliveryData);
 
-      if (response.ok) {
-        const result = await response.json();
-        
-        // Show success animation
-        setShowSuccess(true);
-        
-        // Wait for animation, then close modal and refresh data
-        setTimeout(() => {
-          setShowSuccess(false);
-          onDeliveryComplete(result);
-          onClose();
-          resetForm();
-        }, 3000);
-        
-      } else {
-        const error = await response.json();
-        alert(error.message || t('deliveryCompletionFailed'));
-      }
+      // Show success animation
+      setShowSuccess(true);
+
+      // Wait for animation, then close modal and refresh data
+      setTimeout(() => {
+        setShowSuccess(false);
+        onDeliveryComplete(response.data);
+        onClose();
+        resetForm();
+      }, 3000);
+
     } catch (error) {
       console.error('Error completing delivery:', error);
-      alert(t('deliveryCompletionFailed'));
+      const message = error.response?.data?.message || error.response?.data?.error || t('deliveryCompletionFailed');
+      alert(message);
     } finally {
       setLoading(false);
     }

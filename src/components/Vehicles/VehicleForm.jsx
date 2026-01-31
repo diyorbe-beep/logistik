@@ -32,20 +32,10 @@ const VehicleForm = () => {
 
   const fetchVehicle = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/vehicles/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get(`/vehicles/${id}`);
+      setFormData(response.data);
     } catch (err) {
+      console.error('Error fetching vehicle:', err);
       setError(t('error'));
     }
   };
@@ -64,29 +54,15 @@ const VehicleForm = () => {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
-      const url = isEdit
-        ? `${API_URL}/api/vehicles/${id}`
-        : `${API_URL}/api/vehicles`;
-      const method = isEdit ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        navigate('/vehicles');
+      if (isEdit) {
+        await api.put(`/vehicles/${id}`, formData);
       } else {
-        const data = await response.json();
-        setError(data.error || t('error'));
+        await api.post('/vehicles', formData);
       }
+      navigate('/vehicles');
     } catch (err) {
-      setError(t('error'));
+      console.error('Error saving vehicle:', err);
+      setError(err.response?.data?.error || t('error'));
     } finally {
       setLoading(false);
     }

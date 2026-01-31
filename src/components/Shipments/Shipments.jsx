@@ -213,6 +213,7 @@ const Shipments = () => {
                   <th>{t('destination')}</th>
                   <th>{t('status')}</th>
                   <th>{t('vehicle')}</th>
+                  <th>{t('carrier')}</th>
                   <th>{t('created')}</th>
                   <th>{t('actions')}</th>
                 </tr>
@@ -230,6 +231,7 @@ const Shipments = () => {
                       </span>
                     </td>
                     <td>{shipment.vehicle || t('nA')}</td>
+                    <td>{shipment.carrierName || shipment.carrierId || t('nA')}</td>
                     <td>{new Date(shipment.createdAt).toLocaleDateString()}</td>
                     <td className="actions">
                       {/* Carrier Accept Button */}
@@ -289,6 +291,10 @@ const Shipments = () => {
                   <div className="card-row">
                     <span className="label">{t('vehicle')}:</span>
                     <span className="value">{shipment.vehicle || t('nA')}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="label">{t('carrier')}:</span>
+                    <span className="value">{shipment.carrierName || shipment.carrierId || t('nA')}</span>
                   </div>
                   <div className="card-row">
                     <span className="label">{t('created')}:</span>

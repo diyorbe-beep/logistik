@@ -67,6 +67,15 @@ export const translations = {
     manageVehicles: 'Transport vositalarini boshqarish',
     manageVehiclesDesc: 'Avtopark transport vositalarini kuzating va boshqaring',
     loadingDashboard: 'Dashboard yuklanmoqda...',
+    statusDistribution: 'Holat bo\'yicha taqsimot',
+    monthlyShipments: 'Oylik yuk tashishlar',
+    carrier: 'Yetkazib beruvchi',
+    noData: 'Ma\'lumotlar mavjud emas',
+    pending: 'Kutilmoqda',
+    
+    // Months
+    jan: 'Yan', feb: 'Fev', mar: 'Mar', apr: 'Apr', may: 'May', jun: 'Iyun',
+    jul: 'Iyul', aug: 'Avg', sep: 'Sen', oct: 'Okt', nov: 'Noy', dec: 'Dek',
     
     // Shipments
     shipments: 'Yuk tashishlar',

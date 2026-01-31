@@ -39,17 +39,8 @@ const ShipmentForm = () => {
 
   const fetchVehicles = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/vehicles`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setVehicles(data);
-      }
+      const response = await api.get('/vehicles');
+      setVehicles(response.data);
     } catch (err) {
       console.error('Error fetching vehicles:', err);
     }
@@ -57,20 +48,10 @@ const ShipmentForm = () => {
 
   const fetchShipment = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/shipments/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get(`/shipments/${id}`);
+      setFormData(response.data);
     } catch (err) {
+      console.error('Error fetching shipment:', err);
       setError(t('error'));
     }
   };
@@ -89,29 +70,15 @@ const ShipmentForm = () => {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
-      const url = isEdit
-        ? `${API_URL}/api/shipments/${id}`
-        : `${API_URL}/api/shipments`;
-      const method = isEdit ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        navigate('/shipments');
+      if (isEdit) {
+        await api.put(`/shipments/${id}`, formData);
       } else {
-        const data = await response.json();
-        setError(data.error || t('error'));
+        await api.post('/shipments', formData);
       }
+      navigate('/shipments');
     } catch (err) {
-      setError(t('error'));
+      console.error('Error saving shipment:', err);
+      setError(err.response?.data?.error || t('error'));
     } finally {
       setLoading(false);
     }

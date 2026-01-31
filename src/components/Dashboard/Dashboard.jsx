@@ -68,6 +68,7 @@ const Dashboard = () => {
         inTransit: allShipments.filter(s => s.status === 'In Transit').length,
         delivered: allShipments.filter(s => s.status === 'Delivered').length,
         received: allShipments.filter(s => s.status === 'Received').length,
+        pending: allShipments.filter(s => s.status === 'Pending').length,
         monthly: (() => {
           const stats = {};
           allShipments.forEach(s => {
@@ -104,10 +105,16 @@ const Dashboard = () => {
 
   // Prepare chart data
   const statusChartData = [
-    { name: t('received'), value: stats.received, color: '#06b6d4' },
-    { name: t('inTransit'), value: stats.inTransit, color: '#f59e0b' },
-    { name: t('delivered'), value: stats.delivered, color: '#10b981' },
-  ];
+    { name: t('received'), value: stats.received || 0, color: '#06b6d4' },
+    { name: t('inTransit'), value: stats.inTransit || 0, color: '#f59e0b' },
+    { name: t('delivered'), value: stats.delivered || 0, color: '#10b981' },
+    { name: t('pending'), value: stats.pending || 0, color: '#6366f1' },
+  ].filter(item => item.value > 0);
+
+  // If no data, show a dummy placeholder item to keep the chart visible/rendered
+  const finalChartData = statusChartData.length > 0
+    ? statusChartData
+    : [{ name: t('noData'), value: 1, color: '#e5e7eb' }];
 
   // Convert monthly data from backend to chart format
   const monthlyData = stats.monthly?.map((item) => {
@@ -190,7 +197,7 @@ const Dashboard = () => {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={statusChartData}
+                data={finalChartData}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
