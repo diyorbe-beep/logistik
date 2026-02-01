@@ -100,11 +100,7 @@ const DeliveryCompletionModal = ({ isOpen, onClose, shipment, onDeliveryComplete
         {showSuccess ? (
           <div className="success-animation">
             <div className="success-icon">
-              <div className="checkmark">
-                <div className="checkmark-circle"></div>
-                <div className="checkmark-stem"></div>
-                <div className="checkmark-kick"></div>
-              </div>
+              <span className="success-emoji">✅</span>
             </div>
             <h2>{t('congratulations')}</h2>
             <p>{t('deliveryCompletedSuccessfully')}</p>
