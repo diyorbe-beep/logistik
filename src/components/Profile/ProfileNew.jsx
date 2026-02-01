@@ -2,8 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
-import { useApi } from '../../hooks/useApi';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import Loading, { SkeletonLoader, CardSkeleton } from '../Loading/Loading';
 import DeliveryCompletionModal from '../DeliveryCompletion/DeliveryCompletionModal';
@@ -84,31 +83,19 @@ const ProfileNew = () => {
   // Accept shipment function
   const handleAcceptShipment = async (shipmentId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/shipments/${shipmentId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          carrierId: user.id,
-          status: 'In Transit',
-          note: 'Shipment accepted by carrier'
-        })
+      await api.put(`/shipments/${shipmentId}`, {
+        carrierId: user.id,
+        status: 'In Transit',
+        note: 'Shipment accepted by carrier'
       });
 
-      if (response.ok) {
-        // Refresh data after accepting
-        refreshData();
-        alert(t('shipmentAccepted'));
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error || t('error'));
-      }
+      // Refresh data after accepting
+      refreshData();
+      alert(t('shipmentAccepted'));
     } catch (error) {
       console.error('Error accepting shipment:', error);
-      alert(t('error'));
+      const message = error.response?.data?.error || error.message || t('error');
+      alert(`${t('error')}: ${message}`);
     }
   };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Orders.scss';
@@ -24,21 +24,11 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/orders`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setOrders(data);
-        setFilteredOrders(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get('/orders');
+      setOrders(response.data);
+      setFilteredOrders(response.data);
     } catch (err) {
+      console.error('Error fetching orders:', err);
       setError(t('error'));
     } finally {
       setLoading(false);
@@ -75,24 +65,13 @@ const Orders = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/orders/${orderId}/convert-to-shipment`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        alert(t('orderConvertedSuccess'));
-        fetchOrders(); // Refresh the list
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error || t('error'));
-      }
+      await api.post(`/orders/${orderId}/convert-to-shipment`);
+      alert(t('orderConvertedSuccess'));
+      fetchOrders(); // Refresh the list
     } catch (err) {
-      alert(t('error'));
+      console.error('Convert to shipment error:', err);
+      const message = err.response?.data?.error || err.message || t('error');
+      alert(`${t('error')}: ${message}`);
     }
   };
 
