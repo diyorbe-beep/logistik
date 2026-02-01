@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import './Carriers.scss';
 
@@ -16,17 +17,8 @@ const Carriers = () => {
 
   const fetchCarriers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/carriers`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCarriers(data);
-      }
+      const response = await api.get('/carriers');
+      setCarriers(response.data);
     } catch (err) {
       console.error('Error fetching carriers:', err);
     } finally {
@@ -36,17 +28,8 @@ const Carriers = () => {
 
   const fetchCarrierHistory = async (carrierId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/carriers/${carrierId}/history`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSelectedCarrier({ ...carriers.find(c => c.id === carrierId), history: data });
-      }
+      const response = await api.get(`/carriers/${carrierId}/history`);
+      setSelectedCarrier({ ...carriers.find(c => c.id === carrierId), history: response.data });
     } catch (err) {
       console.error('Error fetching carrier history:', err);
     }

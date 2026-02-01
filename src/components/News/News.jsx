@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
 import './News.scss';
 
@@ -16,17 +16,13 @@ const News = () => {
 
   const fetchNews = async () => {
     try {
-      // News endpoint is public, no token required
-      const response = await fetch(`${API_URL}/api/news`);
-
-      if (response.ok) {
-        const data = await response.json();
-        // Sort by date, newest first
-        const sortedNews = data.sort((a, b) => 
-          new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0)
-        );
-        setNews(sortedNews);
-      }
+      const response = await api.get('/news');
+      const data = response.data;
+      // Sort by date, newest first
+      const sortedNews = data.sort((a, b) =>
+        new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0)
+      );
+      setNews(sortedNews);
     } catch (err) {
       console.error('Error fetching news:', err);
     } finally {

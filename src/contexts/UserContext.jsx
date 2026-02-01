@@ -28,42 +28,28 @@ export const UserProvider = ({ children }) => {
     try {
       setError(null);
 
-      // Add timeout for faster failure detection
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const response = await api.get('/users/profile');
+      const data = response.data;
+      setUser(data);
 
-      const response = await fetch(`${API_URL}/api/users/profile`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data);
-
-        // Preload critical data after successful login (with delay to avoid overwhelming server)
-        setTimeout(() => {
-          preloadCriticalData().catch((error) => {
-            console.log('Preload failed:', error);
-            // Don't show error to user, just log it
-          });
-        }, 1000); // 1 second delay
-      } else if (response.status === 401) {
-        // Token expired or invalid
-        localStorage.removeItem('token');
-        setUser(null);
-      } else {
-        throw new Error(`HTTP ${response.status}`);
-      }
+      // Preload critical data after successful login (with delay to avoid overwhelming server)
+      setTimeout(() => {
+        preloadCriticalData().catch((error) => {
+          console.log('Preload failed:', error);
+          // Don't show error to user, just log it
+        });
+      }, 1000); // 1 second delay
     } catch (err) {
       console.error('Error fetching user profile:', err);
 
+      // Response interceptor already handles 401s
+      if (err.response?.status === 401) {
+        setUser(null);
+        return;
+      }
+
       // Retry logic for network issues
-      if (retryCount < 2 && (err.name === 'AbortError' || err.message.includes('fetch'))) {
+      if (retryCount < 2 && (!err.response || err.message.includes('Network Error'))) {
         setTimeout(() => {
           fetchUserProfile(retryCount + 1);
         }, 2000 * (retryCount + 1)); // Exponential backoff

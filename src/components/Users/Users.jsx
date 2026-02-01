@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import './Users.scss';
 
 const Users = () => {
@@ -14,17 +14,8 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/users`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
-      }
+      const response = await api.get('/users');
+      setUsers(response.data);
     } catch (err) {
       console.error('Error fetching users:', err);
     } finally {

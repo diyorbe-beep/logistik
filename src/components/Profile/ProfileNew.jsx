@@ -24,27 +24,49 @@ const ProfileNew = () => {
 
   // Helper for status translation removed as it's now in statusUtils
 
-  // Optimized API calls with caching
-  const {
-    data: allShipments = [],
-    loading: shipmentsLoading,
-    refetch: refetchShipments
-  } = useApi('/api/shipments', {
-    immediate: !!contextUser,
-    dependencies: [contextUser?.id, contextUser?.role]
-  });
+  // Optimized API calls without useApi (standardized)
+  const [allShipments, setAllShipments] = useState([]);
+  const [shipmentsLoading, setShipmentsLoading] = useState(false);
+  const [rawOrders, setRawOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+
+  const fetchShipments = useCallback(async () => {
+    if (!contextUser) return;
+    setShipmentsLoading(true);
+    try {
+      const response = await api.get('/shipments');
+      setAllShipments(response.data || []);
+    } catch (err) {
+      console.error('Error fetching shipments:', err);
+    } finally {
+      setShipmentsLoading(false);
+    }
+  }, [contextUser]);
+
+  const fetchOrders = useCallback(async () => {
+    if (contextUser?.role !== 'customer') return;
+    setOrdersLoading(true);
+    try {
+      const response = await api.get('/orders');
+      setRawOrders(response.data || []);
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+    } finally {
+      setOrdersLoading(false);
+    }
+  }, [contextUser]);
+
+  useEffect(() => {
+    if (contextUser) {
+      fetchShipments();
+      if (contextUser.role === 'customer') {
+        fetchOrders();
+      }
+    }
+  }, [contextUser?.id, contextUser?.role, fetchShipments, fetchOrders]);
 
   // Alias for availableLoading since it uses the same data source
   const availableLoading = shipmentsLoading;
-
-  const {
-    data: rawOrders = [],
-    loading: ordersLoading,
-    refetch: refetchOrders
-  } = useApi('/api/orders', {
-    immediate: contextUser?.role === 'customer',
-    dependencies: [contextUser?.role]
-  });
 
   // Derived state based on role
   const safeAllShipments = allShipments || [];
@@ -74,11 +96,11 @@ const ProfileNew = () => {
   // Optimized refresh function
   const refreshData = useCallback(() => {
     refetchUser();
-    refetchShipments();
+    fetchShipments();
     if (contextUser?.role === 'customer') {
-      refetchOrders();
+      fetchOrders();
     }
-  }, [contextUser?.role, refetchUser, refetchShipments, refetchOrders]);
+  }, [contextUser?.role, refetchUser, fetchShipments, fetchOrders]);
 
   // Accept shipment function
   const handleAcceptShipment = async (shipmentId) => {

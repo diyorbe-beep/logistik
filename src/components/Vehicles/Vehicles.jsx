@@ -33,22 +33,12 @@ const Vehicles = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/vehicles/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setVehicles(vehicles.filter(v => v.id !== id));
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error || t('error'));
-      }
+      await api.delete(`/vehicles/${id}`);
+      setVehicles(vehicles.filter(v => v.id !== id));
     } catch (err) {
-      alert(t('error'));
+      console.error('Error deleting vehicle:', err);
+      const message = err.response?.data?.error || err.message || t('error');
+      alert(`${t('error')}: ${message}`);
     }
   };
 

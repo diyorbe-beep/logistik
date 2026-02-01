@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 
 const PerformanceMonitor = () => {
   const [metrics, setMetrics] = useState({
@@ -14,7 +14,7 @@ const PerformanceMonitor = () => {
     const measureApiResponse = async () => {
       const start = performance.now();
       try {
-        await fetch(`${API_URL}/api/health`, { method: 'HEAD' });
+        await api.get('/health'); // Use get or head if supported
         const end = performance.now();
         setMetrics(prev => ({
           ...prev,
@@ -73,8 +73,8 @@ const PerformanceMonitor = () => {
     }}>
       <div>API: {metrics.apiResponseTime}ms</div>
       <div>Memory: {metrics.memoryUsage}MB</div>
-      <div>Status: <span style={{ 
-        color: metrics.connectionStatus === 'connected' ? '#4CAF50' : '#f44336' 
+      <div>Status: <span style={{
+        color: metrics.connectionStatus === 'connected' ? '#4CAF50' : '#f44336'
       }}>
         {metrics.connectionStatus}
       </span></div>

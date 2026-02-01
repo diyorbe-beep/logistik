@@ -29,20 +29,10 @@ const PricingForm = () => {
 
   const fetchPricing = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/pricing/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(data);
-      } else {
-        setError(t('error'));
-      }
+      const response = await api.get(`/pricing/${id}`);
+      setFormData(response.data);
     } catch (err) {
+      console.error('Error fetching pricing:', err);
       setError(t('error'));
     }
   };
@@ -54,14 +44,14 @@ const PricingForm = () => {
         ...prev,
         [name]: value,
       };
-      
+
       // Auto calculate total price
       if (name === 'distance' || name === 'pricePerKm') {
         const distance = parseFloat(name === 'distance' ? value : prev.distance) || 0;
         const pricePerKm = parseFloat(name === 'pricePerKm' ? value : prev.pricePerKm) || 0;
         updated.totalPrice = (distance * pricePerKm).toFixed(2);
       }
-      
+
       return updated;
     });
   };
@@ -72,34 +62,18 @@ const PricingForm = () => {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
-      const url = isEdit
-        ? `${API_URL}/api/pricing/${id}`
-        : `${API_URL}/api/pricing`;
-      const method = isEdit ? 'PUT' : 'POST';
-
       const totalPrice = (parseFloat(formData.distance) * parseFloat(formData.pricePerKm)).toFixed(2);
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
-          totalPrice,
-        }),
-      });
-
-      if (response.ok) {
-        navigate('/pricing');
+      if (isEdit) {
+        await api.put(`/pricing/${id}`, { ...formData, totalPrice });
       } else {
-        const data = await response.json();
-        setError(data.error || t('error'));
+        await api.post('/pricing', { ...formData, totalPrice });
       }
+
+      navigate('/pricing');
     } catch (err) {
-      setError(t('error'));
+      console.error('Error saving pricing:', err);
+      setError(err.response?.data?.error || t('error'));
     } finally {
       setLoading(false);
     }

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import './Pricing.scss';
 
 const Pricing = () => {
@@ -18,20 +18,8 @@ const Pricing = () => {
 
   const fetchPricing = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-      
-      const response = await fetch(`${API_URL}/api/pricing`, {
-        headers,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPricing(data);
-      }
+      const response = await api.get('/pricing');
+      setPricing(response.data);
     } catch (err) {
       console.error('Error fetching pricing:', err);
     } finally {
@@ -45,20 +33,10 @@ const Pricing = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/pricing/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setPricing(pricing.filter(p => p.id !== id));
-      } else {
-        alert(t('error'));
-      }
+      await api.delete(`/pricing/${id}`);
+      setPricing(pricing.filter(p => p.id !== id));
     } catch (err) {
+      console.error('Error deleting pricing:', err);
       alert(t('error'));
     }
   };
