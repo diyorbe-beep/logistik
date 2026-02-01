@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import './VehicleForm.scss';
 
 const VehicleForm = () => {

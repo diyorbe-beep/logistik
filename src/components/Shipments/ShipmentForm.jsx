@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import { useTranslation } from '../../hooks/useTranslation';
-import { API_URL } from '../../config/api';
+import api from '../../api/client';
 import './ShipmentForm.scss';
 
 const ShipmentForm = () => {
