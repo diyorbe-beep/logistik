@@ -364,7 +364,7 @@ const ProfileNew = () => {
                         <div className="shipment-header">
                           <h4>#{shipment.id}</h4>
                           <span className={`status ${shipment.status.toLowerCase().replace(' ', '-')}`}>
-                            {getStatusTranslation(shipment.status)}
+                            {translateStatus(t, shipment.status)}
                           </span>
                         </div>
                         <div className="shipment-details">

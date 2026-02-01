@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Vehicles.scss';
 
 const Vehicles = () => {
@@ -107,7 +108,7 @@ const Vehicles = () => {
                   <p className="capacity">{t('capacity')}: {vehicle.capacity}</p>
                 )}
                 <span className={`status-badge ${getStatusClass(vehicle.status)}`}>
-                  {getStatusTranslation(vehicle.status)}
+                  {translateStatus(t, vehicle.status)}
                 </span>
               </div>
               <div className="vehicle-actions">

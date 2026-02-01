@@ -3,6 +3,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { API_URL } from '../../config/api';
 import api from '../../api/client';
 import { Icons } from '../Icons/Icons';
+import { translateStatus, getStatusClass } from '../../utils/statusUtils';
 import './Carriers.scss';
 
 const Carriers = () => {
