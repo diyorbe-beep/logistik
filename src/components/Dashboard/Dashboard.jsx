@@ -69,6 +69,7 @@ const Dashboard = () => {
         delivered: allShipments.filter(s => s.status === 'Delivered').length,
         received: allShipments.filter(s => s.status === 'Received').length,
         pending: allShipments.filter(s => s.status === 'Pending').length,
+        converted: allShipments.filter(s => s.status === 'Converted to Shipment').length,
         monthly: (() => {
           const stats = {};
           allShipments.forEach(s => {
@@ -109,12 +110,13 @@ const Dashboard = () => {
     { name: t('inTransit'), value: stats.inTransit || 0, color: '#f59e0b' },
     { name: t('delivered'), value: stats.delivered || 0, color: '#10b981' },
     { name: t('pending'), value: stats.pending || 0, color: '#6366f1' },
+    { name: t('converted'), value: stats.converted || 0, color: '#8b5cf6' },
   ].filter(item => item.value > 0);
 
-  // If no data, show a dummy placeholder item to keep the chart visible/rendered
+  // If no data, show a dummy placeholder item
   const finalChartData = statusChartData.length > 0
     ? statusChartData
-    : [{ name: t('noData'), value: 1, color: '#e5e7eb' }];
+    : [{ name: t('noData'), value: 1, color: '#f3f4f6' }];
 
   // Convert monthly data from backend to chart format
   const monthlyData = stats.monthly?.map((item) => {
@@ -200,17 +202,20 @@ const Dashboard = () => {
                 data={finalChartData}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                innerRadius={60}
                 outerRadius={80}
-                fill="#8884d8"
+                paddingAngle={5}
                 dataKey="value"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
-                {statusChartData.map((entry, index) => (
+                {finalChartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+              />
+              <Legend verticalAlign="bottom" height={36} />
             </PieChart>
           </ResponsiveContainer>
         </div>
