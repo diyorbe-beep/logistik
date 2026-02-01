@@ -97,11 +97,7 @@ const Shipments = () => {
   const handleAcceptShipment = async (id) => {
     try {
       setLoading(true);
-      await api.put(`/shipments/${id}`, {
-        carrierId: user.id,
-        status: 'In Transit', // Auto-update status when accepting
-        note: 'Shipment accepted by carrier'
-      });
+      await api.post(`/shipments/${id}/accept`);
       // Refresh to move from available to my shipments
       await fetchShipments();
       setActiveTab('my_shipments');
