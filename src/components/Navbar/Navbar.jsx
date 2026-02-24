@@ -10,18 +10,21 @@ import './Navbar.scss';
 
 const Navbar = () => {
   const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
   const { user } = useUser();
+  const isAuthenticated = !!localStorage.getItem('token');
 
-  // Check if user can access dashboard
   const canAccessDashboard = user && (user.role === 'admin' || user.role === 'operator');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-  }, [location]);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (menuOpen) {
@@ -29,156 +32,101 @@ const Navbar = () => {
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [menuOpen]);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
-
-  // Protected routes where navbar should be hidden (excluding profile)
-  const protectedRoutes = ['/dashboard', '/shipments', '/users', '/vehicles'];
-  const isProtectedRoute = protectedRoutes.some(route =>
+  const protectedRoutes = ['/dashboard', '/shipments', '/users', '/vehicles', '/carriers', '/orders'];
+  const isDashboardArea = protectedRoutes.some(route =>
     location.pathname === route || location.pathname.startsWith(route + '/')
   );
 
-  // Hide navbar on protected routes when authenticated (but always show on profile)
-  if (isAuthenticated && isProtectedRoute && location.pathname !== '/profile') {
-    return null; // Don't show navbar when authenticated on protected routes except profile
+  // In the dashboard area, we use the Sidebar layout instead of this Navbar
+  if (isAuthenticated && isDashboardArea && location.pathname !== '/profile') {
+    return null;
   }
+
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <>
       {menuOpen && <div className="navbar-overlay" onClick={closeMenu}></div>}
-      <nav className="navbar">
-        <div className="navbar-container">
+      <nav className={`navbar-saas ${scrolled || isAuthPage ? 'scrolled' : ''}`}>
+        <div className="container">
           <Link to="/" className="navbar-logo" onClick={closeMenu}>
-            <div className="logo-icon-wrapper">
-              <svg className="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 8H17L15 4H9L7 8H4C2.9 8 2 8.9 2 10V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V10C22 8.9 21.1 8 20 8Z" fill="currentColor" opacity="0.9" />
-                <path d="M12 17C13.6569 17 15 15.6569 15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17Z" fill="white" />
-                <rect x="3" y="10" width="18" height="2" fill="currentColor" opacity="0.3" />
-              </svg>
+            <div className="logo-mark">
+              <Icons.Truck size={24} color="white" />
             </div>
-            <div className="logo-text">
-              <span className="logo-line1">Logistics</span>
-              <span className="logo-line2">Pro</span>
-            </div>
+            <span className="logo-text">Logistik<span className="text-primary-saas">Pro</span></span>
           </Link>
+
           <div className="navbar-links">
-            <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.Home size={18} /></span>
-              <span className="nav-text">{t('home')}</span>
+            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+              {t('home')}
             </Link>
-            <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.Package size={18} /></span>
-              <span className="nav-text">{t('services')}</span>
+            <Link to="/services" className={location.pathname === '/services' ? 'active' : ''}>
+              {t('services')}
             </Link>
-            <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.DollarSign size={18} /></span>
-              <span className="nav-text">{t('pricing')}</span>
+            <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''}>
+              {t('pricing')}
             </Link>
-            <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.Info size={18} /></span>
-              <span className="nav-text">{t('about')}</span>
+            <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>
+              {t('Biz Haqimizda')}
             </Link>
-            <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.Phone size={18} /></span>
-              <span className="nav-text">{t('contact')}</span>
+            <Link to="/news" className={location.pathname === '/news' ? 'active' : ''}>
+              {'Yangiliklar'}
             </Link>
-            <Link to="/news" className={location.pathname === '/news' ? 'active' : ''} onClick={closeMenu}>
-              <span className="nav-icon"><Icons.FileText size={18} /></span>
-              <span className="nav-text">{t('news')}</span>
+            <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>
+              {t('contact') || 'Aloqa'}
             </Link>
           </div>
+
           <div className="navbar-actions">
             <LanguageSwitcher />
-            {isAuthenticated && <NotificationBell />}
-            {!isAuthenticated && (
-              <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>
-                {t('login')}
-              </Link>
-            )}
-            {isAuthenticated && (
-              <>
-                <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
-                  {t('createOrder')}
+            {isAuthenticated ? (
+              <div className="user-actions">
+                <NotificationBell />
+                <Link to="/profile" className="profile-btn">
+                  <Icons.User size={20} />
                 </Link>
                 {canAccessDashboard && (
-                  <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
-                    {t('dashboard')}
+                  <Link to="/dashboard" className="btn-primary-saas">
+                    Dashboard
                   </Link>
                 )}
-                <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={closeMenu}>
-                  {t('profile')}
-                </Link>
-              </>
+              </div>
+            ) : (
+              <div className="auth-btns">
+                <Link to="/login" className="btn-ghost-saas">{t('login')}</Link>
+                <Link to="/register" className="btn-primary-saas">{t('register')}</Link>
+              </div>
             )}
+
+            <button className={`menu-toggle ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+              <span></span><span></span><span></span>
+            </button>
           </div>
-          <button className="navbar-toggle" onClick={toggleMenu} aria-label="Toggle menu">
-            <span className={`hamburger ${menuOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
-          </button>
-          <div className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
-            <div className="navbar-links-mobile">
-              <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.Home size={18} /></span>
-                <span className="nav-text">{t('home')}</span>
-              </Link>
-              <Link to="/services" className={location.pathname === '/services' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.Package size={18} /></span>
-                <span className="nav-text">{t('services')}</span>
-              </Link>
-              <Link to="/pricing" className={location.pathname === '/pricing' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.DollarSign size={18} /></span>
-                <span className="nav-text">{t('pricing')}</span>
-              </Link>
-              <Link to="/about" className={location.pathname === '/about' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.Info size={18} /></span>
-                <span className="nav-text">{t('about')}</span>
-              </Link>
-              <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.Phone size={18} /></span>
-                <span className="nav-text">{t('contact')}</span>
-              </Link>
-              <Link to="/news" className={location.pathname === '/news' ? 'active' : ''} onClick={closeMenu}>
-                <span className="nav-icon"><Icons.FileText size={18} /></span>
-                <span className="nav-text">{t('news')}</span>
-              </Link>
-            </div>
-            <div className="navbar-actions-mobile">
-              <LanguageSwitcher />
-              {isAuthenticated && <NotificationBell />}
-              {!isAuthenticated && (
-                <Link to="/login" className={`btn-primary ${location.pathname === '/login' ? 'active' : ''}`} onClick={closeMenu}>
-                  {t('login')}
-                </Link>
-              )}
-              {isAuthenticated && (
-                <>
-                  <Link to="/orders/new" className="btn-secondary" onClick={closeMenu}>
-                    {t('createOrder')}
-                  </Link>
-                  {canAccessDashboard && (
-                    <Link to="/dashboard" className="btn-primary" onClick={closeMenu}>
-                      {t('dashboard')}
-                    </Link>
-                  )}
-                  <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={closeMenu}>
-                    {t('profile')}
-                  </Link>
-                </>
-              )}
-            </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+          <div className="mobile-links">
+            <Link to="/" onClick={closeMenu}>{t('home')}</Link>
+            <Link to="/services" onClick={closeMenu}>{t('services')}</Link>
+            <Link to="/pricing" onClick={closeMenu}>{t('pricing')}</Link>
+            <Link to="/about" onClick={closeMenu}>{t('about')}</Link>
+            <Link to="/contact" onClick={closeMenu}>{t('contact')}</Link>
+          </div>
+          <div className="mobile-auth">
+            {!isAuthenticated ? (
+              <>
+                <Link to="/login" className="btn-ghost-saas" onClick={closeMenu}>{t('login')}</Link>
+                <Link to="/register" className="btn-primary-saas" onClick={closeMenu}>{t('register')}</Link>
+              </>
+            ) : (
+              <Link to="/dashboard" className="btn-primary-saas" onClick={closeMenu}>Dashboard</Link>
+            )}
           </div>
         </div>
       </nav>

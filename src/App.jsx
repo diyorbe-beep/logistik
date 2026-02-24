@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { useUser } from './contexts/UserContext';
 import { useTranslation } from './hooks/useTranslation';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
 import Loading from './components/Loading/Loading';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.scss';
@@ -13,7 +14,7 @@ const Login = lazy(() => import('./components/Login/Login'));
 const Register = lazy(() => import('./components/Register/Register'));
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Orders = lazy(() => import('./components/Orders/Orders'));
-const Shipments = lazy(() => import('./components/Shipments/Shipments'));
+const Shipments = lazy(() => import('./components/Shipments/Shipments.jsx'));
 const ShipmentForm = lazy(() => import('./components/Shipments/ShipmentForm'));
 const Users = lazy(() => import('./components/Users/Users'));
 const Vehicles = lazy(() => import('./components/Vehicles/Vehicles'));
@@ -359,6 +360,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
+        <Footer />
       </Router>
     </ErrorBoundary>
   );

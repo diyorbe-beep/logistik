@@ -3,433 +3,252 @@
 
 .navbar-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
-  backdrop-filter: blur(4px);
-  
-  @include responsive(lg) {
-    display: block;
-  }
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
 }
 
-.navbar {
+.navbar-saas {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  z-index: 999;
-  @include smooth-transition(all, 0.3s);
+  height: 72px;
+  z-index: 1001;
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid transparent;
 
-  .navbar-container {
-    @include container;
-    @include flex-between;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    align-items: center;
-    min-height: 60px; // Ensure consistent height
-    
-    // Ensure proper flex distribution
-    > * {
-      flex-shrink: 0; // Prevent children from shrinking
-    }
+  &.scrolled {
+    height: 64px;
+    background: rgba($bg-white, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid $border-color;
+    box-shadow: $shadow-sm;
   }
 
-  // Logo
+  .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include container;
+  }
+
   .navbar-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: $spacing-3;
     text-decoration: none;
-    color: $text-primary;
-    font-weight: 700;
-    @include smooth-transition(all, 0.3s);
 
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    .logo-icon-wrapper {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
-      border-radius: 10px;
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: $primary;
+      border-radius: $radius-md;
       @include flex-center;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-
-      .logo-icon {
-        width: 24px;
-        height: 24px;
-        color: white;
-      }
+      box-shadow: 0 4px 12px rgba($primary, 0.2);
     }
 
     .logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-
-      .logo-line1 {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: $text-primary;
-      }
-
-      .logo-line2 {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: $primary;
-        margin-top: -2px;
-      }
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: $text-primary;
+      letter-spacing: -0.02em;
     }
   }
 
-  // Desktop Navigation Links
   .navbar-links {
     display: flex;
     align-items: center;
-    gap: 2rem;
-    flex-shrink: 0; // Prevent shrinking
+    gap: $spacing-1; // reduced gap
+    flex-wrap: nowrap;
+    white-space: nowrap;
 
-    @include responsive(lg) {
+    @media (max-width: $breakpoint-lg) {
       display: none;
     }
 
     a {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
+      padding: $spacing-2 $spacing-3; // reduced padding
       color: $text-secondary;
+      text-decoration: none;
       font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      white-space: nowrap; // Prevent text wrapping
-      flex-shrink: 0; // Prevent link from shrinking
-      @include smooth-transition(all, 0.3s);
-      position: relative;
-
-      .nav-icon {
-        font-size: 1.125rem;
-        flex-shrink: 0; // Prevent icon from shrinking
-      }
-
-      .nav-text {
-        font-size: 0.95rem;
-        flex-shrink: 0; // Prevent text from shrinking
-      }
+      font-size: 0.9375rem;
+      border-radius: $radius-full;
+      transition: all var(--transition-fast);
 
       &:hover {
-        color: $primary;
-        background: rgba(59, 130, 246, 0.1);
-        transform: translateY(-2px);
+        color: $text-primary;
+        background: rgba($primary, 0.05);
       }
 
       &.active {
         color: $primary;
-        background: rgba(59, 130, 246, 0.1);
-        
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: -1rem;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 6px;
-          height: 6px;
-          background: $primary;
-          border-radius: 50%;
-        }
+        background: rgba($primary, 0.08);
       }
     }
   }
 
-  // Desktop Actions
   .navbar-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex-shrink: 0; // Prevent shrinking
+    gap: $spacing-4;
 
-    @include responsive(lg) {
-      display: none;
-    }
-
-    .btn-primary {
-      @include button-primary;
-      padding: 0.5rem 1.5rem;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      white-space: nowrap; // Prevent text wrapping
-      min-width: fit-content; // Ensure button fits content
-      flex-shrink: 0; // Prevent button from shrinking
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: $primary;
-      border: 2px solid $primary;
-      padding: 0.5rem 1.5rem;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      white-space: nowrap;
-      min-width: fit-content;
-      flex-shrink: 0;
-      text-decoration: none;
-      font-weight: 600;
-      @include smooth-transition(all, 0.3s);
-
-      &:hover {
-        background: $primary;
-        color: white;
-        transform: translateY(-2px);
-      }
-    }
-
-    a:not(.btn-primary) {
-      color: $text-secondary;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      white-space: nowrap; // Prevent text wrapping
-      flex-shrink: 0; // Prevent link from shrinking
-      @include smooth-transition(all, 0.3s);
-
-      &:hover {
-        color: $primary;
-        background: rgba(59, 130, 246, 0.1);
-      }
-
-      &.active {
-        color: $primary;
-        background: rgba(59, 130, 246, 0.1);
-      }
-    }
-  }
-
-  // Mobile Menu Toggle
-  .navbar-toggle {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 6px;
-    @include smooth-transition(all, 0.3s);
-
-    @include responsive(lg) {
-      display: block;
-    }
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .hamburger {
-      width: 24px;
-      height: 18px;
-      position: relative;
+    .auth-btns {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-primary-saas {
+      @include button-primary;
+      padding: 0.5rem 1.25rem;
+      border-radius: $radius-full;
+    }
+
+    .btn-ghost-saas {
+      padding: 0.5rem 1rem;
+      color: $text-secondary;
+      font-weight: 500;
+      text-decoration: none;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+
+    .profile-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: $bg-secondary;
+      @include flex-center;
+      color: $text-secondary;
+      transition: all 0.2s;
+
+      &:hover {
+        background: $border-color;
+        color: $primary;
+      }
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      position: relative;
+      cursor: pointer;
+
+      @media (max-width: $breakpoint-lg) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        align-items: flex-end;
+      }
 
       span {
         display: block;
         height: 2px;
-        width: 100%;
         background: $text-primary;
-        border-radius: 1px;
-        @include smooth-transition(all, 0.3s);
-        transform-origin: center;
+        border-radius: 2px;
+        transition: 0.3s;
 
         &:nth-child(1) {
-          width: 100%;
+          width: 24px;
         }
 
         &:nth-child(2) {
-          width: 80%;
+          width: 18px;
         }
 
         &:nth-child(3) {
-          width: 60%;
+          width: 24px;
         }
       }
 
-      &.open {
-        span {
-          &:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-            width: 100%;
-          }
+      &.open span {
+        &:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
 
-          &:nth-child(2) {
-            opacity: 0;
-            width: 100%;
-          }
+        &:nth-child(2) {
+          opacity: 0;
+        }
 
-          &:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-            width: 100%;
-          }
+        &:nth-child(3) {
+          transform: rotate(-45deg) translate(5px, -5px);
         }
       }
     }
   }
 
-  // Mobile Menu
-  .navbar-menu {
+  .mobile-menu {
     position: fixed;
-    top: 0;
+    top: 72px;
+    left: 0;
     right: 0;
-    width: 320px;
-    height: 100vh;
-    background: white;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    transform: translateX(100%);
-    @include smooth-transition(transform, 0.3s);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 0;
-
-    @include responsive(sm) {
-      width: 280px;
-    }
+    background: $bg-white;
+    padding: $spacing-6;
+    border-bottom: 1px solid $border-color;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: $shadow-lg;
 
     &.open {
-      transform: translateX(0);
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
     }
 
-    .navbar-links-mobile {
-      flex: 1;
-      padding: 2rem 0;
-
-      a {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        text-decoration: none;
-        color: $text-secondary;
-        font-weight: 500;
-        padding: 1rem 2rem;
-        @include smooth-transition(all, 0.3s);
-        border-left: 4px solid transparent;
-
-        .nav-icon {
-          font-size: 1.25rem;
-          width: 24px;
-          text-align: center;
-        }
-
-        .nav-text {
-          font-size: 1rem;
-        }
-
-        &:hover {
-          color: $primary;
-          background: rgba(59, 130, 246, 0.05);
-          border-left-color: rgba(59, 130, 246, 0.3);
-        }
-
-        &.active {
-          color: $primary;
-          background: rgba(59, 130, 246, 0.1);
-          border-left-color: $primary;
-          font-weight: 600;
-        }
-      }
-    }
-
-    .navbar-actions-mobile {
-      padding: 2rem;
-      border-top: 1px solid $border-color;
+    .mobile-links {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: $spacing-2;
+      margin-bottom: $spacing-6;
 
-      .btn-primary {
-        @include button-primary;
-        justify-content: center;
-        width: 100%;
-      }
-
-      .btn-secondary {
-        background: transparent;
-        color: $primary;
-        border: 2px solid $primary;
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        text-align: center;
-        text-decoration: none;
-        font-weight: 600;
-        width: 100%;
-        @include smooth-transition(all, 0.3s);
-
-        &:hover {
-          background: $primary;
-          color: white;
-        }
-      }
-
-      a:not(.btn-primary) {
-        color: $text-secondary;
-        text-decoration: none;
+      a {
+        padding: $spacing-3;
         font-weight: 500;
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        text-align: center;
-        @include smooth-transition(all, 0.3s);
+        text-decoration: none;
+        color: $text-primary;
+        border-radius: $radius-md;
 
         &:hover {
-          color: $primary;
-          background: rgba(59, 130, 246, 0.1);
+          background: $bg-secondary;
         }
+      }
+    }
 
-        &.active {
-          color: $primary;
-          background: rgba(59, 130, 246, 0.1);
-        }
+    .mobile-auth {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-3;
+
+      .btn-primary-saas {
+        text-align: center;
+      }
+
+      .btn-ghost-saas {
+        text-align: center;
       }
     }
   }
 }
 
-// Scroll effect
-.navbar.scrolled {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-}
-
-// Add top padding to body when navbar is present
+// Global body padding
 body {
-  padding-top: 80px;
+  // We'll handle this in individual pages or globally
+  // but for the landing page it's better to have it transparent
 }
 
-// Animation for mobile menu items
-.navbar-menu.open {
-  .navbar-links-mobile a {
-    animation: slideInRight 0.3s ease-out forwards;
-    opacity: 0;
-    transform: translateX(20px);
-
-    @for $i from 1 through 10 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.05}s;
-      }
-    }
-  }
-}
-
-@keyframes slideInRight {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
 }

@@ -1,325 +1,215 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.dashboard {
-  .dashboard-header {
-    @include flex-between;
-    margin-bottom: $spacing-2xl;
+.dashboard-saas {
+  padding: $spacing-6 0;
 
-    @include responsive(md) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $spacing-md;
+  .dashboard-welcome {
+    margin-bottom: $spacing-8;
+    h2 { font-size: 1.75rem; font-weight: 800; color: $text-primary; margin-bottom: $spacing-1; }
+    p { color: $text-secondary; font-size: 0.9375rem; }
+  }
 
-      h1 {
-        font-size: 1.5rem;
+  .stats-grid-saas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: $spacing-6;
+    margin-bottom: $spacing-8;
+
+    .stat-card-saas {
+      background: $bg-white;
+      padding: $spacing-6;
+      border-radius: $radius-xl;
+      border: 1px solid $border-color;
+      display: flex;
+      align-items: center;
+      gap: $spacing-4;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+        border-color: $primary;
       }
-    }
 
-    h1 {
-      font-size: 2rem;
-      color: $text-primary;
-    }
-  }
-}
-
-.dashboard-error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  padding: $spacing-xl;
-
-  .error-content {
-    text-align: center;
-    max-width: 500px;
-
-    h2 {
-      color: $danger;
-      margin-bottom: $spacing-md;
-      font-size: 1.5rem;
-    }
-
-    p {
-      color: $text-secondary;
-      margin-bottom: $spacing-lg;
-      line-height: 1.6;
-    }
-
-    .btn-primary {
-      @include button-primary;
-      padding: $spacing-md $spacing-xl;
-    }
-  }
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-2xl;
-
-  @include responsive(sm) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.stat-card {
-  @include card;
-  @include flex-between;
-  padding: $spacing-xl;
-  @include hover-lift;
-  animation-delay: calc(var(--index, 0) * 0.1s);
-
-  @include responsive(sm) {
-    padding: $spacing-md;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: $radius-lg;
-    @include flex-center;
-    font-size: 1.8rem;
-    flex-shrink: 0;
-
-    @include responsive(sm) {
-      width: 50px;
-      height: 50px;
-      font-size: 1.5rem;
-      margin-bottom: $spacing-sm;
-    }
-
-    &.total {
-      background: rgba(37, 99, 235, 0.1);
-    }
-
-    &.received {
-      background: rgba(6, 182, 212, 0.1);
-    }
-
-    &.in-transit {
-      background: rgba(245, 158, 11, 0.1);
-    }
-
-    &.delivered {
-      background: rgba(16, 185, 129, 0.1);
-    }
-  }
-
-  .stat-content {
-    flex: 1;
-    margin-left: $spacing-lg;
-    min-width: 0; // Crucial for text-overflow to work in flex child
-
-    @include responsive(sm) {
-      margin-left: 0;
-      width: 100%; // Ensure full width on mobile
-    }
-
-    h3 {
-      font-size: 0.875rem;
-      color: $text-secondary;
-      font-weight: 500;
-      margin-bottom: $spacing-xs;
-      white-space: normal; // Allow wrapping
-      word-break: break-word; // Break long words if necessary
-      line-height: 1.4;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: $text-primary;
-      word-break: break-all; // Prevent long numbers from overflowing
-
-      @include responsive(sm) {
-        font-size: 1.5rem;
-      }
-    }
-  }
-}
-
-.dashboard-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $spacing-lg;
-
-  @include responsive(sm) {
-    grid-template-columns: 1fr;
-  }
-
-  .action-card {
-    @include card;
-    text-decoration: none;
-    color: $text-primary;
-    @include hover-lift;
-    animation-delay: calc(var(--index, 0) * 0.1s);
-
-    h3 {
-      font-size: 1.25rem;
-      margin-bottom: $spacing-sm;
-      color: $text-primary;
-    }
-
-    p {
-      color: $text-secondary;
-      font-size: 0.9rem;
-    }
-  }
-}
-
-.dashboard-loading {
-  @include flex-center;
-  height: 50vh;
-  font-size: 1.2rem;
-  color: $text-secondary;
-}
-
-.charts-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-2xl;
-
-  @include responsive(md) {
-    grid-template-columns: 1fr;
-  }
-
-  @include responsive(sm) {
-    gap: $spacing-md;
-  }
-
-  .chart-card {
-    @include card;
-    padding: $spacing-xl;
-    overflow-x: auto;
-    @include scale-in(0.5s);
-    animation-delay: calc(var(--index, 0) * 0.1s);
-
-    @include responsive(sm) {
-      padding: $spacing-md;
-    }
-
-    h3 {
-      font-size: 1.25rem;
-      margin-bottom: $spacing-lg;
-      color: $text-primary;
-      text-align: center;
-      @include smooth-transition(all, 0.3s);
-
-      @include responsive(sm) {
-        font-size: 1.1rem;
-        margin-bottom: $spacing-md;
-      }
-    }
-
-    &:hover {
-      h3 {
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: $radius-lg;
+        @include flex-center;
+        background: rgba($primary, 0.05);
         color: $primary;
-        transform: scale(1.05);
       }
-    }
-  }
-}
 
-.recent-shipments {
-  @include card;
-  margin-bottom: $spacing-2xl;
+      &.success .stat-icon { background: rgba($success, 0.05); color: $success; }
+      &.warning .stat-icon { background: rgba($warning, 0.05); color: $warning; }
+      &.info .stat-icon { background: rgba($info, 0.05); color: $info; }
 
-  .section-header {
-    @include flex-between;
-    margin-bottom: $spacing-lg;
+      .stat-info {
+        flex: 1;
+        .label { display: block; font-size: 0.75rem; font-weight: 600; color: $text-light; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .value { font-size: 1.5rem; font-weight: 800; color: $text-primary; }
+      }
 
-    @include responsive(sm) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $spacing-sm;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      color: $text-primary;
-
-      @include responsive(sm) {
-        font-size: 1.25rem;
+      .stat-trend {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: $radius-full;
+        &.positive { background: rgba($success, 0.1); color: $success; }
       }
     }
   }
 
-  .shipments-list {
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: $spacing-6;
+    margin-bottom: $spacing-8;
+
+    @media (max-width: $breakpoint-xl) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .chart-container-saas {
+    background: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: $radius-xl;
+    padding: $spacing-6;
+
+    .chart-header {
+      margin-bottom: $spacing-6;
+      h3 { font-size: 1rem; font-weight: 700; color: $text-primary; }
+    }
+  }
+
+  .activity-feed-saas {
+    background: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: $radius-xl;
+    padding: $spacing-6;
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
-  }
 
-  .shipment-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $spacing-md;
-    background: $bg-secondary;
-    border-radius: $radius-md;
-    transition: background 0.2s;
-
-    @include responsive(sm) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $spacing-sm;
+    .section-header-saas {
+      @include flex-between;
+      margin-bottom: $spacing-6;
+      h3 { font-size: 1rem; font-weight: 700; color: $text-primary; }
+      .view-all { font-size: 0.8125rem; font-weight: 600; color: $primary; text-decoration: none; }
     }
 
-    &:hover {
-      background: darken($bg-secondary, 2%);
-    }
-
-    .shipment-info {
+    .feed-list {
       display: flex;
       flex-direction: column;
-      gap: $spacing-xs;
-      flex: 1;
+      gap: $spacing-4;
 
-      .tracking-number {
-        font-weight: 600;
-        color: $primary;
-        font-size: 0.9rem;
-      }
+      .feed-item {
+        display: flex;
+        gap: $spacing-4;
+        position: relative;
+        animation: slideInLeft 0.4s ease-out forwards;
+        animation-delay: calc(var(--index) * 0.08s);
+        opacity: 0;
 
-      .route {
-        color: $text-secondary;
-        font-size: 0.875rem;
+        &::before {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 20px;
+          bottom: -20px;
+          width: 1px;
+          background: $border-color;
+        }
+
+        &:last-child::before { display: none; }
+
+        .status-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #eee;
+          flex-shrink: 0;
+          margin-top: 5px;
+          border: 2px solid $bg-white;
+          z-index: 1;
+
+          &.delivered { background: $success; box-shadow: 0 0 0 4px rgba($success, 0.1); }
+          &.in-transit { background: $warning; box-shadow: 0 0 0 4px rgba($warning, 0.1); }
+          &.received { background: $info; box-shadow: 0 0 0 4px rgba($info, 0.1); }
+        }
+
+        .feed-content {
+          flex: 1;
+          .feed-top {
+            @include flex-between;
+            margin-bottom: 2px;
+            .tracking { font-weight: 700; font-size: 0.875rem; color: $text-primary; }
+            .time { font-size: 0.75rem; font-weight: 600; color: $text-light; }
+          }
+          .feed-bottom {
+            font-size: 0.8125rem;
+            color: $text-secondary;
+          }
+        }
       }
     }
+  }
 
-    .status-badge {
-      padding: $spacing-xs $spacing-md;
-      border-radius: $radius-md;
+  .quick-actions-saas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-4;
+
+    .action-btn {
+      background: $bg-white;
+      border: 1px solid $border-color;
+      border-radius: $radius-lg;
+      padding: $spacing-4;
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+      text-decoration: none;
+      color: $text-primary;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600;
+      transition: all 0.2s;
 
-      &.status-received {
-        background: rgba(6, 182, 212, 0.1);
-        color: $info;
+      .icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: $radius-md;
+        background: $bg-secondary;
+        @include flex-center;
+        color: $primary;
+        transition: 0.2s;
       }
 
-      &.status-in-transit {
-        background: rgba(245, 158, 11, 0.1);
-        color: $warning;
-      }
-
-      &.status-delivered {
-        background: rgba(16, 185, 129, 0.1);
-        color: $success;
+      &:hover {
+        border-color: $primary;
+        background: rgba($primary, 0.02);
+        .icon-box { background: $primary; color: #fff; }
       }
     }
   }
+}
 
-  .no-data {
-    text-align: center;
-    color: $text-secondary;
-    padding: $spacing-xl;
-  }
+.dashboard-loading-saas {
+  height: 60vh;
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-4;
+  color: $text-light;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 

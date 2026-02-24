@@ -109,11 +109,11 @@
 
 // Card mixins
 @mixin card-hover {
-  @include smooth-transition(all, 0.3s, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all var(--transition-base);
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    box-shadow: $shadow-premium;
   }
 }
 
@@ -211,59 +211,35 @@
 }
 
 @mixin button-primary {
-  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  background: $primary;
   color: $text-white;
   border: none;
-  padding: $spacing-md $spacing-xl;
-  border-radius: $radius-lg;
-  font-weight: 600;
-  font-size: 1rem;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $radius-md;
+  font-weight: 500;
+  font-size: 0.875rem;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  @include smooth-transition(all, 0.3s, cubic-bezier(0.4, 0, 0.2, 1));
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  justify-content: center;
+  gap: $spacing-2;
+  transition: all var(--transition-fast);
+  box-shadow: $shadow-sm;
 
   &:hover {
-    background: linear-gradient(135deg, $primary-dark 0%, darken($primary-dark, 10%) 100%);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 24px -6px rgba(37, 99, 235, 0.4);
+    background: $primary-dark;
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
   }
 
   &:active {
-    transform: translateY(-1px) scale(0.98);
-    
-    &::before {
-      width: 300px;
-      height: 300px;
-    }
+    transform: translateY(0) scale(0.98);
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
   }
 }
 
@@ -346,4 +322,30 @@
   }
 }
 
+@mixin hover-underline($color: currentColor, $height: 2px, $offset: 2px) {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: $height;
+    bottom: -$offset;
+    left: 0;
+    background-color: $color;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  &:hover::after {
+    width: 100%;
+  }
+}
 
+@mixin premium-gradient {
+  background: linear-gradient(135deg, $primary-dark 0%, $primary 100%);
+}
+
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}

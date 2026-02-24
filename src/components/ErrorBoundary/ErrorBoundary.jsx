@@ -26,8 +26,8 @@ class ErrorBoundary extends React.Component {
           <div className="error-content">
             <h2>Xatolik yuz berdi</h2>
             <p>Sahifani yuklashda muammo bo'ldi. Iltimos, sahifani yangilang.</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="reload-btn"
             >
               Sahifani yangilash
@@ -36,7 +36,7 @@ class ErrorBoundary extends React.Component {
               <details className="error-details">
                 <summary>Texnik ma'lumotlar</summary>
                 <pre>{this.state.error && this.state.error.toString()}</pre>
-                <pre>{this.state.errorInfo.componentStack}</pre>
+                <pre>{this.state.errorInfo?.componentStack}</pre>
               </details>
             )}
           </div>

@@ -1,0 +1,1358 @@
+﻿
+> logistik@0.0.0 build
+> vite build
+
+[36mvite v4.5.14 [32mbuilding for production...[36m[39m
+transforming...
+node.exe : DEPRECATION WARNIN
+G [legacy-js-api]: The legacy
+ JS API is deprecated and wil
+l be removed in Dart Sass 2.0
+.0.
+At line:1 char:1
++ & "C:\Program Files\nodejs/
+node.exe" "C:\Users\ghost\App
+Data\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (DEPRECA  
+  TION WAR...art Sass 2.0.   
+ 0.:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import './styles/varia
+bles';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^
+  Γò╡
+    src\App.scss 1:9  root st
+ylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './styles/mixin
+s';
+  Γöé         ^^^^^^^^^^^^^^^
+^^
+  Γò╡
+    src\App.scss 2:9  root st
+ylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './styles/base'
+;
+  Γöé         ^^^^^^^^^^^^^^^
+  Γò╡
+    src\App.scss 3:9  root st
+ylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9  @import
+    src\App.scss 2:9         
+    root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9  @import
+    src\App.scss 2:9         
+    root stylesheet
+
+DEPRECATION WARNING [global-b
+uiltin]: Global built-in func
+tions are deprecated and will
+ be removed in Dart Sass 3.0.
+0.
+Use color.adjust instead.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+   Γò╖
+90 Γöé   background: linear-g
+radient(135deg, $success 0%, 
+darken($success, 10%) 100%);
+   Γöé                       
+                             
+^^^^^^^^^^^^^^^^^^^^^
+   Γò╡
+    src\styles\_base.scss 90:
+52  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [color-fu
+nctions]: darken() is depreca
+ted. Suggestions:
+
+color.scale($color, $lightnes
+s: -25.3731343284%)
+color.adjust($color, $lightne
+ss: -10%)
+
+More info: https://sass-lang.
+com/d/color-functions
+
+   Γò╖
+90 Γöé   background: linear-g
+radient(135deg, $success 0%, 
+darken($success, 10%) 100%);
+   Γöé                       
+                             
+^^^^^^^^^^^^^^^^^^^^^
+   Γò╡
+    src\styles\_base.scss 90:
+52  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [global-b
+uiltin]: Global built-in func
+tions are deprecated and will
+ be removed in Dart Sass 3.0.
+0.
+Use color.adjust instead.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+   Γò╖
+93 Γöé     background: linear
+-gradient(135deg, darken($suc
+cess, 5%) 0%, darken($success
+, 15%) 100%);
+   Γöé                       
+                  ^^^^^^^^^^^
+^^^^^^^^^
+   Γò╡
+    src\styles\_base.scss 93:
+41  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [color-fu
+nctions]: darken() is depreca
+ted. Suggestions:
+
+color.scale($color, $lightnes
+s: -12.6865671642%)
+color.adjust($color, $lightne
+ss: -5%)
+
+More info: https://sass-lang.
+com/d/color-functions
+
+   Γò╖
+93 Γöé     background: linear
+-gradient(135deg, darken($suc
+cess, 5%) 0%, darken($success
+, 15%) 100%);
+   Γöé                       
+                  ^^^^^^^^^^^
+^^^^^^^^^
+   Γò╡
+    src\styles\_base.scss 93:
+41  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [global-b
+uiltin]: Global built-in func
+tions are deprecated and will
+ be removed in Dart Sass 3.0.
+0.
+Use color.adjust instead.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+   Γò╖
+93 Γöé     background: linear
+-gradient(135deg, darken($suc
+cess, 5%) 0%, darken($success
+, 15%) 100%);
+   Γöé                       
+                             
+              ^^^^^^^^^^^^^^^
+^^^^^^
+   Γò╡
+    src\styles\_base.scss 93:
+66  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [color-fu
+nctions]: darken() is depreca
+ted. Suggestions:
+
+color.scale($color, $lightnes
+s: -38.0597014925%)
+color.adjust($color, $lightne
+ss: -15%)
+
+More info: https://sass-lang.
+com/d/color-functions
+
+   Γò╖
+93 Γöé     background: linear
+-gradient(135deg, darken($suc
+cess, 5%) 0%, darken($success
+, 15%) 100%);
+   Γöé                       
+                             
+              ^^^^^^^^^^^^^^^
+^^^^^^
+   Γò╡
+    src\styles\_base.scss 93:
+66  @import
+    src\App.scss 3:9         
+    root stylesheet
+
+DEPRECATION WARNING [global-b
+uiltin]: Global built-in func
+tions are deprecated and will
+ be removed in Dart Sass 3.0.
+0.
+Use color.adjust instead.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+    Γò╖
+100 Γöé   background: linear-
+gradient(135deg, $warning 0%,
+ darken($warning, 10%) 100%);
+    Γöé                      
+                             
+ ^^^^^^^^^^^^^^^^^^^^^
+    Γò╡
+    src\styles\_base.scss 100
+:52  @import
+    src\App.scss 3:9         
+     root stylesheet
+
+DEPRECATION WARNING [color-fu
+nctions]: darken() is depreca
+ted. Suggestions:
+
+color.scale($color, $lightnes
+s: -19.921875%)
+color.adjust($color, $lightne
+ss: -10%)
+
+More info: https://sass-lang.
+com/d/color-functions
+
+    Γò╖
+100 Γöé   background: linear-
+gradient(135deg, $warning 0%,
+ darken($warning, 10%) 100%);
+    Γöé                      
+                             
+ ^^^^^^^^^^^^^^^^^^^^^
+    Γò╡
+    src\styles\_base.scss 100
+:52  @import
+    src\App.scss 3:9         
+     root stylesheet
+
+DEPRECATION WARNING [global-b
+uiltin]: Global built-in func
+tions are deprecated and will
+ be removed in Dart Sass 3.0.
+0.
+Use color.adjust instead.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+    Γò╖
+103 Γöé     background: linea
+r-gradient(135deg, darken($wa
+rning, 5%) 0%, darken($warnin
+g, 15%) 100%);
+    Γöé                      
+                   ^^^^^^^^^^
+^^^^^^^^^^
+    Γò╡
+    src\styles\_base.scss 103
+:41  @import
+    src\App.scss 3:9         
+     root stylesheet
+
+DEPRECATION WARNING [color-fu
+nctions]: darken() is depreca
+ted. Suggestions:
+
+color.scale($color, $lightnes
+s: -9.9609375%)
+color.adjust($color, $lightne
+ss: -5%)
+
+More info: https://sass-lang.
+com/d/color-functions
+
+    Γò╖
+103 Γöé     background: linea
+r-gradient(135deg, darken($wa
+rning, 5%) 0%, darken($warnin
+g, 15%) 100%);
+    Γöé                      
+                   ^^^^^^^^^^
+^^^^^^^^^^
+    Γò╡
+    src\styles\_base.scss 103
+:41  @import
+    src\App.scss 3:9         
+     root stylesheet
+
+WARNING: 14 repetitive deprec
+ation warnings omitted.
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Navbar\Nav
+bar.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Navbar\Nav
+bar.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9            @import
+    src\components\Navbar\Nav
+bar.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9            @import
+    src\components\Navbar\Nav
+bar.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Login\Logi
+n.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Login\Logi
+n.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9          @import
+    src\components\Login\Logi
+n.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9          @import
+    src\components\Login\Logi
+n.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Shipments\
+Shipments.scss 1:9  root styl
+esheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Vehicles\V
+ehicles.scss 1:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Vehicles\V
+ehicles.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\ErrorBound
+ary\ErrorBoundary.scss 1:9  r
+oot stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\ErrorBound
+ary\ErrorBoundary.scss 2:9  r
+oot stylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Users\User
+s.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Users\User
+s.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Register\R
+egister.scss 1:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Register\R
+egister.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Shipments\
+ShipmentForm.scss 1:9  root s
+tylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Shipments\
+ShipmentForm.scss 2:9  root s
+tylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Home\Home.
+scss 1:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Home\Home.
+scss 2:9  root stylesheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Dashboard\
+Dashboard.scss 1:9  root styl
+esheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Dashboard\
+Dashboard.scss 2:9  root styl
+esheet
+
+DEPRECATION WARNING [legacy-j
+s-api]: The legacy JS API is 
+deprecated and will be remove
+d in Dart Sass 2.0.0.
+
+More info: https://sass-lang.
+com/d/legacy-js-api
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+1 Γöé @import '../../styles/v
+ariables';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^^^^
+  Γò╡
+    src\components\Vehicles\V
+ehicleForm.scss 1:9  root sty
+lesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import '../../styles/m
+ixins';
+  Γöé         ^^^^^^^^^^^^^^^
+^^^^^^
+  Γò╡
+    src\components\Vehicles\V
+ehicleForm.scss 2:9  root sty
+lesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                  @import
+    src\components\Shipments\
+Shipments.scss 1:9  root styl
+esheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                  @import
+    src\components\Shipments\
+Shipments.scss 1:9  root styl
+esheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                @import
+    src\components\Vehicles\V
+ehicles.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                @import
+    src\components\Vehicles\V
+ehicles.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                          @
+import
+    src\components\ErrorBound
+ary\ErrorBoundary.scss 2:9  r
+oot stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                          @
+import
+    src\components\ErrorBound
+ary\ErrorBoundary.scss 2:9  r
+oot stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9          @import
+    src\components\Users\User
+s.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9          @import
+    src\components\Users\User
+s.scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                @import
+    src\components\Register\R
+egister.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                @import
+    src\components\Register\R
+egister.scss 2:9  root styles
+heet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                     @impor
+t
+    src\components\Shipments\
+ShipmentForm.scss 2:9  root s
+tylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                     @impor
+t
+    src\components\Shipments\
+ShipmentForm.scss 2:9  root s
+tylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9        @import
+    src\components\Home\Home.
+scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9        @import
+    src\components\Home\Home.
+scss 2:9  root stylesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                  @import
+    src\components\Dashboard\
+Dashboard.scss 2:9  root styl
+esheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                  @import
+    src\components\Dashboard\
+Dashboard.scss 2:9  root styl
+esheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+2 Γöé @import './variables';
+  Γöé         ^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 2
+:9                   @import
+    src\components\Vehicles\V
+ehicleForm.scss 2:9  root sty
+lesheet
+
+DEPRECATION WARNING [import]:
+ Sass @import rules are depre
+cated and will be removed in 
+Dart Sass 3.0.0.
+
+More info and automated migra
+tor: https://sass-lang.com/d/
+import
+
+  Γò╖
+3 Γöé @import './animations';
+  Γöé         ^^^^^^^^^^^^^^
+  Γò╡
+    src\styles\_mixins.scss 3
+:9                   @import
+    src\components\Vehicles\V
+ehicleForm.scss 2:9  root sty
+lesheet
+
+[32mΓ£ô[39m 63 modules transformed.
+[32mΓ£ô built in 1.87s[39m
+[31m[vite:css] [sass] Undefi
+ned variable.
+    Γò╖
+261 Γöé       padding: $spaci
+ng-3xl;
+    Γöé                ^^^^^^
+^^^^^^
+    Γò╡
+  src\components\Shipments\Sh
+ipments.scss 261:16  root sty
+lesheet[39m
+file: [36mD:/logistik/src/co
+mponents/Shipments/Shipments.
+scss[39m
+[33mError: Undefined variabl
+e.
+    Γò╖
+261 Γöé       padding: $spaci
+ng-3xl;
+    Γöé                ^^^^^^
+^^^^^^
+    Γò╡
+  src\components\Shipments\Sh
+ipments.scss 261:16  root sty
+lesheet[39m
+[31merror during build:
+Error: Undefined variable.
+    Γò╖
+261 Γöé       padding: $spaci
+ng-3xl;
+    Γöé                ^^^^^^
+^^^^^^
+    Γò╡
+  src\components\Shipments\Sh
+ipments.scss 261:16  root sty
+lesheet
+    at Object.wrapException (
+D:\logistik\node_modules\sass
+\sass.dart.js:2337:47)
+    at D:\logistik\node_modul
+es\sass\sass.dart.js:90558:23
+    at _wrapJsFunctionForAsyn
+c_closure.$protected (D:\logi
+stik\node_modules\sass\sass.d
+art.js:5005:15)
+    at _wrapJsFunctionForAsyn
+c_closure.call$2 (D:\logistik
+\node_modules\sass\sass.dart.
+js:38505:12)
+    at Object._asyncStartSync
+ (D:\logistik\node_modules\sa
+ss\sass.dart.js:4969:20)
+    at _EvaluateVisitor2.visi
+tVariableExpression$body$_Eva
+luateVisitor0 (D:\logistik\no
+de_modules\sass\sass.dart.js:
+90564:16)
+    at _EvaluateVisitor2.visi
+tVariableExpression$1 (D:\log
+istik\node_modules\sass\sass.
+dart.js:90538:19)
+    at VariableExpression0.ac
+cept$1$1 (D:\logistik\node_mo
+dules\sass\sass.dart.js:12824
+3:22)
+    at VariableExpression0.ac
+cept$1 (D:\logistik\node_modu
+les\sass\sass.dart.js:128246:
+19)
+    at D:\logistik\node_modul
+es\sass\sass.dart.js:88619:41
+[39m

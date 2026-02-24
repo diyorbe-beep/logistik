@@ -4,6 +4,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { AuthService } from '../../services/authService';
 import { API_URL } from '../../config/api';
 import { testApiConnection, wakeUpServer } from '../../utils/apiTest';
+import Icons from '../Icons/Icons';
 import Loading from '../Loading/Loading';
 import './Login.scss';
 
@@ -121,113 +122,153 @@ const Login = ({ onLogin }) => {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
-          <h1>Tizimga kirish</h1>
-          <p>Logistics Pro platformasiga xush kelibsiz</p>
+    <div className="login-page">
+      <div className="login-grid">
+        {/* Left: Form */}
+        <div className="login-main-content">
+          <div className="login-card-elite">
+            <div className="login-header-elite">
+              <h1>{t('loginTitle') || 'Tizimga kirish'}</h1>
+              <p>{t('loginSubtitle') || 'Logistics Pro platformasiga xush kelibsiz'}</p>
 
-          {/* API Status Indicator */}
-          <div className={`api-status api-status--${apiStatus}`}>
-            <span className="status-dot"></span>
-            {apiStatus === 'checking' && 'Server holati tekshirilmoqda...'}
-            {apiStatus === 'connected' && 'Server tayyor'}
-            {apiStatus === 'disconnected' && 'Server bilan aloqa yo\'q'}
+              {/* API Status Indicator */}
+              <div className={`api-status-badge api-status--${apiStatus}`}>
+                <span className="status-dot"></span>
+                <span>
+                  {apiStatus === 'checking' && (t('checkingApi') || 'Server holati tekshirilmoqda...')}
+                  {apiStatus === 'connected' && (t('apiConnected') || 'Server tayyor')}
+                  {apiStatus === 'disconnected' && (t('apiDisconnected') || 'Server bilan aloqa yo\'q')}
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="premium-form-stack">
+              {error && (
+                <div className="error-alert">
+                  <Icons.AlertTriangle size={20} />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="form-group-modern">
+                <label htmlFor="username">{t('username')}</label>
+                <div className="input-wrapper">
+                  <Icons.User size={18} className="input-icon" />
+                  <input
+                    type="text"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    placeholder={t('enterUsername')}
+                    autoComplete="username"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-modern">
+                <label htmlFor="password">{t('password')}</label>
+                <div className="input-wrapper">
+                  <Icons.Lock size={18} className="input-icon" />
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder={t('enterPassword')}
+                    autoComplete="current-password"
+                  />
+                </div>
+              </div>
+
+              {/* Default Credentials Helper - Glass style */}
+              <div className="default-credentials-glass">
+                <div className="credentials-header">
+                  <Icons.Info size={16} />
+                  <h4>{t('defaultCredentialsTitle') || 'Test uchun ma\'lumotlar:'}</h4>
+                </div>
+                <div className="credentials-list">
+                  <div className="credential-row">
+                    <span><strong>Admin:</strong> admin / admin123</span>
+                    <button type="button" onClick={() => quickLogin('admin')} className="btn-quick-fill">
+                      {t('fill') || 'To\'ldirish'}
+                    </button>
+                  </div>
+                  <div className="credential-row">
+                    <span><strong>Operator:</strong> operator / admin123</span>
+                    <button type="button" onClick={() => quickLogin('operator')} className="btn-quick-fill">
+                      {t('fill') || 'To\'ldirish'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn-login-premium"
+                disabled={loading || apiStatus !== 'connected'}
+              >
+                {loading ? (
+                  <>
+                    <Icons.Loader className="spin" size={20} />
+                    <span>{t('loggingIn')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{t('login')}</span>
+                    <Icons.ArrowRight size={20} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="login-footer-modern">
+              <p>
+                {t('dontHaveAccount')} <Link to="/register">{t('registerHere')}</Link>
+              </p>
+            </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          {error && (
-            <div className="error-message">
-              <span className="error-icon">!</span>
-              {error}
+        {/* Right: Brand Sidebar */}
+        <div className="login-brand-sidebar">
+          <div className="brand-content">
+            <div className="brand-header">
+              <div className="logo-badge">
+                <Icons.Truck size={32} />
+              </div>
+              <h2>Logistik<span className="text-highlight">Pro</span></h2>
+              <p className="brand-tagline">Professional Transport & Logistics Management System</p>
             </div>
-          )}
 
-          {/* Default Credentials Helper */}
-          <div className="default-credentials">
-            <h4>Dashboard uchun:</h4>
-            <div className="credential-item">
-              <strong>Admin:</strong> admin / admin123
-              <button
-                type="button"
-                onClick={() => quickLogin('admin')}
-                className="quick-login-btn"
-              >
-                To'ldirish
-              </button>
+            <div className="feature-showcase">
+              <div className="showcase-item">
+                <div className="showcase-icon">
+                  <Icons.BarChart size={24} />
+                </div>
+                <div className="showcase-text">
+                  <h4>{t('dashboardAnalytics') || 'Dashboard tahlillari'}</h4>
+                  <p>{t('dashboardAnalyticsDesc') || 'Real vaqt rejimida statistikalar va hisobotlar.'}</p>
+                </div>
+              </div>
+              <div className="showcase-item">
+                <div className="showcase-icon">
+                  <Icons.ShieldCheck size={24} />
+                </div>
+                <div className="showcase-text">
+                  <h4>{t('securePayments') || 'Xavfsiz tizim'}</h4>
+                  <p>{t('registerBenefit3') || 'Ma\'lumotlaringiz to\'liq himoyalangan.'}</p>
+                </div>
+              </div>
             </div>
-            <div className="credential-item">
-              <strong>Operator:</strong> operator / admin123
-              <button
-                type="button"
-                onClick={() => quickLogin('operator')}
-                className="quick-login-btn"
-              >
-                To'ldirish
-              </button>
+
+            <div className="sidebar-footer">
+              <div className="trust-indicator">
+                <Icons.Verified size={16} />
+                <span>500+ kompaniya bizga ishonadi</span>
+              </div>
             </div>
-            <div className="current-user-info">
-              <small>Customer userlar: Dashboard ko'rmaydi, faqat buyurtma beradi</small>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="username">Foydalanuvchi nomi</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="Foydalanuvchi nomini kiriting"
-              autoComplete="username"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Parol</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Parolni kiriting"
-              autoComplete="current-password"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="login-btn"
-            disabled={loading || apiStatus !== 'connected'}
-          >
-            {loading ? 'Kirilmoqda...' : 'Kirish'}
-          </button>
-        </form>
-
-        <div className="login-footer">
-          <p>Hisobingiz yo'qmi? <Link to="/register">Ro'yxatdan o'ting</Link></p>
-
-          {/* Quick login for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="quick-login">
-              <p>Tez kirish:</p>
-              <button
-                type="button"
-                onClick={() => quickLogin('admin')}
-                className="quick-login-btn"
-              >
-                Admin (admin/admin123)
-              </button>
-            </div>
-          )}
-
-          <div className="login-hint">
-            <p><strong>Test uchun:</strong></p>
-            <p>Admin: admin / admin123</p>
-            <p>API: {API_URL}</p>
           </div>
         </div>
       </div>

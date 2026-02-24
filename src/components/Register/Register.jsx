@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { AuthService } from '../../services/authService';
+import Icons from '../Icons/Icons';
 import './Register.scss';
 
 const Register = () => {
@@ -52,13 +53,8 @@ const Register = () => {
         phone: formData.phone || '',
       };
 
-      console.log('Register request:', requestBody);
-
       await AuthService.register(requestBody);
-
-      // Auto login after registration
       const loginData = await AuthService.login(formData.username, formData.password);
-
       localStorage.setItem('token', loginData.token);
       navigate('/dashboard');
 
@@ -76,7 +72,6 @@ const Register = () => {
           errorMessage = serverError;
         }
       }
-
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -84,94 +79,195 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <div className="register-header">
-          <h1>{t('createAccountTitle')}</h1>
-          <p>{t('joinLogisticsPro')}</p>
+    <div className="register-page">
+      <div className="register-grid">
+        {/* Left: Form */}
+        <div className="register-main-content">
+          <div className="register-card-elite">
+            <div className="register-header-elite">
+              <h1>{t('createAccountTitle')}</h1>
+              <p>{t('joinLogisticsPro')}</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="premium-form-stack">
+              {error && (
+                <div className="error-alert">
+                  <Icons.AlertTriangle size={20} />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="form-section-group">
+                <h3>{t('personalInfo')}</h3>
+                <div className="form-row-dual">
+                  <div className="form-group-modern">
+                    <label>{t('username')}</label>
+                    <div className="input-wrapper">
+                      <Icons.User size={18} className="input-icon" />
+                      <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                        placeholder={t('enterUsername')}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group-modern">
+                    <label>{t('email')}</label>
+                    <div className="input-wrapper">
+                      <Icons.Mail size={18} className="input-icon" />
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        placeholder={t('enterEmail')}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-row-dual">
+                  <div className="form-group-modern">
+                    <label>{t('phone')}</label>
+                    <div className="input-wrapper">
+                      <Icons.Phone size={18} className="input-icon" />
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+998 (__) ___-__-__"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group-modern">
+                    <label>{t('userType')}</label>
+                    <div className="input-wrapper">
+                      <Icons.Users size={18} className="input-icon" />
+                      <select name="userType" value={formData.userType} onChange={handleChange} required>
+                        <option value="customer">{t('customer')}</option>
+                        <option value="carrier">{t('carrier')}</option>
+                        <option value="operator">{t('operator')}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section-group">
+                <h3>{t('security')}</h3>
+                <div className="form-row-dual">
+                  <div className="form-group-modern">
+                    <label>{t('password')}</label>
+                    <div className="input-wrapper">
+                      <Icons.Lock size={18} className="input-icon" />
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="••••••••"
+                        minLength={6}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group-modern">
+                    <label>{t('confirmPassword')}</label>
+                    <div className="input-wrapper">
+                      <Icons.ShieldCheck size={18} className="input-icon" />
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" className="btn-register-premium" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Icons.Loader className="spin" size={20} />
+                    <span>{t('creatingAccount')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{t('register')}</span>
+                    <Icons.ArrowRight size={20} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="register-footer-modern">
+              <p>
+                {t('alreadyHaveAccount')} <Link to="/login">{t('loginHere')}</Link>
+              </p>
+            </div>
+          </div>
         </div>
-        <form onSubmit={handleSubmit} className="register-form">
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-group">
-            <label htmlFor="username">{t('username')}</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              placeholder={t('enterUsername')}
-            />
+
+        {/* Right: Benefits Sidebar */}
+        <div className="register-benefits-sidebar">
+          <div className="benefits-content">
+            <div className="benefits-header">
+              <div className="logo-badge">
+                <Icons.Package size={32} />
+              </div>
+              <h2>{t('registerBenefitsTitle')}</h2>
+            </div>
+
+            <div className="benefits-list">
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Icons.Search size={24} />
+                </div>
+                <div className="benefit-text">
+                  <p>{t('registerBenefit1')}</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Icons.Truck size={24} />
+                </div>
+                <div className="benefit-text">
+                  <p>{t('registerBenefit2')}</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Icons.Lock size={24} />
+                </div>
+                <div className="benefit-text">
+                  <p>{t('registerBenefit3')}</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">
+                  <Icons.HelpCircle size={24} />
+                </div>
+                <div className="benefit-text">
+                  <p>{t('registerBenefit4')}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="sidebar-footer-card">
+              <div className="trust-badge">
+                <Icons.Verified size={16} />
+                <span>Garantlangan xavfsizlik</span>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="email">{t('email')}</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder={t('enterEmail')}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">{t('phone')}</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+998 90 123 45 67"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="userType">{t('userType')} *</label>
-            <select
-              id="userType"
-              name="userType"
-              value={formData.userType}
-              onChange={handleChange}
-              required
-            >
-              <option value="customer">{t('customer')}</option>
-              <option value="carrier">{t('carrier')}</option>
-              <option value="operator">{t('operator')}</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">{t('password')}</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder={t('passwordMinLength')}
-              minLength={6}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">{t('confirmPassword')}</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder={t('enterConfirmPassword')}
-            />
-          </div>
-          <button type="submit" className="register-btn" disabled={loading}>
-            {loading ? t('creatingAccount') : t('register')}
-          </button>
-        </form>
-        <div className="register-footer">
-          <p>{t('alreadyHaveAccount')} <Link to="/login">{t('loginHere')}</Link></p>
         </div>
       </div>
     </div>

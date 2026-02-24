@@ -1,0 +1,135 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.unified-page-header {
+  background: linear-gradient(135deg, $bg-sidebar 0%, #1e293b 100%);
+  padding: $spacing-20 0;
+  color: $text-white;
+  position: relative;
+  overflow: hidden;
+
+  .container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: $spacing-12;
+    align-items: center;
+
+    @include responsive(md) {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+
+  &.centered {
+    text-align: center;
+    .container {
+      display: block;
+      max-width: 800px;
+    }
+    .header-content {
+      margin: 0 auto;
+    }
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 2;
+
+    .header-badge {
+      display: inline-block;
+      padding: $spacing-1 $spacing-4;
+      background: rgba($primary, 0.2);
+      color: $primary-light;
+      border-radius: $radius-full;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: $spacing-6;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba($primary, 0.3);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: $spacing-8;
+      background: linear-gradient(to right, $text-white, #94a3b8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      @include responsive(md) {
+        font-size: 2.5rem;
+      }
+    }
+
+    .header-subtitle {
+      font-size: 1.125rem;
+      color: $text-light;
+      line-height: 1.6;
+      margin-bottom: $spacing-8;
+      max-width: 600px;
+      
+      @include responsive(md) {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: $spacing-4;
+      
+      @include responsive(md) {
+        justify-content: center;
+      }
+    }
+  }
+
+  .header-visual {
+    display: flex;
+    justify-content: flex-end;
+    @include fade-in-up(1s);
+
+    @include responsive(md) {
+      display: none;
+    }
+
+    img {
+      width: 100%;
+      max-width: 450px;
+      height: auto;
+      border-radius: $radius-xl;
+      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.5);
+      @include hover-lift;
+    }
+  }
+
+  // Common background effects
+  &::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba($primary, 0.1) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+
+// Fade-in and slide-up classes
+.fade-in { animation: fadeIn 0.8s ease-out forwards; }
+.slide-up { animation: slideUp 0.8s ease-out forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

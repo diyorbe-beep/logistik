@@ -1,51 +1,93 @@
 import { useTranslation } from '../../hooks/useTranslation';
 import { Icons } from '../Icons/Icons';
+import PageHeader from '../Common/PageHeader';
+import missionImg from '../../assets/images/about-mission.png';
+import visionImg from '../../assets/images/about-vision.png';
 import './About.scss';
 
 const About = () => {
   const { t } = useTranslation();
 
+  const values = [
+    {
+      icon: <Icons.Shield size={32} />,
+      title: t('valueTrust'),
+      description: t('valueTrustDesc')
+    },
+    {
+      icon: <Icons.Rocket size={32} />,
+      title: t('valueInnovation'),
+      description: t('valueInnovationDesc')
+    },
+    {
+      icon: <Icons.Clock size={32} />,
+      title: t('valueSpeed'),
+      description: t('valueSpeedDesc')
+    },
+    {
+      icon: <Icons.Shield size={32} />,
+      title: t('valueSafety'),
+      description: t('valueSafetyDesc')
+    }
+  ];
+
   return (
-    <div className="about-page">
+    <div className="about-redesign">
+      <PageHeader
+        badge={t('aboutUs')}
+        title={t('aboutTitle')}
+        description={t('aboutDescription')}
+        centered
+      />
+
       <div className="container">
-        <div className="about-hero">
-          <h1>{t('aboutUs')}</h1>
-          <p className="subtitle">{t('aboutSubtitle')}</p>
-        </div>
-
-        <div className="about-content">
-          <div className="about-section">
-            <h2>{t('ourMission')}</h2>
-            <p>{t('missionText')}</p>
-          </div>
-
-          <div className="about-section">
-            <h2>{t('ourVision')}</h2>
-            <p>{t('visionText')}</p>
-          </div>
-
-          <div className="about-section">
-            <h2>{t('whyChooseUs')}</h2>
-            <div className="features-list">
-              <div className="feature-item">
-                <Icons.CheckCircle size={20} color="#10b981" />
-                <span>{t('feature1')}</span>
-              </div>
-              <div className="feature-item">
-                <Icons.CheckCircle size={20} color="#10b981" />
-                <span>{t('feature2')}</span>
-              </div>
-              <div className="feature-item">
-                <Icons.CheckCircle size={20} color="#10b981" />
-                <span>{t('feature3')}</span>
-              </div>
-              <div className="feature-item">
-                <Icons.CheckCircle size={20} color="#10b981" />
-                <span>{t('feature4')}</span>
+        <section className="about-content">
+          {/* Mission Section */}
+          <div className="about-row fade-in">
+            <div className="about-text">
+              <div className="section-label">{t('ourMission')}</div>
+              <h2>{t('ourMission')}</h2>
+              <p className="description">{t('missionText')}</p>
+            </div>
+            <div className="about-visual">
+              <div className="image-wrapper">
+                <img src={missionImg} alt="Our Mission" />
+                <div className="image-overlay"></div>
               </div>
             </div>
           </div>
-        </div>
+
+          {/* Vision Section */}
+          <div className="about-row reverse fade-in">
+            <div className="about-text">
+              <div className="section-label">{t('ourVision')}</div>
+              <h2>{t('ourVision')}</h2>
+              <p className="description">{t('visionText')}</p>
+            </div>
+            <div className="about-visual">
+              <div className="image-wrapper">
+                <img src={visionImg} alt="Our Vision" />
+                <div className="image-overlay"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Core Values Section */}
+        <section className="core-values section fade-in">
+          <div className="section-header">
+            <h2>{t('coreValues')}</h2>
+          </div>
+          <div className="values-grid">
+            {values.map((value, index) => (
+              <div key={index} className="value-card">
+                <div className="value-icon">{value.icon}</div>
+                <h3>{value.title}</h3>
+                <p>{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

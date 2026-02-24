@@ -4,9 +4,9 @@ import { useTranslation } from '../../hooks/useTranslation';
 import api from '../../api/client';
 import { testApiConnection } from '../../config/api';
 import { Icons } from '../Icons/Icons';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Loading from '../Loading/Loading';
-import { translateStatus, getStatusClass } from '../../utils/statusUtils';
+import { translateStatus } from '../../utils/statusUtils';
 import './Dashboard.scss';
 
 const Dashboard = () => {
@@ -15,6 +15,7 @@ const Dashboard = () => {
     inTransit: 0,
     delivered: 0,
     received: 0,
+    pending: 0,
     monthly: [],
   });
   const [shipments, setShipments] = useState([]);
@@ -22,21 +23,17 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const { t } = useTranslation();
 
-  // Helper for status translation removed as it's now in statusUtils
-
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // First test API connection
-        console.log('Testing API connection...');
+        // Test API connection as per original logic
         const connectionTest = await testApiConnection();
         if (!connectionTest.success) {
           throw new Error(`API connection failed: ${connectionTest.error}`);
         }
-        console.log('API connection successful');
 
         await Promise.all([fetchStats(), fetchRecentShipments()]);
       } catch (err) {
@@ -50,16 +47,8 @@ const Dashboard = () => {
     loadDashboardData();
   }, []);
 
-  /* API Connection test removed as we trust the client */
-
   const fetchStats = async () => {
     try {
-      console.log('Fetching stats...');
-      // Note: Backend endpoint for stats might need to be /shipments/stats or similar
-      // For now, let's assume we can calculate from shipments list if stats endpoint doesn't exist yet
-      // Or if we implemented it. We didn't explicitly implement /api/stats in backend.
-      // So let's fetch shipments and calculate manually for now to be safe.
-
       const response = await api.get('/shipments');
       const allShipments = response.data;
 
@@ -69,20 +58,16 @@ const Dashboard = () => {
         delivered: allShipments.filter(s => s.status === 'Delivered').length,
         received: allShipments.filter(s => s.status === 'Received').length,
         pending: allShipments.filter(s => s.status === 'Pending').length,
-        converted: allShipments.filter(s => s.status === 'Converted to Shipment').length,
         monthly: (() => {
-          const stats = {};
+          const statsMap = {};
           allShipments.forEach(s => {
             if (s.createdAt) {
               const date = new Date(s.createdAt);
-              const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-              stats[key] = (stats[key] || 0) + 1;
+              const key = `${date.toLocaleString('default', { month: 'short' })}`;
+              statsMap[key] = (statsMap[key] || 0) + 1;
             }
           });
-          return Object.entries(stats)
-            .map(([month, count]) => ({ month, count }))
-            .sort((a, b) => a.month.localeCompare(b.month))
-            .slice(-6);
+          return Object.entries(statsMap).map(([name, count]) => ({ name, shipments: count }));
         })()
       };
 
@@ -95,7 +80,6 @@ const Dashboard = () => {
 
   const fetchRecentShipments = async () => {
     try {
-      console.log('Fetching shipments...');
       const response = await api.get('/shipments');
       setShipments(response.data.slice(0, 5));
     } catch (error) {
@@ -104,176 +88,124 @@ const Dashboard = () => {
     }
   };
 
-  // Prepare chart data
-  const statusChartData = [
-    { name: t('received'), value: stats.received || 0, color: '#06b6d4' },
-    { name: t('inTransit'), value: stats.inTransit || 0, color: '#f59e0b' },
-    { name: t('delivered'), value: stats.delivered || 0, color: '#10b981' },
-    { name: t('pending'), value: stats.pending || 0, color: '#6366f1' },
-    { name: t('converted'), value: stats.converted || 0, color: '#8b5cf6' },
-  ].filter(item => item.value > 0);
+  if (loading) return (
+    <div className="dashboard-loading-saas">
+      <Loading message={t('loadingDashboard')} size="large" />
+    </div>
+  );
 
-  // If no data, show a dummy placeholder item
-  const finalChartData = statusChartData.length > 0
-    ? statusChartData
-    : [{ name: t('noData'), value: 1, color: '#f3f4f6' }];
-
-  // Convert monthly data from backend to chart format
-  const monthlyData = stats.monthly?.map((item) => {
-    const [year, month] = item.month.split('-');
-    const monthNames = [t('jan'), t('feb'), t('mar'), t('apr'), t('may'), t('jun'), t('jul'), t('aug'), t('sep'), t('oct'), t('nov'), t('dec')];
-    return {
-      month: monthNames[parseInt(month) - 1] || month,
-      shipments: item.count,
-    };
-  }) || [];
-
-  if (loading) {
-    return <Loading message={t('loadingDashboard')} size="large" />;
-  }
-
-  if (error) {
-    return (
-      <div className="dashboard-error">
-        <div className="error-content">
-          <h2>{t('error')}</h2>
-          <p>{t('error')}: {error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="btn-primary"
-          >
-            {t('refresh')}
-          </button>
-        </div>
+  if (error) return (
+    <div className="dashboard-error">
+      <div className="error-content">
+        <Icons.AlertCircle size={48} color="#ef4444" />
+        <h2>{t('error')}</h2>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()} className="btn-primary-saas">
+          {t('retry')}
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <h1>{t('dashboard')}</h1>
-        <Link to="/shipments/new" className="btn-primary">
-          {t('newShipment')}
-        </Link>
+    <div className="dashboard-saas">
+      <div className="dashboard-welcome">
+        <h2>{t('welcomeBack') || 'Welcome back'}, ✨</h2>
+        <p>{t('dashboardSubtitle') || 'Here is what is happening with your shipments today.'}</p>
       </div>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon total"><Icons.Package size={32} color="#2563eb" /></div>
-          <div className="stat-content">
-            <h3>{t('totalShipments')}</h3>
-            <p className="stat-value">{stats.total}</p>
+      <div className="stats-grid-saas">
+        <div className="stat-card-saas primary">
+          <div className="stat-icon"><Icons.Package size={24} /></div>
+          <div className="stat-info">
+            <span className="label">{t('totalShipments')}</span>
+            <span className="value">{stats.total}</span>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon received"><Icons.CheckCircle size={32} color="#06b6d4" /></div>
-          <div className="stat-content">
-            <h3>{t('received')}</h3>
-            <p className="stat-value">{stats.received}</p>
+        <div className="stat-card-saas info">
+          <div className="stat-icon"><Icons.Plus size={24} /></div>
+          <div className="stat-info">
+            <span className="label">{t('received')}</span>
+            <span className="value">{stats.received}</span>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon in-transit"><Icons.Truck size={32} color="#f59e0b" /></div>
-          <div className="stat-content">
-            <h3>{t('inTransit')}</h3>
-            <p className="stat-value">{stats.inTransit}</p>
+        <div className="stat-card-saas warning">
+          <div className="stat-icon"><Icons.Truck size={24} /></div>
+          <div className="stat-info">
+            <span className="label">{t('inTransit')}</span>
+            <span className="value">{stats.inTransit}</span>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon delivered"><Icons.CheckCircle size={32} color="#10b981" /></div>
-          <div className="stat-content">
-            <h3>{t('delivered')}</h3>
-            <p className="stat-value">{stats.delivered}</p>
+        <div className="stat-card-saas success">
+          <div className="stat-icon"><Icons.CheckCircle size={24} /></div>
+          <div className="stat-info">
+            <span className="label">{t('delivered')}</span>
+            <span className="value">{stats.delivered}</span>
           </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="charts-section">
-        <div className="chart-card">
-          <h3>{t('statusDistribution')}</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={finalChartData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              >
-                {finalChartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-              />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
+      <div className="dashboard-grid">
+        <div className="chart-container-saas">
+          <div className="chart-header">
+            <h3>{t('monthlyShipments')}</h3>
+          </div>
+          <div className="chart-body">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={stats.monthly.length > 0 ? stats.monthly : [{ name: 'None', shipments: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                <Tooltip
+                  cursor={{ fill: '#f8fafc' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                />
+                <Bar dataKey="shipments" fill="rgba(99, 102, 241, 0.8)" radius={[4, 4, 0, 0]} barSize={32} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="chart-card">
-          <h3>{t('monthlyShipments')}</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="shipments" fill="#2563eb" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Recent Shipments */}
-      <div className="recent-shipments">
-        <div className="section-header">
-          <h2>{t('recentShipments')}</h2>
-          <Link to="/shipments" className="btn-secondary">
-            {t('viewAll')}
-          </Link>
-        </div>
-        {shipments.length > 0 ? (
-          <div className="shipments-list">
-            {shipments.map((shipment) => (
-              <div key={shipment.id} className="shipment-item">
-                <div className="shipment-info">
-                  <span className="tracking-number">#{shipment.trackingNumber || shipment.id}</span>
-                  <span className="route">{shipment.origin} → {shipment.destination}</span>
+        <div className="activity-feed-saas">
+          <div className="section-header-saas">
+            <h3>{t('recentShipments')}</h3>
+            <Link to="/shipments" className="view-all">{t('viewAll')}</Link>
+          </div>
+          <div className="feed-list">
+            {shipments.length > 0 ? (
+              shipments.map((shipment, index) => (
+                <div key={shipment.id} className="feed-item" style={{ "--index": index }}>
+                  <div className={`status-dot ${shipment.status.toLowerCase().replace(' ', '-')}`}></div>
+                  <div className="feed-content">
+                    <div className="feed-top">
+                      <span className="tracking">#{shipment.trackingNumber || shipment.id}</span>
+                      <span className="time">{translateStatus(t, shipment.status)}</span>
+                    </div>
+                    <div className="feed-bottom">
+                      <span>{shipment.origin} → {shipment.destination}</span>
+                    </div>
+                  </div>
                 </div>
-                <span className={`status-badge ${getStatusClass(shipment.status)}`}>
-                  {translateStatus(t, shipment.status)}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="no-data">{t('noRecentShipments')}</p>
+            )}
           </div>
-        ) : (
-          <p className="no-data">{t('noRecentShipments')}</p>
-        )}
+        </div>
       </div>
 
-      <div className="dashboard-actions">
-        <Link to="/shipments" className="action-card">
-          <h3>{t('manageShipments')}</h3>
-          <p>{t('manageShipmentsDesc')}</p>
+      <div className="quick-actions-saas">
+        <Link to="/shipments/new" className="action-btn">
+          <div className="icon-box"><Icons.Plus size={20} /></div>
+          <span>{t('newShipment')}</span>
         </Link>
-        <Link to="/users" className="action-card">
-          <h3>{t('manageUsers')}</h3>
-          <p>{t('manageUsersDesc')}</p>
+        <Link to="/users" className="action-btn">
+          <div className="icon-box"><Icons.Users size={20} /></div>
+          <span>{t('manageUsers')}</span>
         </Link>
-        <Link to="/vehicles" className="action-card">
-          <h3>{t('manageVehicles')}</h3>
-          <p>{t('manageVehiclesDesc')}</p>
+        <Link to="/vehicles" className="action-btn">
+          <div className="icon-box"><Icons.Truck size={20} /></div>
+          <span>{t('manageVehicles')}</span>
         </Link>
       </div>
     </div>

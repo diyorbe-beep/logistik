@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useUser } from '../../contexts/UserContext';
 import { Icons } from '../Icons/Icons';
+import PageHeader from '../Common/PageHeader';
 import './Home.scss';
 
 const Home = () => {
@@ -10,285 +11,193 @@ const Home = () => {
 
   const features = [
     {
-      icon: <Icons.Package size={48} color="#3b82f6" />,
+      icon: <Icons.Package size={32} />,
       title: t('shipmentManagement'),
       description: t('shipmentManagementDesc'),
-      color: 'blue'
+      className: 'feature-1'
     },
     {
-      icon: <Icons.Truck size={48} color="#10b981" />,
+      icon: <Icons.Truck size={32} />,
       title: t('vehicleTracking'),
       description: t('vehicleTrackingDesc'),
-      color: 'green'
+      className: 'feature-2'
     },
     {
-      icon: <Icons.BarChart size={48} color="#8b5cf6" />,
+      icon: <Icons.BarChart size={32} />,
       title: t('dashboardAnalytics'),
       description: t('dashboardAnalyticsDesc'),
-      color: 'purple'
+      className: 'feature-3'
     },
     {
-      icon: <Icons.CheckCircle size={48} color="#f59e0b" />,
-      title: t('statusTracking'),
-      description: t('statusTrackingDesc'),
-      color: 'orange'
-    },
-    {
-      icon: <Icons.Globe size={48} color="#14b8a6" />,
+      icon: <Icons.Globe size={32} />,
       title: t('globalReach'),
       description: t('globalReachDesc'),
-      color: 'teal'
-    },
-    {
-      icon: <Icons.Shield size={48} color="#ef4444" />,
-      title: t('secureSystem'),
-      description: t('secureSystemDesc'),
-      color: 'red'
+      className: 'feature-4'
     }
   ];
 
-  const stats = [
-    { icon: <Icons.Truck size={40} color="#3b82f6" />, number: '1000+', label: t('deliveriesCompleted') },
-    { icon: <Icons.Users size={40} color="#10b981" />, number: '500+', label: t('happyCustomers') },
-    { icon: <Icons.CheckCircle size={40} color="#f59e0b" />, number: '99.9%', label: t('successRate') },
-    { icon: <Icons.Clock size={40} color="#8b5cf6" />, number: '24/7', label: t('support') }
+  const pricingPlans = [
+    {
+      name: t('freePlan'),
+      price: '0',
+      features: ['5 yuk tashish/oy', 'Boshlang\'ich tahlillar', 'Email qo\'llab-quvvatlash'],
+      buttonText: t('getStarted'),
+      type: 'basic'
+    },
+    {
+      name: t('proPlan'),
+      price: '49',
+      features: ['Cheksiz yuk tashish', 'Kengaytirilgan tahlillar', '24/7 Priority support', 'API kirish'],
+      buttonText: t('choosePlan'),
+      popular: true,
+      type: 'premium'
+    },
+    {
+      name: t('enterprisePlan'),
+      price: '99',
+      features: ['Maxsus yechimlar', 'Shaxsiy menejer', 'SLA kafolati', 'White-labeling'],
+      buttonText: t('contactUs'),
+      type: 'enterprise'
+    }
   ];
 
   return (
-    <div className="home">
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="container">
-          <div className="hero-content">
-            <div className="hero-text">
-              <h1 className="hero-title">
-                <span className="gradient-text">{t('heroTitle')}</span>
-              </h1>
-              <p className="hero-subtitle">{t('heroSubtitle')}</p>
-              <p className="hero-description">
-                {t('heroDescription')}
-              </p>
-              <div className="hero-buttons">
-                {user ? (
-                  // Authenticated user buttons
-                  <>
-                    <Link to="/orders/new" className="btn-primary btn-large">
-                      <Icons.Package size={20} />
-                      Buyurtma berish
-                    </Link>
-                    <Link to="/profile" className="btn-secondary btn-large">
-                      <Icons.User size={20} />
-                      Profil
-                    </Link>
-                  </>
-                ) : (
-                  // Non-authenticated user buttons
-                  <>
-                    <Link to="/register" className="btn-primary btn-large">
-                      <Icons.Rocket size={20} />
-                      {t('getStarted')}
-                    </Link>
-                    <Link to="/login" className="btn-secondary btn-large">
-                      <Icons.Lock size={20} />
-                      {t('login')}
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="hero-visual">
-              <div className="hero-image">
-                <div className="floating-card card-1">
-                  <span className="card-icon">
-                    <Icons.Package size={24} color="#3b82f6" />
-                  </span>
-                  <span className="card-text">{t('shipmentTracking')}</span>
-                </div>
-                <div className="floating-card card-2">
-                  <span className="card-icon">
-                    <Icons.Truck size={24} color="#10b981" />
-                  </span>
-                  <span className="card-text">{t('realTimeUpdates')}</span>
-                </div>
-                <div className="floating-card card-3">
-                  <span className="card-icon">
-                    <Icons.BarChart size={24} color="#8b5cf6" />
-                  </span>
-                  <span className="card-text">{t('analytics')}</span>
-                </div>
-              </div>
-            </div>
+    <div className="home-saas">
+      <PageHeader
+        badge={
+          <div className="hero-badge">
+            <span>Product Hunt #1 of the day</span>
           </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-grid">
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-card">
-                <div className="stat-icon">{stat.icon}</div>
-                <div className="stat-number">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="features-section section">
-        <div className="container">
-          <div className="section-header">
-            <h2>{t('keyFeatures')}</h2>
-            <p>{t('keyFeaturesDesc')}</p>
-          </div>
-          <div className="features-grid">
-            {features.map((feature, index) => (
-              <div key={index} className={`feature-card card-interactive ${feature.color}`}>
-                <div className="feature-icon">
-                  {feature.icon}
-                </div>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
-                <div className="feature-arrow">
-                  <Icons.ArrowRight size={24} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="how-it-works-section section">
-        <div className="container">
-          <div className="section-header">
-            <h2>{t('howItWorks')}</h2>
-            <p>{t('howItWorksDesc')}</p>
-          </div>
-          <div className="steps-container">
-            <div className="step">
-              <div className="step-number">1</div>
-              <div className="step-content">
-                <div className="step-icon">
-                  <Icons.Edit size={48} color="#3b82f6" />
-                </div>
-                <h3>{t('createOrder')}</h3>
-                <p>{t('createOrderStep')}</p>
-              </div>
-            </div>
-            <div className="step-connector">
-              <Icons.ArrowRight size={32} color="#3b82f6" />
-            </div>
-            <div className="step">
-              <div className="step-number">2</div>
-              <div className="step-content">
-                <div className="step-icon">
-                  <Icons.Truck size={48} color="#10b981" />
-                </div>
-                <h3>{t('assignCarrier')}</h3>
-                <p>{t('assignCarrierStep')}</p>
-              </div>
-            </div>
-            <div className="step-connector">
-              <Icons.ArrowRight size={32} color="#3b82f6" />
-            </div>
-            <div className="step">
-              <div className="step-number">3</div>
-              <div className="step-content">
-                <div className="step-icon">
-                  <Icons.MapPin size={48} color="#f59e0b" />
-                </div>
-                <h3>{t('trackShipment')}</h3>
-                <p>{t('trackShipmentStep')}</p>
-              </div>
-            </div>
-            <div className="step-connector">
-              <Icons.ArrowRight size={32} color="#3b82f6" />
-            </div>
-            <div className="step">
-              <div className="step-number">4</div>
-              <div className="step-content">
-                <div className="step-icon">
-                  <Icons.CheckCircle size={48} color="#10b981" />
-                </div>
-                <h3>{t('deliveryComplete')}</h3>
-                <p>{t('deliveryCompleteStep')}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Order Section */}
-      <section className="order-section section">
-        <div className="container">
-          <div className="section-header">
-            <h2>{t('placeOrder')}</h2>
-            <p>{t('placeOrderDesc')}</p>
-          </div>
-          <div className="order-content">
-            <div className="order-info">
-              <div className="order-features">
-                <div className="order-feature">
-                  <Icons.Clock size={32} color="#3b82f6" />
-                  <div>
-                    <h4>{t('fastDelivery')}</h4>
-                    <p>{t('fastDeliveryDesc')}</p>
-                  </div>
-                </div>
-                <div className="order-feature">
-                  <Icons.Shield size={32} color="#10b981" />
-                  <div>
-                    <h4>{t('safeDelivery')}</h4>
-                    <p>{t('safeDeliveryDesc')}</p>
-                  </div>
-                </div>
-                <div className="order-feature">
-                  <Icons.DollarSign size={32} color="#f59e0b" />
-                  <div>
-                    <h4>{t('affordablePrices')}</h4>
-                    <p>{t('affordablePricesDesc')}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="order-actions">
-              <div className="order-card">
-                <h3>{t('readyToShip')}</h3>
-                <p>{t('readyToShipDesc')}</p>
-                <div className="order-buttons">
-                  <Link to="/orders/new" className="btn-primary btn-large">
-                    <Icons.Plus size={20} />
-                    {t('createOrder')}
-                  </Link>
-                  <Link to="/pricing" className="btn-secondary">
-                    <Icons.DollarSign size={20} />
-                    {t('calculatePrice')}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="container">
-          <div className="cta-content">
-            <h2>{t('readyToStart')}</h2>
-            <p>{t('joinToday')}</p>
-            <div className="cta-buttons">
-              <Link to="/register" className="btn-primary btn-large">
-                <Icons.Rocket size={20} />
-                {t('createAccount')}
+        }
+        title={
+          <>Logistikani <span className="text-gradient">aqlli boshqaring.</span></>
+        }
+        description={t('heroDescription')}
+        actions={
+          <div className="hero-actions">
+            {user ? (
+              <Link to="/dashboard" className="btn-primary-saas">
+                Dashboardga o'tish <Icons.ArrowRight size={18} />
               </Link>
-              <Link to="/contact" className="btn-secondary btn-large">
-                <Icons.Mail size={20} />
-                {t('contactUs')}
+            ) : (
+              <>
+                <Link to="/register" className="btn-primary-saas">
+                  {t('getStarted')} <Icons.Rocket size={18} />
+                </Link>
+                <Link to="/login" className="btn-secondary-saas">
+                  <Icons.Play size={18} /> Demo ko'rish
+                </Link>
+              </>
+            )}
+          </div>
+        }
+        visual={
+          <div className="hero-preview">
+            <img
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200"
+              alt="LogistikPro Dashboard Preview"
+              className="preview-image"
+            />
+          </div>
+        }
+      />
+
+      {/* Social Proof */}
+      <section className="social-proof">
+        <div className="container">
+          <p>{t('socialProofTitle')}</p>
+          <div className="logo-cloud">
+            <div className="logo"><span>LOGISTIC</span></div>
+            <div className="logo"><span>MOVE.IT</span></div>
+            <div className="logo"><span>TRANS.X</span></div>
+            <div className="logo"><span>SHIP.IO</span></div>
+            <div className="logo"><span>CARGO.CO</span></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bento Grid Features */}
+      <section className="features-saas section">
+        <div className="container">
+          <div className="section-header-saas">
+            <h2 className="section-title">{t('keyFeatures')}</h2>
+            <p className="section-subtitle">{t('keyFeaturesDesc')}</p>
+          </div>
+          <div className="bento-grid">
+            {features.map((feature, index) => (
+              <div key={index} className={`bento-item ${feature.className}`}>
+                <div className="bento-icon">{feature.icon}</div>
+                <div className="bento-content">
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Glassmorphism Pricing */}
+      <section className="pricing-saas section">
+        <div className="container">
+          <div className="section-header-saas">
+            <h2 className="section-title">{t('saasPricingTitle')}</h2>
+            <p className="section-subtitle">{t('saasPricingSubtitle')}</p>
+          </div>
+          <div className="pricing-grid">
+            {pricingPlans.map((plan, index) => (
+              <div key={index} className={`pricing-card ${plan.popular ? 'popular' : ''}`}>
+                {plan.popular && <div className="popular-badge">Eng ommabop</div>}
+                <div className="plan-header">
+                  <h3>{plan.name}</h3>
+                  <div className="plan-price">
+                    <span className="amount">${plan.price}</span>
+                    <span className="period">{t('perMonth')}</span>
+                  </div>
+                </div>
+                <ul className="plan-features">
+                  {plan.features.map((feat, fIdx) => (
+                    <li key={fIdx}><Icons.CheckCircle size={16} /> {feat}</li>
+                  ))}
+                </ul>
+                <button className={`btn-plan ${plan.popular ? 'btn-primary' : 'btn-secondary'}`}>
+                  {plan.buttonText}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="faq-saas section">
+        <div className="container">
+          <div className="section-header-saas">
+            <h2 className="section-title">{t('faqTitle')}</h2>
+            <p className="section-subtitle">{t('faqSubtitle')}</p>
+          </div>
+          <div className="faq-list">
+            <div className="faq-item">
+              <h4>Tizim qanchalik xavfsiz?</h4>
+              <p>Bizning tizimimiz bank darajasidagi xavfsizlik va JWT-ga asoslangan autentifikatsiya bilan jihozlangan.</p>
+            </div>
+            <div className="faq-item">
+              <h4>Mobil ilovasi bormi?</h4>
+              <p>Platformamiz to'liq adaptiv va barcha qurilmalarda mukammal ishlaydi.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Footer Section */}
+      <section className="final-cta">
+        <div className="container">
+          <div className="cta-box">
+            <h2>Logistikani keyingi darajaga olib chiqing.</h2>
+            <p>Bugunoq o'z jamoangiz bilan ishlashni boshlang.</p>
+            <div className="cta-actions">
+              <Link to="/register" className="btn-primary-saas btn-glow">
+                Hoziroq boshlash
               </Link>
             </div>
           </div>

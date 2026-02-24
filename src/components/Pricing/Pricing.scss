@@ -1,232 +1,298 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.pricing-page {
-  padding: $spacing-2xl 0;
-  min-height: 80vh;
-  background: linear-gradient(to bottom, $bg-primary, $bg-secondary);
+.pricing-redesign {
+  background: $bg-secondary;
+  padding-bottom: $spacing-20;
 
-  .pricing-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 $spacing-xl;
-
-    @include responsive(md) {
-      padding: 0 $spacing-md;
-    }
-
-    @include responsive(sm) {
-      padding: 0 $spacing-sm;
-    }
+  .container {
+    @include container;
   }
 
-  .pricing-header {
-    text-align: center;
-    margin-bottom: $spacing-2xl;
 
-    h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      color: $text-primary;
-      margin-bottom: $spacing-md;
-      @include fade-in-down(0.5s);
-
-      @include responsive(md) {
-        font-size: 2.5rem;
-      }
-
-      @include responsive(sm) {
-        font-size: 2rem;
-      }
-    }
-
-    .pricing-subtitle {
-      font-size: 1.2rem;
-      color: $text-secondary;
-      margin-bottom: $spacing-xl;
-      @include fade-in-up(0.5s);
-
-      @include responsive(sm) {
-        font-size: 1rem;
-      }
-    }
-
-    .btn-primary {
-      @include fade-in-up(0.6s);
-    }
-  }
-
-  .empty-state {
-    @include card;
-    text-align: center;
-    padding: $spacing-2xl;
-    background: $bg-white;
-    border-radius: $radius-lg;
-
-    p {
-      color: $text-secondary;
-      margin-bottom: $spacing-lg;
-      font-size: 1.1rem;
-    }
+  .pricing-grid-section {
+    padding: $spacing-16 0;
+    margin-top: -$spacing-12;
+    position: relative;
+    z-index: 10;
   }
 
   .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: $spacing-xl;
-    margin-bottom: $spacing-2xl;
-
-    @include responsive(md) {
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: $spacing-lg;
-    }
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: $spacing-8;
 
     @include responsive(sm) {
       grid-template-columns: 1fr;
-      gap: $spacing-md;
     }
   }
 
   .pricing-card {
-    @include card;
     background: $bg-white;
-    border-radius: $radius-lg;
-    overflow: hidden;
-    @include smooth-transition(all, 0.3s);
-    @include fade-in-up(0.4s);
-    animation-delay: calc(var(--index, 0) * 0.1s);
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-premium;
     border: 1px solid $border-color;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    @include smooth-transition;
+    @include fade-in-up(0.6s);
 
     &:hover {
       transform: translateY(-8px);
-      box-shadow: $shadow-xl;
-      border-color: $primary;
-    }
+      box-shadow: 0 30px 50px -10px rgba(0,0,0,0.1);
+      border-color: rgba($primary, 0.3);
 
-    .pricing-card-header {
-      background: linear-gradient(135deg, $primary, $primary-dark);
-      color: $text-white;
-      padding: $spacing-xl;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-      }
-
-      .vehicle-type-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: $spacing-xs $spacing-md;
-        border-radius: $radius-full;
-        font-size: 0.875rem;
-        font-weight: 500;
-      }
-    }
-
-    .pricing-card-body {
-      padding: $spacing-xl;
-
-      .pricing-info {
-        margin-bottom: $spacing-lg;
-
-        .info-item {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: $spacing-md;
-          padding-bottom: $spacing-md;
-          border-bottom: 1px solid $border-color;
-
-          &:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-          }
-
-          &.description {
-            flex-direction: column;
-            align-items: flex-start;
-
-            p {
-              color: $text-secondary;
-              font-size: 0.95rem;
-              line-height: 1.6;
-              margin: 0;
-            }
-          }
-
-          .info-label {
-            color: $text-secondary;
-            font-weight: 500;
-          }
-
-          .info-value {
-            color: $text-primary;
-            font-weight: 600;
-          }
-        }
-      }
-
-      .pricing-total {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: $spacing-lg;
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.05));
-        border-radius: $radius-md;
-        margin-top: $spacing-lg;
-
-        .total-label {
-          font-size: 1.1rem;
-          color: $text-primary;
-          font-weight: 600;
-        }
-
-        .total-value {
-          font-size: 1.5rem;
-          color: $primary;
-          font-weight: 700;
-        }
-      }
-    }
-
-    .pricing-card-actions {
-      padding: $spacing-md $spacing-xl;
-      border-top: 1px solid $border-color;
-      display: flex;
-      gap: $spacing-md;
-      background: $bg-secondary;
-
-      .btn-edit,
-      .btn-delete {
-        flex: 1;
-        padding: $spacing-sm $spacing-md;
-        border-radius: $radius-md;
-        border: none;
-        cursor: pointer;
-        font-weight: 500;
-        @include smooth-transition(all, 0.2s);
-      }
-
-      .btn-edit {
+      .vehicle-icon {
         background: $primary;
         color: $text-white;
+        transform: scale(1.1);
+      }
+    }
 
-        &:hover {
-          background: $primary-dark;
+    .card-header {
+      padding: $spacing-8;
+      display: flex;
+      gap: $spacing-6;
+      align-items: center;
+      border-bottom: 1px solid $border-light;
+
+      .vehicle-icon {
+        width: 64px;
+        height: 64px;
+        background: $bg-secondary;
+        color: $primary;
+        border-radius: $radius-xl;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include smooth-transition;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: $spacing-1;
+        color: $text-primary;
+      }
+
+      .route-name {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        font-weight: 500;
+        display: block;
+      }
+    }
+
+    .card-body {
+      padding: $spacing-8;
+      flex-grow: 1;
+
+      .metric {
+        display: flex;
+        gap: $spacing-4;
+        margin-bottom: $spacing-6;
+
+        &:last-child { margin-bottom: 0; }
+
+        .metric-icon {
+          width: 32px;
+          height: 32px;
+          background: rgba($primary, 0.05);
+          color: $primary;
+          border-radius: $radius-md;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .metric-data {
+          display: flex;
+          flex-direction: column;
+
+          .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: $text-light;
+            font-weight: 600;
+          }
+
+          .value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: $text-primary;
+          }
+        }
+      }
+    }
+
+    .card-footer {
+      padding: $spacing-8;
+      background: $bg-primary;
+      border-top: 1px solid $border-light;
+
+      .price-total {
+        margin-bottom: $spacing-8;
+        
+        .label {
+          display: block;
+          font-size: 0.875rem;
+          color: $text-secondary;
+          margin-bottom: $spacing-2;
+        }
+
+        .amount {
+          font-size: 2.25rem;
+          font-weight: 800;
+          color: $text-primary;
+
+          sub {
+            font-size: 1rem;
+            font-weight: 600;
+            bottom: 0;
+            color: $text-light;
+          }
         }
       }
 
-      .btn-delete {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
+      .card-actions {
+        display: flex;
+        gap: $spacing-4;
+        align-items: center;
 
-        &:hover {
-          background: rgba(239, 68, 68, 0.2);
+        .btn-order {
+          flex-grow: 1;
+          @include button-primary;
+          padding: $spacing-4;
+          text-decoration: none;
+          font-weight: 700;
+          border-radius: $radius-xl;
+        }
+
+        .admin-actions {
+          display: flex;
+          gap: $spacing-2;
+
+          .btn-icon-action {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: $bg-white;
+            border: 1px solid $border-color;
+            border-radius: $radius-lg;
+            color: $text-secondary;
+            cursor: pointer;
+            @include smooth-transition;
+
+            &:hover {
+              background: $bg-secondary;
+              color: $primary;
+              border-color: $primary;
+            }
+
+            &.delete:hover {
+              color: $danger;
+              border-color: $danger;
+              background: rgba($danger, 0.05);
+            }
+          }
         }
       }
+    }
+  }
+
+  .faq-section {
+    padding: $spacing-20 0;
+    background: $bg-white;
+
+    .section-header {
+      margin-bottom: $spacing-12;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: $spacing-12;
+    }
+
+    .faq-card {
+      display: flex;
+      gap: $spacing-6;
+
+      .faq-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background: rgba($primary, 0.1);
+        color: $primary;
+        border-radius: $radius-full;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .faq-text {
+        h4 {
+          font-size: 1.125rem;
+          font-weight: 700;
+          margin-bottom: $spacing-2;
+          color: $text-primary;
+        }
+
+        p {
+          color: $text-secondary;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+
+  .admin-fab {
+    position: fixed;
+    bottom: $spacing-8;
+    right: $spacing-8;
+    z-index: 100;
+
+    .btn-fab {
+      width: 64px;
+      height: 64px;
+      background: $primary;
+      color: $text-white;
+      border-radius: $radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px -5px rgba($primary, 0.5);
+      @include smooth-transition;
+      @include hover-lift;
+
+      &:hover {
+        background: $primary-dark;
+      }
+    }
+  }
+
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-20;
+    text-align: center;
+    background: $bg-white;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-premium;
+
+    svg {
+      color: $text-light;
+      margin-bottom: $spacing-6;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+      margin-bottom: $spacing-8;
     }
   }
 }
