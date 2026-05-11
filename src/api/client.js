@@ -29,12 +29,15 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       localStorage.removeItem('token');
-      // Only redirect to login if we aren't already there
+      sessionStorage.removeItem('user');
+      
+      // Use React Router navigation instead of direct window location
       if (!window.location.pathname.includes('/login')) {
-         window.location.href = '/login';
+        // This will be handled by the UserContext and App routing
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);

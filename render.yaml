@@ -13,3 +13,5 @@ services:
         generateValue: true
       - key: PORT
         value: 10000
+      - key: FRONTEND_URL
+        value: https://logistik-pro-jez4.onrender.com

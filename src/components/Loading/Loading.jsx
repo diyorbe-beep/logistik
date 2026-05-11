@@ -70,4 +70,4 @@ export const CardSkeleton = ({ count = 3 }) => (
   </div>
 );
 
-export default Loading;
+export default Loading; 
