@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { AuthService } from '../../services/authService';
+import authService from '../../services/authService';
 import { API_URL } from '../../config/api';
 import { testApiConnection, wakeUpServer } from '../../utils/apiTest';
 import Icons from '../Icons/Icons';
@@ -61,7 +61,7 @@ const Login = ({ onLogin }) => {
     try {
       console.log('Attempting login with:', { username });
 
-      const data = await AuthService.login(username, password);
+      const data = await authService.login({ username, password });
 
       // Successful login
       console.log('Login successful:', data.user);

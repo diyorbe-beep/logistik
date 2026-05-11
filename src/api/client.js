@@ -11,7 +11,7 @@ const api = axios.create({
 // Request interceptor for API calls
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('authToken'); // Use sessionStorage to match authService
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -31,7 +31,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('authToken'); // Use sessionStorage to match authService
       sessionStorage.removeItem('user');
       
       // Use React Router navigation instead of direct window location

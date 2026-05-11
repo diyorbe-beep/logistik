@@ -103,7 +103,11 @@ class AuthService {
         throw new Error('Username and password are required');
       }
 
-      const response = await api.post('/auth/login', credentials);
+      // Send as separate parameters to match backend API
+      const response = await api.post('/auth/login', {
+        username: credentials.username,
+        password: credentials.password
+      });
       const { token, user } = response.data;
 
       // Validate token format
@@ -151,7 +155,9 @@ class AuthService {
         throw new Error('Password must be at least 6 characters long');
       }
 
+      console.log('Sending registration data:', userData);
       const response = await api.post('/auth/register', userData);
+      console.log('Register response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Registration failed:', error);

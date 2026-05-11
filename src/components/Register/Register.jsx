@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
-import { AuthService } from '../../services/authService';
+import authService from '../../services/authService';
 import Icons from '../Icons/Icons';
 import './Register.scss';
 
@@ -53,9 +53,9 @@ const Register = () => {
         phone: formData.phone || '',
       };
 
-      await AuthService.register(requestBody);
-      const loginData = await AuthService.login(formData.username, formData.password);
-      localStorage.setItem('token', loginData.token);
+      await authService.register(requestBody);
+      const loginData = await authService.login({ username: formData.username, password: formData.password });
+      sessionStorage.setItem('authToken', loginData.token);
       navigate('/dashboard');
 
     } catch (err) {
