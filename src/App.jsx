@@ -82,7 +82,7 @@ const ConditionalNavbar = () => {
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading, error } = useUser();
   const { t } = useTranslation();
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
 
   if (loading) {
     return <PageLoader message={t('loadingProfile')} />;
@@ -135,7 +135,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
     setIsAuthenticated(!!token);
     if (token && !user && !loading) {
       refetchUser();
@@ -143,7 +143,7 @@ function App() {
   }, [user, refetchUser, loading]);
 
   const handleLogin = async (token, userData) => {
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('authToken', token);
     setIsAuthenticated(true);
     await refetchUser();
   };

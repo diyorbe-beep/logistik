@@ -82,7 +82,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
       const response = await fetch(`${API_URL}/api/users/profile`, { // Corrected endpoint if exists, else keep /api/profile if that's where User routes put it. 
         // Actually UserRoutes usually mount at /api/users. Let's check UserRoutes later. 
         // For now preventing regression, I will assume /api/users/profile or /api/profile. 
@@ -108,7 +108,7 @@ const Profile = () => {
 
   const handleAcceptShipment = async (shipmentId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
       // Use standard PUT endpoint
       const response = await fetch(`${API_URL}/api/shipments/${shipmentId}`, {
         method: 'PUT',
@@ -137,7 +137,7 @@ const Profile = () => {
 
   const handleConfirmShipment = async (shipmentId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
       const response = await fetch(`${API_URL}/api/shipments/${shipmentId}`, {
         method: 'PUT',
         headers: {

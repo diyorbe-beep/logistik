@@ -11,7 +11,7 @@ const api = axios.create({
 // Request interceptor for API calls
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('authToken'); // Use sessionStorage to match authService
+    const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -31,14 +31,13 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      sessionStorage.removeItem('authToken'); // Use sessionStorage to match authService
+      // Clear all token storage locations
+      sessionStorage.removeItem('authToken');
       sessionStorage.removeItem('user');
+      localStorage.removeItem('token');
       
-      // Use React Router navigation instead of direct window location
-      if (!window.location.pathname.includes('/login')) {
-        // This will be handled by the UserContext and App routing
-        return Promise.reject(error);
-      }
+      // This will be handled by the UserContext and App routing
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

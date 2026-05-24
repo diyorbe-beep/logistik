@@ -17,9 +17,17 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const getToken = () => sessionStorage.getItem('authToken') || localStorage.getItem('token');
+
+  const clearToken = () => {
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
+    localStorage.removeItem('token');
+  };
+
   // Optimized profile fetch with timeout and retry
   const fetchUserProfile = useCallback(async (retryCount = 0) => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (!token) {
       setLoading(false);
       return;
@@ -44,6 +52,7 @@ export const UserProvider = ({ children }) => {
 
       // Response interceptor already handles 401s
       if (err.response?.status === 401) {
+        clearToken();
         setUser(null);
         return;
       }
@@ -60,7 +69,7 @@ export const UserProvider = ({ children }) => {
 
       // If persistent error, clear token
       if (retryCount >= 2) {
-        localStorage.removeItem('token');
+        clearToken();
         setUser(null);
       }
     } finally {
@@ -93,8 +102,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('user');
+    clearToken();
     setUser(null);
     setError(null);
   }, []);

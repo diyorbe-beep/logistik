@@ -14,7 +14,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
   const { user } = useUser();
-  const isAuthenticated = !!localStorage.getItem('token');
+  const isAuthenticated = !!(sessionStorage.getItem('authToken') || localStorage.getItem('token'));
 
   const canAccessDashboard = user && (user.role === 'admin' || user.role === 'operator');
 

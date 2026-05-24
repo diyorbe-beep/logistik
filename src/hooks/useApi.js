@@ -64,7 +64,7 @@ export const useApi = (url, options = {}) => {
     setError(null);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
       
       const fetchOptions = {
         signal: controller.signal,
@@ -142,7 +142,7 @@ export const useApi = (url, options = {}) => {
 // Optimized API functions with better error handling
 export const apiRequest = async (endpoint, options = {}) => {
   const controller = new AbortController();
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
   
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -178,7 +178,7 @@ export const clearApiCache = () => {
 
 // Preload critical endpoints with better error handling
 export const preloadCriticalData = async () => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('authToken') || localStorage.getItem('token');
   if (!token) return;
 
   console.log('🔄 Starting critical data preload...');
